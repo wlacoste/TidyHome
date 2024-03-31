@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "904738470895",
+    "project_id": "cleanapp-44f11",
+    "storage_bucket": "cleanapp-44f11.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904738470895:android:5a1496c38eadfdeb7c541a",
+        "android_client_info": {
+          "package_name": "com.wallatt.CleapApp2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904738470895-8mh9latu47t5sc3qr8aalfa3nqt0aq0i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wallatt.CleapApp2",
+            "certificate_hash": "b3f5de14c31b2cebdf0b52720db50f968fe5652a"
+          }
+        },
+        {
+          "client_id": "904738470895-ld1bvdeu29ejho47e98d9b6mb54di7js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTva5-Uh9Fj1jNY5Xlbayrit5stIAeZoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904738470895-ld1bvdeu29ejho47e98d9b6mb54di7js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

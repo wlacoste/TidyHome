@@ -1,0 +1,1 @@
+cd ~/AppData/Local/Android/Sdk/emulator && ./emulator -avd MP

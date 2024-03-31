@@ -5,8 +5,18 @@
  * @format
  */
 
-import React from 'react';
+import Hola from './hola/Hola';
+import {
+  Colors,
+  DebugInstructions,
+  Header,
+  LearnMoreLinks,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
+
 import type {PropsWithChildren} from 'react';
+
+import React from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,14 +26,6 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -42,6 +44,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
         ]}>
         {title}
       </Text>
+      <Hola />
       <Text
         style={[
           styles.sectionDescription,
@@ -55,7 +58,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
-function App(): React.JSX.Element {
+function Appas(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -115,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Appas;
