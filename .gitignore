@@ -39,7 +39,8 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
-android/
+/android/*
+!/android/**/gradle*
 .vscode/
 ios/
 # fastlane
