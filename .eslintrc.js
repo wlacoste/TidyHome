@@ -9,6 +9,13 @@ module.exports = {
   },
   rules: {
     'react-hooks/exhaustive-deps': 'warn',
+    'linebreak-style': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ], // Disable the linebreak-style rule
   },
 };
 // module.exports = {

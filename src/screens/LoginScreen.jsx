@@ -1,7 +1,7 @@
-import auth from '@react-native-firebase/auth';
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import { Text, Button, TextInput } from 'react-native-paper';
+import { Button, Text, TextInput } from 'react-native-paper';
+import { useUserAuth } from '../context/userAuthContext';
 
 const LoginScreen = () => {
   const [mail, setMail] = useState('');
@@ -9,14 +9,14 @@ const LoginScreen = () => {
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
   const [visible, setVisible] = useState(false);
   const onToggleSnackBar = () => setVisible(!visible);
+  const { logIn } = useUserAuth();
 
   const handleLogin = () => {
     try {
       // logIn(mail, password);
-      auth()
-        .signInWithEmailAndPassword(mail, password)
+      logIn(mail, password)
         .then(() => {
-          Alert.alert('inicio sesion');
+          Alert.alert('inicio sesionado');
         })
         .catch(error => console.log(error));
 
