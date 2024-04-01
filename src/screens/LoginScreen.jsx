@@ -1,40 +1,26 @@
-import {useNavigation} from '@react-navigation/core';
-import React, {useState} from 'react';
-import {useEffect} from 'react';
-import {KeyboardAvoidingView, StyleSheet, View} from 'react-native';
-import {Text, Button, TextInput} from 'react-native-paper';
-
-import {auth} from '../../firebase';
-import {useUserAuth} from '../context/userAuthContext';
+import auth from '@react-native-firebase/auth';
+import React, { useState } from 'react';
+import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { Text, Button, TextInput } from 'react-native-paper';
 
 const LoginScreen = () => {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-  const {logIn, signUp} = useUserAuth();
   const [visible, setVisible] = useState(false);
-  // const [error, setErrorMessage] = useState(null);
   const onToggleSnackBar = () => setVisible(!visible);
-
-  // const onDismissSnackBar = () => setVisible(false);
-
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        navigation.navigate('Home');
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   const handleLogin = () => {
     try {
-      logIn(mail, password);
+      // logIn(mail, password);
+      auth()
+        .signInWithEmailAndPassword(mail, password)
+        .then(() => {
+          Alert.alert('inicio sesion');
+        })
+        .catch(error => console.log(error));
+
+      console.log(mail, password);
     } catch (err) {
       console.log(err.message);
     }
@@ -42,7 +28,8 @@ const LoginScreen = () => {
 
   const handleSignUp = () => {
     try {
-      signUp(mail, password);
+      // signUp(mail, password);
+      console.log(mail, password);
     } catch (err) {
       console.log(err.message);
     }
@@ -113,7 +100,7 @@ const LoginScreen = () => {
           action={{
             label: "Dismiss",
             onPress: () => {setVisible(false)
-              
+
             },
           }}
         >

@@ -15,16 +15,22 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "jsx": "react-native",
     "moduleResolution": "node",
     "noEmit": true,
     "resolveJsonModule": true,
     "target": "esnext",
     "checkJs": true,
-    "esModuleInterop": true
-    //     "baseUrl": "./",
+    "esModuleInterop": true,
+    // "paths": {
+    //   "@/*": ["./node_modules/@/*"]
+    // }
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "babel.config.js",
