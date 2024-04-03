@@ -12,17 +12,12 @@ const LoginScreen = ({ navigation }) => {
   const { logIn } = useUserAuth();
 
   const handleLogin = () => {
-    try {
-      // logIn(mail, password);
+    if (mail.trim() && password.trim()) {
       logIn(mail, password)
         .then(() => {
           Alert.alert('inicio sesionado');
         })
         .catch(error => console.log(error));
-
-      console.log(mail, password);
-    } catch (err) {
-      console.log(err.message);
     }
   };
 

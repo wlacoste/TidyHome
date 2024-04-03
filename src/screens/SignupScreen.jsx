@@ -12,10 +12,8 @@ const SignupScreen = () => {
   const { signUp } = useUserAuth();
 
   const handleSignUp = () => {
-    try {
+    if (mail.trim() && password.trim() && nombre.trim() && apellido.trim()) {
       signUp(mail, password, nombre, apellido);
-    } catch (err) {
-      console.log(err.message);
     }
   };
 

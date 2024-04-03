@@ -1,6 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useContext, useEffect, useState } from 'react';
-
-// import { auth } from '../../firebase';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -21,11 +20,11 @@ export function UserAuthContextProvider({ children }) {
     return auth()
       .createUserWithEmailAndPassword(email, password)
       .then(userCredential => {
-        const user = userCredential.user;
+        // const user = userCredential.user;
         // Save the user data to the "Users" collection
-        return usersCollection.doc(user.uid).set({
-          email: user.email,
-          uid: user.uid,
+        return usersCollection.doc(userCredential.user.uid).set({
+          email: userCredential.user.email,
+          uid: userCredential.user.uid,
           nombre: nombre,
           apellido: apellido,
         });
@@ -37,8 +36,8 @@ export function UserAuthContextProvider({ children }) {
     // return signOut(auth);
   }
 
-  function onAuthStateChanged(user) {
-    setUser(user);
+  function onAuthStateChanged(usuario) {
+    setUser(usuario);
     if (initializing) {
       setInitializing(false);
     }
