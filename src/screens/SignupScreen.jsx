@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
-import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
 
-const LoginScreen = ({ navigation }) => {
+const SignupScreen = () => {
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-  const [visible, setVisible] = useState(false);
-  const onToggleSnackBar = () => setVisible(!visible);
-  const { logIn } = useUserAuth();
+  const { signUp } = useUserAuth();
 
-  const handleLogin = () => {
+  const handleSignUp = () => {
     try {
-      // logIn(mail, password);
-      logIn(mail, password)
-        .then(() => {
-          Alert.alert('inicio sesionado');
-        })
-        .catch(error => console.log(error));
-
-      console.log(mail, password);
+      signUp(mail, password, nombre, apellido);
     } catch (err) {
       console.log(err.message);
     }
@@ -29,9 +22,21 @@ const LoginScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text variant="displayMedium">Clean Apps</Text>
+        <Text variant="displayMedium">Sign up</Text>
       </View>
       <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Nombre"
+          style={styles.input}
+          value={nombre}
+          onChangeText={text => setNombre(text)}
+        />
+        <TextInput
+          placeholder="apellido"
+          style={styles.input}
+          value={apellido}
+          onChangeText={text => setApellido(text)}
+        />
         <TextInput
           placeholder="Mail"
           style={styles.input}
@@ -61,20 +66,8 @@ const LoginScreen = ({ navigation }) => {
         <Button
           mode="contained-tonal"
           style={[styles.button, styles.buttonOutline]}
-          onPress={handleLogin}>
-          Login
-        </Button>
-        <Button
-          mode="contained-tonal"
-          style={[styles.button, styles.buttonOutline]}
-          onPress={() => navigation.navigate('Signup')}>
+          onPress={handleSignUp}>
           Register
-        </Button>
-        <Button
-          mode="contained-tonal"
-          style={[styles.button, styles.buttonOutline]}
-          onPress={onToggleSnackBar}>
-          Snack
         </Button>
       </View>
     </KeyboardAvoidingView>
@@ -132,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignupScreen;
