@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
-
 const LoginScreen = ({ navigation }) => {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,6 +9,7 @@ const LoginScreen = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
   const onToggleSnackBar = () => setVisible(!visible);
   const { logIn } = useUserAuth();
+  const theme = useTheme();
 
   const handleLogin = () => {
     if (mail.trim() && password.trim()) {
@@ -22,14 +22,15 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.titleContainer}>
         <Text variant="displayMedium">Clean Apps</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Mail"
-          style={styles.input}
           value={mail}
           onChangeText={text => setMail(text)}
         />
@@ -37,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Contraseña"
           right={
             <TextInput.Icon
-              icon={isPasswordSecure ? 'eye-off' : 'eye'}
+              icon={isPasswordSecure ? 'eye' : 'eye-off'}
               onPress={() => {
                 isPasswordSecure
                   ? setIsPasswordSecure(false)
@@ -47,7 +48,6 @@ const LoginScreen = ({ navigation }) => {
           }
           value={password}
           onChangeText={text => setPassword(text)}
-          // style={styles.input}
           secureTextEntry={isPasswordSecure}
         />
       </View>
@@ -55,19 +55,19 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <Button
           mode="contained-tonal"
-          style={[styles.button, styles.buttonOutline]}
+          style={[styles.button]}
           onPress={handleLogin}>
           Login
         </Button>
         <Button
           mode="contained-tonal"
-          style={[styles.button, styles.buttonOutline]}
+          style={[styles.button]}
           onPress={() => navigation.navigate('Signup')}>
           Register
         </Button>
         <Button
           mode="contained-tonal"
-          style={[styles.button, styles.buttonOutline]}
+          style={[styles.button]}
           onPress={onToggleSnackBar}>
           Snack
         </Button>
@@ -99,16 +99,6 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  buttonOutlineText: {
-    color: '#0782F9',
-    fontWeight: '700',
-    fontSize: 16,
   },
 });
 
