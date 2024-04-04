@@ -89,13 +89,6 @@ const styles = StyleSheet.create({
     width: '80%',
     gap: 20,
   },
-  input: {
-    // backgroundColor: "white",
-    // paddingHorizontal: 15,
-    // paddingVertical: 10,
-    // borderRadius: 10,
-    // margin: 5,
-  },
   buttonContainer: {
     width: '80%',
     justifyContent: 'center',
@@ -104,17 +97,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   button: {
-    // backgroundColor: "#0782F9",
     width: '100%',
-    // padding: 15,
     borderRadius: 5,
   },
-  // buttonOutline: {
-  //   // backgroundColor: "white",
-  //   marginTop: 5,
-  //   borderColor: "#0782F9",
-  //   borderWidth: 2,
-  // },
   buttonText: {
     color: 'white',
     fontWeight: '700',
