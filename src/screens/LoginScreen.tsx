@@ -1,8 +1,12 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
-const LoginScreen = ({ navigation }) => {
+
+type LoginScreenProps = NativeStackScreenProps<any, 'Login'>;
+
+const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
