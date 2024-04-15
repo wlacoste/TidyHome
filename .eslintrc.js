@@ -3,12 +3,13 @@ module.exports = {
   extends: ['@react-native-community'],
   plugins: ['react', 'import'],
   parserOptions: {
+    ecmaVersion: 8,
     ecmaFeatures: {
       jsx: true,
     },
   },
   rules: {
-    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/exhaustive-deps': 'off',
     'linebreak-style': 'off',
     'prettier/prettier': [
       'error',

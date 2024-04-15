@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
 
 const SignupScreen = () => {
@@ -10,6 +10,7 @@ const SignupScreen = () => {
   const [password, setPassword] = useState('');
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
   const { signUp } = useUserAuth();
+  const theme = useTheme();
 
   const handleSignUp = () => {
     if (mail.trim() && password.trim() && nombre.trim() && apellido.trim()) {
@@ -18,7 +19,9 @@ const SignupScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.titleContainer}>
         <Text variant="displayMedium">Sign up</Text>
       </View>
@@ -63,7 +66,7 @@ const SignupScreen = () => {
       <View style={styles.buttonContainer}>
         <Button
           mode="contained-tonal"
-          style={[styles.button, styles.buttonOutline]}
+          style={[styles.button]}
           onPress={handleSignUp}>
           Register
         </Button>
@@ -105,12 +108,12 @@ const styles = StyleSheet.create({
     // padding: 15,
     borderRadius: 5,
   },
-  // buttonOutline: {
-  //   // backgroundColor: "white",
-  //   marginTop: 5,
-  //   borderColor: "#0782F9",
-  //   borderWidth: 2,
-  // },
+  buttonOutline: {
+    // backgroundColor: "white",
+    marginTop: 5,
+    borderColor: '#0782F9',
+    borderWidth: 2,
+  },
   buttonText: {
     color: 'white',
     fontWeight: '700',

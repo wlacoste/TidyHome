@@ -1,13 +1,15 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
 
 const HomeScreen = () => {
   const { logOut } = useUserAuth();
+  const theme = useTheme();
 
   return (
-    <View>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Text>HomeScreendd</Text>
 
       <Button icon="camera" mode="contained" onPress={logOut}>
@@ -16,5 +18,13 @@ const HomeScreen = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default HomeScreen;

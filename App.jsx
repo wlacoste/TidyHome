@@ -2,10 +2,13 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import * as React from 'react';
 import { useColorScheme } from 'react-native';
-import { MD3LightTheme, PaperProvider } from 'react-native-paper';
+import { PaperProvider } from 'react-native-paper';
 import { Routes } from './src/Routes';
 import { UserAuthContextProvider } from './src/context/userAuthContext';
-import { DarkTheme } from './src/theme/themeOptions';
+import {
+  MaterialDarkTheme,
+  MaterialLightTheme,
+} from './src/theme/themeOptions';
 
 export default function App() {
   const scheme = useColorScheme();
@@ -15,7 +18,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <UserAuthContextProvider>
-        <PaperProvider theme={scheme === 'dark' ? DarkTheme : MD3LightTheme}>
+        <PaperProvider
+          theme={scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme}>
           <Routes />
         </PaperProvider>
       </UserAuthContextProvider>
