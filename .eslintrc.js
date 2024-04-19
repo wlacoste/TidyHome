@@ -16,7 +16,11 @@ module.exports = {
       {
         endOfLine: 'auto',
       },
-    ], // Disable the linebreak-style rule
+    ],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
+
+    // Disable the linebreak-style rule
   },
 };
 // module.exports = {
