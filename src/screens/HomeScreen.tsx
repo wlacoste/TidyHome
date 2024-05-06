@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
 import Categories from '../components';
+import ProductForm from '../components/ProductForm';
 
 const HomeScreen = () => {
   const { logOut } = useUserAuth();
@@ -11,6 +12,7 @@ const HomeScreen = () => {
   return (
     <>
       <Categories />
+      <ProductForm />
       <View
         style={[
           styles.container,
