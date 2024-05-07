@@ -1,8 +1,14 @@
-import { Text, StyleSheet, View } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { useCategories } from '../../hooks/useCategories';
-import { Button, Card } from 'react-native-paper';
+import { Button, Card, Switch, TextInput, useTheme } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 import {
   ListItem,
@@ -12,7 +18,7 @@ import { ICategoria } from '..';
 
 interface IProductoForm {
   nombre: string;
-  cantidad: string | number;
+  cantidad: string | undefined;
   precio: string | number;
   isUnitario: boolean;
   categoria: string;
@@ -32,10 +38,11 @@ const getListItem = (categorias: ICategoria[]) => {
 const ProductForm = () => {
   const { categorias, loading: categoriasLoading } = useCategories();
   const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
+  const theme = useTheme();
 
   const [product, setProduct] = useState<IProductoForm>({
     nombre: '',
-    cantidad: '',
+    cantidad: undefined,
     precio: '',
     isUnitario: false,
     categoria: '',
@@ -43,11 +50,10 @@ const ProductForm = () => {
     isVence: false,
     fechaCreacion: dayjs().format('DD/MM/YYYY'),
   });
-  const handleChange = (e: { target: { name: any; value: any } }) => {
-    const { name, value } = e.target;
+  const handleChange = (e: string | boolean, nombre: string) => {
     setProduct(prevProduct => ({
       ...prevProduct,
-      [name]: value,
+      [nombre]: e,
     }));
   };
   const toggleVence = () => {
@@ -80,9 +86,29 @@ const ProductForm = () => {
   }, [categorias]);
 
   return (
-    <Card>
-      <Card.Content>
-        <Text>ProductForm</Text>
+    <Card style={styles.card}>
+      <Card.Content style={styles.content}>
+        <Text style={[styles.titulo, { color: theme.colors.onSurface }]}>
+          Nuevo Producto
+        </Text>
+        <TextInput
+          label={'Producto'}
+          value={product.nombre}
+          onChangeText={e => handleChange(e, 'nombre')}
+        />
+        <TextInput
+          keyboardType={'numeric'}
+          label={'Cantidad'}
+          value={product.cantidad}
+          onChangeText={e => handleChange(e, 'cantidad')}
+        />
+        <View style={styles.viewUnitario}>
+          <Text style={styles.textoUnitario}> Es precio unitario?</Text>
+          <Switch
+            value={product.isUnitario}
+            onValueChange={e => handleChange(e, 'isUnitario')}
+          />
+        </View>
         <PaperSelect
           label={'Categorias'}
           arrayList={itemsCategorias}
@@ -106,4 +132,30 @@ const ProductForm = () => {
 
 export default ProductForm;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  card: {
+    margin: 10,
+    width: '95%',
+  },
+  titulo: {
+    fontSize: 20,
+    height: 35,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  content: {
+    display: 'flex',
+    gap: 10,
+  },
+  viewUnitario: {
+    height: 30,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textoUnitario: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+});

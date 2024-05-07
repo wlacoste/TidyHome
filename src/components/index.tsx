@@ -23,8 +23,7 @@ const Categories = () => {
     );
   }
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { backgroundColor: 'red' }]}>
       <Text style={styles.text}>categoriassl</Text>
 
       {categorias &&
@@ -37,7 +36,7 @@ const Categories = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
   },

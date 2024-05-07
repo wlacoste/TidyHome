@@ -10,21 +10,18 @@ const HomeScreen = () => {
   const theme = useTheme();
 
   return (
-    <>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Categories />
       <ProductForm />
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: theme.colors.background },
-        ]}>
+      <View>
         <Text>HomeScreendd</Text>
 
         <Button icon="camera" mode="contained" onPress={logOut}>
           Log out
         </Button>
       </View>
-    </>
+    </View>
   );
 };
 
