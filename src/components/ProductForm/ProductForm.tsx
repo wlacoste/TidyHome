@@ -1,28 +1,29 @@
-import {
-  Text,
-  StyleSheet,
-  View,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { useCategories } from '../../hooks/useCategories';
-import { Button, Card, Switch, TextInput, useTheme } from 'react-native-paper';
-import { PaperSelect } from 'react-native-paper-select';
 import {
-  ListItem,
-  SelectedItem,
-} from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
+  Button,
+  Card,
+  Drawer,
+  Switch,
+  TextInput,
+  useTheme,
+} from 'react-native-paper';
+import { PaperSelect } from 'react-native-paper-select';
+import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import { ICategoria } from '..';
+import Text from '../Text';
+import Collapsible from 'react-native-collapsible';
+import DatePicker from '../DatePicker';
 
 interface IProductoForm {
   nombre: string;
   cantidad: string | undefined;
-  precio: string | number;
+  precio: string | undefined;
   isUnitario: boolean;
   categoria: string;
-  fechaVencimiento: string | Date;
+  fechaVencimiento: Date | undefined;
   isVence: boolean;
   fechaCreacion: string | Date;
 }
@@ -39,6 +40,12 @@ const ProductForm = () => {
   const { categorias, loading: categoriasLoading } = useCategories();
   const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
   const theme = useTheme();
+  const [active, setActive] = React.useState('');
+
+  const [displayValue, setDisplayValue] = useState('');
+
+  const [open, setOpen] = React.useState(false);
+  const [openDate, setOpenDate] = React.useState(false);
 
   const [product, setProduct] = useState<IProductoForm>({
     nombre: '',
@@ -46,7 +53,7 @@ const ProductForm = () => {
     precio: '',
     isUnitario: false,
     categoria: '',
-    fechaVencimiento: '',
+    fechaVencimiento: undefined,
     isVence: false,
     fechaCreacion: dayjs().format('DD/MM/YYYY'),
   });
@@ -56,6 +63,46 @@ const ProductForm = () => {
       [nombre]: e,
     }));
   };
+  const handleChangeDate = (
+    e: string | boolean | Date | undefined,
+    nombre: string,
+  ) => {
+    setProduct(prevProduct => ({
+      ...prevProduct,
+      [nombre]: e,
+      isVence: product.isVence,
+    }));
+  };
+
+  const handleInputChange = (text: string, nombre: string) => {
+    const isPositiveInteger = (input: string): boolean => {
+      const parsedValue = parseInt(input, 10);
+      return !isNaN(parsedValue) && parsedValue > 0;
+    };
+    if (text === '' || isPositiveInteger(text)) {
+      const valor = isPositiveInteger(text)
+        ? parseInt(text, 10).toString()
+        : '';
+
+      handleChange(valor, nombre);
+    }
+  };
+
+  const handleCurrencyInput = (value: string) => {
+    const numericValue = value.replace(/\D/g, '');
+    const options = {
+      useGrouping: true,
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
+    };
+    const formattedValue = Number(numericValue)
+      .toLocaleString('en-US', options)
+      .replace(/,/g, '.');
+
+    handleChange(numericValue, 'precio');
+    setDisplayValue(formattedValue);
+  };
+
   const toggleVence = () => {
     // if(!product.isVence){
     //   setProduct({...product, fechaVencimiento:""})
@@ -64,7 +111,7 @@ const ProductForm = () => {
       ...prevProduct,
       isVence: !prevProduct.isVence,
       // fechaVencimiento: dayjs().add(2, "week"),
-      //   fechaVencimiento: !prevProduct.isVence ? dayjs().add(2, 'week') : '',
+      // fechaVencimiento: !prevProduct.isVence ? dayjs().add(2, 'week') : '',
     }));
   };
   const toggleUnitario = () => {
@@ -73,6 +120,7 @@ const ProductForm = () => {
       isUnitario: !prevProduct.isUnitario,
     }));
   };
+
   const setFecha = (e: any) => {
     setProduct(prevProduct => ({
       ...prevProduct,
@@ -88,9 +136,7 @@ const ProductForm = () => {
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.content}>
-        <Text style={[styles.titulo, { color: theme.colors.onSurface }]}>
-          Nuevo Producto
-        </Text>
+        <Text style={styles.titulo}>Nuevo Producto</Text>
         <TextInput
           label={'Producto'}
           value={product.nombre}
@@ -100,15 +146,24 @@ const ProductForm = () => {
           keyboardType={'numeric'}
           label={'Cantidad'}
           value={product.cantidad}
-          onChangeText={e => handleChange(e, 'cantidad')}
+          onChangeText={e => handleInputChange(e, 'cantidad')}
+        />
+        <TextInput
+          keyboardType={'numeric'}
+          label={'Precio'}
+          value={displayValue}
+          onChangeText={handleCurrencyInput}
+          placeholder="0.00"
+          left={<TextInput.Affix text="$" />}
         />
         <View style={styles.viewUnitario}>
-          <Text style={styles.textoUnitario}> Es precio unitario?</Text>
+          <Text style={styles.textoUnitario}> Es precio por unidad?</Text>
           <Switch
             value={product.isUnitario}
             onValueChange={e => handleChange(e, 'isUnitario')}
           />
         </View>
+
         <PaperSelect
           label={'Categorias'}
           arrayList={itemsCategorias}
@@ -122,6 +177,27 @@ const ProductForm = () => {
             }));
           }}
         />
+        <View style={styles.viewUnitario}>
+          <Text style={styles.textoUnitario}>Posee fecha de vencimiento?</Text>
+          <Switch
+            value={product.isVence}
+            onValueChange={e => handleChange(e, 'isVence')}
+          />
+        </View>
+        <View style={styles.viewUnitario}>
+          <Text style={styles.textoUnitario}>Posee fecha de vencimiento?</Text>
+          <Switch value={openDate} onValueChange={e => setOpenDate(e)} />
+        </View>
+        <Collapsible collapsed={!openDate}>
+          <View>
+            <DatePicker
+              date={product.fechaVencimiento}
+              setDate={handleChangeDate}
+              open={openDate}
+              setOpen={setOpenDate}
+            />
+          </View>
+        </Collapsible>
         <Button mode="contained" onPress={() => console.log(product)}>
           Console
         </Button>
@@ -142,10 +218,21 @@ const styles = StyleSheet.create({
     height: 35,
     fontWeight: '600',
     textAlign: 'center',
+    fontFamily: 'Roboto',
   },
   content: {
     display: 'flex',
     gap: 10,
+  },
+  inputCurrency: {
+    backgroundColor: 'red',
+    width: '100%',
+    height: 60,
+    display: 'flex',
+    verticalAlign: 'middle',
+    paddingLeft: 20,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
   },
   viewUnitario: {
     height: 30,
