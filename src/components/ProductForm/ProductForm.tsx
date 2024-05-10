@@ -48,6 +48,7 @@ const ProductForm = () => {
     isVence: false,
     fechaCreacion: dayjs().format('DD/MM/YYYY'),
   });
+
   const handleChange = (e: string | boolean, nombre: string) => {
     setProduct(prevProduct => ({
       ...prevProduct,
@@ -59,7 +60,7 @@ const ProductForm = () => {
 
     setProduct(prevProduct => ({
       ...prevProduct,
-      fechaVencimiento: e ? product.fechaVencimiento : undefined,
+      fechaVencimiento: e ? dayjs().add(2, 'week').toDate() : undefined,
       isVence: e,
     }));
   };
@@ -105,7 +106,7 @@ const ProductForm = () => {
     }
   }, [categorias]);
 
-  const showMode = () => {
+  const showDatePicker = () => {
     DateTimePickerAndroid.open({
       value: product.fechaVencimiento
         ? product.fechaVencimiento
@@ -170,27 +171,17 @@ const ProductForm = () => {
           />
         </View>
         <Collapsible collapsed={!openDate}>
-          {/* <View>
-            <DatePicker
-              date={product.fechaVencimiento}
-              setDate={handleChangeDate}
-              open={openDate}
-              setOpen={setOpenDate}
-            />
-          </View> */}
           <SafeAreaView>
             <TextInput
-              onPressIn={showMode}
+              onPressIn={showDatePicker}
               value={product.fechaVencimiento?.toLocaleDateString('es-ES', {
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric',
               })}
               placeholder="DD/MM/YYYY"
+              showSoftInputOnFocus={false}
             />
-            {/* {product.fechaVencimiento && (
-              <Text> fecha: {product.fechaVencimiento.toString()}</Text>
-            )} */}
           </SafeAreaView>
         </Collapsible>
         <Button mode="contained" onPress={() => console.log(product)}>
