@@ -2,20 +2,14 @@ import { StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { useCategories } from '../../hooks/useCategories';
-import {
-  Button,
-  Card,
-  Drawer,
-  Switch,
-  TextInput,
-  useTheme,
-} from 'react-native-paper';
+import { Button, Card, Switch, TextInput } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import { ICategoria } from '..';
 import Text from '../Text';
 import Collapsible from 'react-native-collapsible';
-import DatePicker from '../DatePicker';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
 interface IProductoForm {
   nombre: string;
@@ -39,12 +33,9 @@ const getListItem = (categorias: ICategoria[]) => {
 const ProductForm = () => {
   const { categorias, loading: categoriasLoading } = useCategories();
   const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
-  const theme = useTheme();
-  const [active, setActive] = React.useState('');
 
   const [displayValue, setDisplayValue] = useState('');
 
-  const [open, setOpen] = React.useState(false);
   const [openDate, setOpenDate] = React.useState(false);
 
   const [product, setProduct] = useState<IProductoForm>({
@@ -63,14 +54,13 @@ const ProductForm = () => {
       [nombre]: e,
     }));
   };
-  const handleChangeDate = (
-    e: string | boolean | Date | undefined,
-    nombre: string,
-  ) => {
+  const handleChangeDate = (e: boolean) => {
+    setOpenDate(e);
+
     setProduct(prevProduct => ({
       ...prevProduct,
-      [nombre]: e,
-      isVence: product.isVence,
+      fechaVencimiento: e ? product.fechaVencimiento : undefined,
+      isVence: e,
     }));
   };
 
@@ -103,24 +93,6 @@ const ProductForm = () => {
     setDisplayValue(formattedValue);
   };
 
-  const toggleVence = () => {
-    // if(!product.isVence){
-    //   setProduct({...product, fechaVencimiento:""})
-    // }
-    setProduct(prevProduct => ({
-      ...prevProduct,
-      isVence: !prevProduct.isVence,
-      // fechaVencimiento: dayjs().add(2, "week"),
-      // fechaVencimiento: !prevProduct.isVence ? dayjs().add(2, 'week') : '',
-    }));
-  };
-  const toggleUnitario = () => {
-    setProduct(prevProduct => ({
-      ...prevProduct,
-      isUnitario: !prevProduct.isUnitario,
-    }));
-  };
-
   const setFecha = (e: any) => {
     setProduct(prevProduct => ({
       ...prevProduct,
@@ -132,6 +104,17 @@ const ProductForm = () => {
       setItemsCategorias(getListItem(categorias));
     }
   }, [categorias]);
+
+  const showMode = () => {
+    DateTimePickerAndroid.open({
+      value: product.fechaVencimiento
+        ? product.fechaVencimiento
+        : dayjs().add(2, 'week').toDate(),
+      onChange: e => setFecha(new Date(e.nativeEvent.timestamp)),
+      mode: 'date',
+      minimumDate: dayjs().toDate(),
+    });
+  };
 
   return (
     <Card style={styles.card}>
@@ -180,23 +163,35 @@ const ProductForm = () => {
         <View style={styles.viewUnitario}>
           <Text style={styles.textoUnitario}>Posee fecha de vencimiento?</Text>
           <Switch
-            value={product.isVence}
-            onValueChange={e => handleChange(e, 'isVence')}
+            value={openDate}
+            onValueChange={e => {
+              handleChangeDate(e);
+            }}
           />
         </View>
-        <View style={styles.viewUnitario}>
-          <Text style={styles.textoUnitario}>Posee fecha de vencimiento?</Text>
-          <Switch value={openDate} onValueChange={e => setOpenDate(e)} />
-        </View>
         <Collapsible collapsed={!openDate}>
-          <View>
+          {/* <View>
             <DatePicker
               date={product.fechaVencimiento}
               setDate={handleChangeDate}
               open={openDate}
               setOpen={setOpenDate}
             />
-          </View>
+          </View> */}
+          <SafeAreaView>
+            <TextInput
+              onPressIn={showMode}
+              value={product.fechaVencimiento?.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+              })}
+              placeholder="DD/MM/YYYY"
+            />
+            {/* {product.fechaVencimiento && (
+              <Text> fecha: {product.fechaVencimiento.toString()}</Text>
+            )} */}
+          </SafeAreaView>
         </Collapsible>
         <Button mode="contained" onPress={() => console.log(product)}>
           Console
