@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useCategories } from '../hooks/useCategories';
+import { useCategories } from '../../hooks/useCategories';
 import { useTheme } from 'react-native-paper';
-import Text from './Text';
+import Text from '../Text';
 
 export interface ICategoria {
   id: number;

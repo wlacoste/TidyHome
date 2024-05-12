@@ -6833,7 +6833,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@*, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -6965,6 +6965,11 @@ react-native-currency-input@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/react-native-currency-input/-/react-native-currency-input-1.1.1.tgz"
   integrity sha512-DLsYqXkhpbvwa1M3znaG0bfKh8jlzkf+iO8TRlAJ/t8c+3gXyKwO2YdWqsBUuX0ZHLY4IVBzDjURMEofjq3ypg==
+
+react-native-floating-action@^1.22.0:
+  version "1.22.0"
+  resolved "https://registry.npmjs.org/react-native-floating-action/-/react-native-floating-action-1.22.0.tgz"
+  integrity sha512-m/9ueh2bgV+Dopelam2hu+FIY1wrIOPjpcBNgU3I5J9SqWmPQCarSz5L8zsW5QWE4YgXuaVbYAO/pgb0P8x/gQ==
 
 react-native-paper-dates@^0.22.7:
   version "0.22.7"

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useFireDB } from './useFireDB';
-import { ICategoria } from '../components';
+import { ICategoria } from '../components/Categorias/Categorias';
 
 export const useCategories = () => {
   const [categorias, setCategorias] = useState<ICategoria[]>([]);
@@ -25,7 +25,9 @@ export const useCategories = () => {
         console.log(err);
       }
     };
-    fetchData();
+    if (!categorias) {
+      fetchData();
+    }
   }, []);
 
   return {

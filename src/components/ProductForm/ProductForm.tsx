@@ -5,7 +5,7 @@ import { useCategories } from '../../hooks/useCategories';
 import { Button, Card, Switch, TextInput } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
-import { ICategoria } from '..';
+import { ICategoria } from '../Categorias/Categorias';
 import Text from '../Text';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';

@@ -4,7 +4,15 @@ import { useUserAuth } from './context/userAuthContext';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
+import { Provider } from 'react-native-paper';
 
+const HomeProvider = () => {
+  return (
+    <Provider>
+      <HomeScreen />
+    </Provider>
+  );
+};
 export const Routes = () => {
   const Stack = createNativeStackNavigator();
   const { user } = useUserAuth();
