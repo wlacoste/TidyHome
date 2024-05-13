@@ -184,7 +184,10 @@ const ProductForm = () => {
             />
           </SafeAreaView>
         </Collapsible>
-        <Button mode="contained" onPress={() => console.log(product)}>
+        <Button
+          mode="contained"
+          onPress={() => console.log(product)}
+          style={styles.boton}>
           Console
         </Button>
       </Card.Content>
@@ -198,6 +201,7 @@ const styles = StyleSheet.create({
   card: {
     margin: 10,
     width: '95%',
+    borderRadius: 30,
   },
   titulo: {
     fontSize: 20,
@@ -230,5 +234,8 @@ const styles = StyleSheet.create({
   textoUnitario: {
     fontSize: 18,
     fontWeight: '600',
+  },
+  boton: {
+    borderRadius: 20,
   },
 });
