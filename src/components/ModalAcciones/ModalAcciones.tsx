@@ -1,8 +1,6 @@
 import React from 'react';
-import { Card, Modal, Portal } from 'react-native-paper';
-import Text from '../Text';
-import { StyleSheet } from 'react-native';
-import { white } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
+import { Modal } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
 import ProductForm from '../ProductForm';
 
 export interface IModal {
@@ -12,9 +10,11 @@ export interface IModal {
 
 const ModalAcciones = ({ visible, onClose }: IModal) => {
   return (
-    <Modal visible={visible} onDismiss={onClose}>
-      <ProductForm />
-    </Modal>
+    <View style={styles.centeredView}>
+      <Modal visible={visible} onDismiss={onClose}>
+        <ProductForm />
+      </Modal>
+    </View>
   );
 };
 
@@ -22,6 +22,12 @@ const styles = StyleSheet.create({
   modalCard: {
     minHeight: 150,
     backgroundColor: 'white',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   },
 });
 

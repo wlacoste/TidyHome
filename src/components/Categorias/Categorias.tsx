@@ -14,7 +14,6 @@ const Categories = () => {
 
   const theme = useTheme();
 
-  console.log('categoriasLoading', categoriasLoading);
   if (categoriasLoading.getData) {
     return (
       <View>

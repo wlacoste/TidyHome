@@ -31,7 +31,6 @@ export const ProductContextProvider = ({ children }) => {
         await getProductos();
         await getCategorias();
         setLastFetched(Date.now());
-        console.log('fetchdata', lastFetched);
       } catch (err) {
         console.log(err);
       }

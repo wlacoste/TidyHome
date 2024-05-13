@@ -13,8 +13,6 @@ import {
 export default function App() {
   const scheme = useColorScheme();
 
-  console.log(scheme);
-
   return (
     <NavigationContainer>
       <UserAuthContextProvider>

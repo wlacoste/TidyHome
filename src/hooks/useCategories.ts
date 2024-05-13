@@ -12,11 +12,6 @@ export const useCategories = () => {
     getData('categoria', setLoading, setCategorias, setError, false);
   };
 
-  // useEffect(() => {
-  //   console.log('categorias', categorias);
-  //   console.log('loading', loading);
-  // }, [categorias, loading]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,7 +20,7 @@ export const useCategories = () => {
         console.log(err);
       }
     };
-    if (!categorias) {
+    if (categorias.length === 0) {
       fetchData();
     }
   }, []);
