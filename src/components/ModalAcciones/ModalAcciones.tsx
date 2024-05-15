@@ -7,22 +7,20 @@ import { rgbaColor } from 'react-native-reanimated/lib/typescript/reanimated2/Co
 export interface IModal {
   visible: boolean;
   onClose: () => void;
+  children: React.ReactNode;
 }
 
-const ModalAcciones = ({ visible, onClose }: IModal) => {
+const ModalAcciones = ({ visible, onClose, children }: IModal) => {
   return (
-    // <View style={styles.centeredView}>
     <Modal visible={visible} onDismiss={onClose} style={styles.centeredView}>
-      <ProductForm />
+      {children}
     </Modal>
-    // </View>
   );
 };
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    // justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 40,
   },

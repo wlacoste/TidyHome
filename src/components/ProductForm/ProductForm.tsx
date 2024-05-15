@@ -22,6 +22,9 @@ interface IProductoForm {
   fechaCreacion: string | Date;
 }
 
+export interface IProductForm {
+  onClose?: () => void;
+}
 const getListItem = (categorias: ICategoria[]) => {
   const items: ListItem[] = categorias.map(categoria => ({
     _id: categoria.id.toString(),
@@ -30,7 +33,7 @@ const getListItem = (categorias: ICategoria[]) => {
   return items;
 };
 
-const ProductForm = () => {
+const ProductForm = ({ onClose }: IProductForm) => {
   const { categorias, loading: categoriasLoading } = useCategories();
   const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
 
@@ -186,7 +189,10 @@ const ProductForm = () => {
         </Collapsible>
         <Button
           mode="contained"
-          onPress={() => console.log(product)}
+          onPress={() => {
+            console.log(product);
+            onClose?.();
+          }}
           style={styles.boton}>
           Console
         </Button>

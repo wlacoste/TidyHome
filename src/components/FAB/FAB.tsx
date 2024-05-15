@@ -1,24 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { FAB, Modal, Portal, useTheme } from 'react-native-paper';
-import { useUserAuth } from '../../context/userAuthContext';
+import { FAB, Portal, useTheme } from 'react-native-paper';
 import ModalAcciones from '../ModalAcciones/ModalAcciones';
+import ProductForm from '../ProductForm';
+import SimpleForm from '../SimpleInput';
 
 const FabGroup = () => {
   const theme = useTheme();
-  const [state, setState] = React.useState({ open: false });
+  const [state, setState] = useState({ open: false });
 
   const onStateChange = ({ open }) => setState({ open });
 
   const { open } = state;
 
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
 
   const hideModal = () => setVisible(false);
 
+  const [seleccionado, setSeleccionado] = useState<React.ReactNode | undefined>(
+    undefined,
+  );
+
+  const getSeleccionado = (numero: number) => {
+    let seleccion;
+    switch (numero) {
+      case 1:
+        seleccion = <ProductForm onClose={hideModal} />;
+        break;
+      case 2:
+        seleccion = <SimpleForm onClose={hideModal} />;
+        break;
+    }
+    setSeleccionado(seleccion);
+  };
+
   return (
     <Portal>
-      <ModalAcciones visible={visible} onClose={hideModal} />
+      <ModalAcciones
+        visible={visible}
+        onClose={hideModal}
+        children={seleccionado}
+      />
       <FAB.Group
         open={open}
         visible
@@ -32,14 +54,25 @@ const FabGroup = () => {
         style={styles.fab}
         actions={[
           {
-            icon: 'plus',
-            label: 'Nuevo Producto',
-            onPress: () => setVisible(true),
+            icon: 'package-variant',
+            label: 'Producto nuevo',
+            onPress: () => {
+              getSeleccionado(1);
+              setVisible(true);
+            },
           },
           {
-            icon: 'email',
-            label: 'Nuevo Movimiento',
+            icon: 'swap-horizontal',
+            label: 'Movimiento nuevo',
             onPress: () => console.log('Pressed email'),
+          },
+          {
+            icon: 'pencil',
+            label: 'Movimiento Input',
+            onPress: () => {
+              getSeleccionado(2);
+              setVisible(true);
+            },
           },
         ]}
         onStateChange={onStateChange}

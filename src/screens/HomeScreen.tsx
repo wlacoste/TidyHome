@@ -1,23 +1,14 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import {
-  Button,
-  Text,
-  useTheme,
-  BottomNavigation,
-  FAB,
-  Portal,
-  Provider,
-} from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { useTheme, BottomNavigation } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
 import Categories from '../components/Categorias/Categorias';
-import ProductForm from '../components/ProductForm';
 import FabGroup from '../components/FAB/FAB';
-import ModalAcciones from '../components/ModalAcciones/ModalAcciones';
+import VisorProducto from '../components/VisorProducto/VisorProducto';
 
 const CategoriaRoute = () => <Categories />;
 
-const ProductoRoute = () => <ProductForm />;
+const ProductoRoute = () => <VisorProducto />;
 
 const HomeScreen = () => {
   const { logOut } = useUserAuth();
@@ -37,29 +28,22 @@ const HomeScreen = () => {
       unfocusedIcon: 'heart-outline',
     },
     { key: 'producto', title: 'Producto', focusedIcon: 'album' },
+    { key: 'cosa1', title: 'Producto', focusedIcon: 'album' },
+    { key: 'cosa2', title: 'Producto', focusedIcon: 'album' },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     categoria: CategoriaRoute,
     producto: ProductoRoute,
+    cosa1: ProductoRoute,
+    cosa2: ProductoRoute,
   });
 
   return (
-    // <View
-    //   style={[styles.container, { backgroundColor: theme.colors.background }]}>
-    //   <Categories />
-    //   <ProductForm />
-    //   <View>
-    //     <Text>HomeScreendd</Text>
-
-    //     <Button icon="camera" mode="contained" onPress={logOut}>
-    //       Log out
-    //     </Button>
-    //   </View>
-    // </View>
     <>
       <FabGroup />
       <BottomNavigation
+        labeled={false}
         navigationState={{ index, routes }}
         onIndexChange={setIndex}
         renderScene={renderScene}
