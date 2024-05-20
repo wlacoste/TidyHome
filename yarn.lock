@@ -4443,6 +4443,11 @@ expect@^29.7.0:
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
 
+fast-base64-decode@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/fast-base64-decode/-/fast-base64-decode-1.0.0.tgz"
+  integrity sha512-qwaScUgUGBYeDNRnbc/KyllVU88Jk1pRHPStuF/lO7B0/RTRLj7U0lkdTAutlBblY08rwZDff6tNU9cjv6j//Q==
+
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz"
@@ -6971,6 +6976,18 @@ react-native-floating-action@^1.22.0:
   resolved "https://registry.npmjs.org/react-native-floating-action/-/react-native-floating-action-1.22.0.tgz"
   integrity sha512-m/9ueh2bgV+Dopelam2hu+FIY1wrIOPjpcBNgU3I5J9SqWmPQCarSz5L8zsW5QWE4YgXuaVbYAO/pgb0P8x/gQ==
 
+react-native-get-random-values@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.npmjs.org/react-native-get-random-values/-/react-native-get-random-values-1.11.0.tgz"
+  integrity sha512-4BTbDbRmS7iPdhYLRcz3PGFIpFJBwNZg9g42iwa2P6FOv9vZj/xJc678RZXnLNZzd0qd7Q3CCF6Yd+CU2eoXKQ==
+  dependencies:
+    fast-base64-decode "^1.0.0"
+
+react-native-mmkv-storage@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.npmjs.org/react-native-mmkv-storage/-/react-native-mmkv-storage-0.9.1.tgz"
+  integrity sha512-FzSx4PKxK2ocT/OuKGlaVziWZyQYHYLUx9595i1oXY263C5mG19PN5RiBgEGL2S5lK4VGUCzO85GAcsrNPtpOg==
+
 react-native-paper-dates@^0.22.7:
   version "0.22.7"
   resolved "https://registry.npmjs.org/react-native-paper-dates/-/react-native-paper-dates-0.22.7.tgz"
@@ -7027,7 +7044,7 @@ react-native-vector-icons@*, react-native-vector-icons@^10.0.3:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@^0.73.0, react-native@0.73.6:
+react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@^0.73.0, react-native@>=0.56, react-native@0.73.6:
   version "0.73.6"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.73.6.tgz"
   integrity sha512-oqmZe8D2/VolIzSPZw+oUd6j/bEmeRHwsLn1xLA5wllEYsZ5zNuMsDus235ONOnCRwexqof/J3aztyQswSmiaA==

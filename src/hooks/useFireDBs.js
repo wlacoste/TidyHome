@@ -1,20 +1,29 @@
 import {
-  collection,
   deleteDoc,
   doc,
-  getDocs,
-  query,
   setDoc,
   updateDoc,
-  where,
   db,
 } from '@react-native-firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
 
 import { nanoid } from 'nanoid';
-import { useUserAuth } from '../context/userAuthContext';
 
 import auth from '@react-native-firebase/auth';
+
+const getRef = subColeccion => {
+  // const dataRef = firestore();
+  let dynamicRef = firestore();
+
+  subColeccion.forEach(item => {
+    dynamicRef = dynamicRef.collection(item.coleccion);
+    if (item.id) {
+      dynamicRef = dynamicRef.doc(item.id);
+    }
+  });
+
+  return dynamicRef;
+};
 
 export const useFireDB = () => {
   const getData = async (coleccion, setLoading, setData, setError, filtro) => {
@@ -43,12 +52,40 @@ export const useFireDB = () => {
     }
   };
 
-  const addData = async (data, coleccion, setLoading, setData, setError) => {
+  const getColeccion = async (setLoading, setData, setError, subColeccion) => {
+    if (!auth().currentUser) {
+      return;
+    }
+    try {
+      setLoading(prev => ({ ...prev, getData: true }));
+      const dataRef = getRef(subColeccion);
+      const querySnapshot = await dataRef.get();
+      if (subColeccion[subColeccion.length - 1].id) {
+        const data = querySnapshot.data();
+        return setData([data]);
+      }
+      const dataDB = querySnapshot.docs.map(doc => doc.data());
+      setData(dataDB);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(prev => ({ ...prev, getData: false }));
+    }
+  };
+
+  const addData = async (
+    data,
+    coleccion,
+    setLoading,
+    setData,
+    setError,
+    nanoId,
+  ) => {
     try {
       setLoading(prev => ({ ...prev, addData: true }));
       const newDoc = {
         ...data,
-        nanoid: nanoid(6),
+        nanoid: nanoId,
         uid: auth.currentUser.uid,
       };
       const docRef = doc(db, coleccion, newDoc.nanoid);
@@ -111,5 +148,6 @@ export const useFireDB = () => {
     addData,
     deleteData,
     updateData,
+    getColeccion,
   };
 };

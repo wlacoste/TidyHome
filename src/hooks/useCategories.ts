@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useFireDB } from './useFireDB';
+import { IGetColeccion, useFireDB } from './useFireDB';
 import { ICategoria } from '../components/Categorias/Categorias';
 
 export const useCategories = () => {
   const [categorias, setCategorias] = useState<ICategoria[]>([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState({ getData: false });
-  const { getData } = useFireDB();
+  const { getColeccion } = useFireDB();
 
   const getCategorias = async () => {
-    getData('categoria', setLoading, setCategorias, setError, false);
+    // getData('categoria', setLoading, setCategorias, setError, false);
+
+    const request: IGetColeccion = {
+      setLoading: setLoading,
+      setData: setCategorias,
+      setError: setError,
+      subColeccion: [{ coleccion: 'categoria' }],
+    };
+    getColeccion(request);
   };
 
   useEffect(() => {

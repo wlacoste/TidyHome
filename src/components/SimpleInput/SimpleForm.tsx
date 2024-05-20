@@ -1,31 +1,71 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import { useCategories } from '../../hooks/useCategories';
-import { Button, Card, Switch, TextInput } from 'react-native-paper';
-import { PaperSelect } from 'react-native-paper-select';
-import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
-import { ICategoria } from '../Categorias/Categorias';
+import { Button, Card, TextInput } from 'react-native-paper';
 import Text from '../Text';
-import Collapsible from 'react-native-collapsible';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { IProductForm } from '../ProductForm/ProductForm';
-
-interface ISimpleInput {
-  nombre: string;
-}
+import { useSimpleInput } from '../../context/simpleInputContext';
+import { IAddData, IGetColeccion, useFireDB } from '../../hooks/useFireDB';
+import auth from '@react-native-firebase/auth';
+import { useUserAuth } from '../../context/userAuthContext';
+import 'react-native-get-random-values';
+import { nanoid } from 'nanoid';
 
 const SimpleForm = ({ onClose }: IProductForm) => {
-  const [product, setProduct] = useState<ISimpleInput>({
-    nombre: '',
-  });
+  const [product, setProduct] = useState<string | undefined>(undefined);
+  const [products, setProducts] = useState<string[]>([]);
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState({ getData: false });
+  const { addData, getColeccion } = useFireDB();
+  // const { products, setProducts } = useSimpleInput();
 
-  const handleChange = (e: string | boolean, nombre: string) => {
-    setProduct(prevProduct => ({
-      ...prevProduct,
-      [nombre]: e,
-    }));
+  const [u, setUser] = useState();
+  const [l, setL] = useState({});
+  const [e, setE] = useState();
+
+  useEffect(() => {
+    const request: IGetColeccion = {
+      setLoading: setL,
+      setData: setUser,
+      setError: setE,
+      subColeccion: [
+        { coleccion: 'Users', id: auth().currentUser?.uid },
+        { coleccion: 'input' },
+      ],
+    };
+    // getColeccion(request);
+  }, []);
+
+  useEffect(() => {
+    console.log(u);
+  }, [u]);
+
+  useEffect(() => {
+    console.log('prodoso', products);
+  }, [products]);
+
+  const handleChange = (e: string) => {
+    setProduct(e);
+  };
+
+  const handleSubmit = () => {
+    const id = nanoid(6);
+    if (product) {
+      if (!auth().currentUser) {
+        return;
+      }
+      // setProducts(prevItems => [...prevItems, product]);
+      const request: IAddData = {
+        setLoading: setLoading,
+        setData: setProducts,
+        setError: setError,
+        subColeccion: [
+          { coleccion: 'Users', id: auth().currentUser?.uid },
+          { coleccion: 'input' },
+        ],
+        data: { valor: product, nanoId: id },
+      };
+      addData(request);
+    }
   };
 
   return (
@@ -34,14 +74,15 @@ const SimpleForm = ({ onClose }: IProductForm) => {
         <Text style={styles.titulo}>Nuevo Input</Text>
         <TextInput
           label={'Producto'}
-          value={product.nombre}
-          onChangeText={e => handleChange(e, 'nombre')}
+          value={product}
+          onChangeText={e => handleChange(e)}
+          autoFocus
         />
 
         <Button
           mode="contained"
           onPress={() => {
-            console.log(product);
+            handleSubmit();
             onClose?.();
           }}
           style={styles.boton}>

@@ -5,10 +5,12 @@ import { useUserAuth } from '../context/userAuthContext';
 import Categories from '../components/Categorias/Categorias';
 import FabGroup from '../components/FAB/FAB';
 import VisorProducto from '../components/VisorProducto/VisorProducto';
+import VisorInput from './VisorInput';
 
 const CategoriaRoute = () => <Categories />;
 
 const ProductoRoute = () => <VisorProducto />;
+const InputRoute = () => <VisorInput />;
 
 const HomeScreen = () => {
   const { logOut } = useUserAuth();
@@ -28,14 +30,14 @@ const HomeScreen = () => {
       unfocusedIcon: 'heart-outline',
     },
     { key: 'producto', title: 'Producto', focusedIcon: 'album' },
-    { key: 'cosa1', title: 'Producto', focusedIcon: 'album' },
+    { key: 'cosa1', title: 'Producto', focusedIcon: 'pencil' },
     { key: 'cosa2', title: 'Producto', focusedIcon: 'album' },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     categoria: CategoriaRoute,
     producto: ProductoRoute,
-    cosa1: ProductoRoute,
+    cosa1: InputRoute,
     cosa2: ProductoRoute,
   });
 
