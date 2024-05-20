@@ -19,7 +19,7 @@ module.exports = {
     ],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
-
+    'react/no-unstable-nested-components': 'off',
     // Disable the linebreak-style rule
   },
 };
