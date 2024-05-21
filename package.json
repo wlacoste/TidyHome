@@ -29,6 +29,7 @@
     "react-native-floating-action": "^1.22.0",
     "react-native-get-random-values": "^1.11.0",
     "react-native-mmkv-storage": "^0.9.1",
+    "react-native-navigation-bar-color": "^2.0.2",
     "react-native-paper": "^5.12.3",
     "react-native-paper-dates": "^0.22.7",
     "react-native-paper-select": "^1.1.1",

@@ -15,9 +15,9 @@ const CategoriaRoute = () => <Categories />;
 const ProductoRoute = () => <VisorProducto />;
 const InputRoute = () => <VisorInput />;
 
-const categoriaName = 'categoria';
-const inputName = 'input';
-const productoName = 'producto';
+const categoriaName = 'Categoria';
+const inputName = 'Input';
+const productoName = 'Producto';
 
 const HomeScreen = () => {
   // const { logOut } = useUserAuth();
@@ -78,36 +78,37 @@ const HomeScreen = () => {
           // tabBarStyle={{ backGroundColor: 'red' }}
           screenOptions={({ route }) => ({
             tabBarStyle: {
-              backgroundColor: tema.colors.onPrimary,
+              backgroundColor: tema.colors.surface,
               borderTopWidth: 0,
-              height: 45,
+              borderTopColor: tema.colors.elevation.level5,
+              height: 50,
+              elevation: 10,
             },
             tabBarLabelStyle: {
               paddingTop: 0,
-              marginTop: -5,
+              marginTop: -10,
               marginBottom: 5,
-              // color: focused =>
-              //   focused ? tema.colors.onError : tema.colors.error,
+              fontWeight: '500',
             },
-            tabBarActiveTintColor: 'red',
-            tabBarInactiveTintColor: 'green',
+            tabBarActiveTintColor: tema.colors.onSurface,
+            tabBarInactiveTintColor: tema.colors.outline,
             tabBarIconStyle: {
               paddingBottom: 0,
               marginBottom: 0,
-              height: 5,
+              height: 7,
               // color: 'red',
             },
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
 
               switch (route.name) {
-                case 'categoria':
+                case 'Categoria':
                   iconName = 'home';
                   break;
-                case 'input':
+                case 'Input':
                   iconName = 'folder';
                   break;
-                case 'producto':
+                case 'Producto':
                   iconName = 'home';
                   break;
                 case 'Forum':
@@ -122,10 +123,8 @@ const HomeScreen = () => {
               return (
                 <Ionicons
                   name={iconName}
-                  size={17}
-                  color={
-                    focused ? tema.colors.primary : tema.colors.inverseSurface
-                  }
+                  size={19}
+                  color={focused ? tema.colors.onSurface : tema.colors.outline}
                 />
               );
               // return <LottieView source={filePath} loop={false} autoPlay={focused} />;
@@ -161,9 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  barra: {
-    // backgroundColor: 'green',
-  },
+  barra: {},
 });
 
 export default HomeScreen;
