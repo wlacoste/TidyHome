@@ -2575,6 +2575,11 @@
   resolved "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.12.tgz"
   integrity sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==
 
+"@types/react-native-sqlite-storage@^6.0.5":
+  version "6.0.5"
+  resolved "https://registry.npmjs.org/@types/react-native-sqlite-storage/-/react-native-sqlite-storage-6.0.5.tgz"
+  integrity sha512-1gPwgYil6pHV/EDF816M8KmVsQC5nGMTAm8OMC25GbyuBaXFn7sdguMq6A2owtXB8c4qsH2tOEIQNetbOquawA==
+
 "@types/react-native-vector-icons@*":
   version "6.4.18"
   resolved "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.18.tgz"
@@ -7062,6 +7067,11 @@ react-native-safe-area-context@*, "react-native-safe-area-context@>= 3.0.0", rea
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-sqlite-storage@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/react-native-sqlite-storage/-/react-native-sqlite-storage-6.0.1.tgz"
+  integrity sha512-1tDFjrint6X6qSYKf3gDyz+XB+X79jfiL6xTugKHPRtF0WvqMtVgdLuNqZunIXjNEvNtNVEbXaeZ6MsguFu00A==
+
 react-native-vector-icons@*, react-native-vector-icons@^10.0.3:
   version "10.0.3"
   resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.0.3.tgz"
@@ -7070,7 +7080,7 @@ react-native-vector-icons@*, react-native-vector-icons@^10.0.3:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@^0.73.0, react-native@>=0.56, react-native@0.73.6:
+react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@^0.73.0, react-native@>=0.14.0, react-native@>=0.56, react-native@0.73.6:
   version "0.73.6"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.73.6.tgz"
   integrity sha512-oqmZe8D2/VolIzSPZw+oUd6j/bEmeRHwsLn1xLA5wllEYsZ5zNuMsDus235ONOnCRwexqof/J3aztyQswSmiaA==

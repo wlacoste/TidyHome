@@ -18,6 +18,7 @@
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
+    "@types/react-native-sqlite-storage": "^6.0.5",
     "dayjs": "^1.11.11",
     "firebase": "^9.6.11",
     "ionicons": "^7.4.0",
@@ -36,6 +37,7 @@
     "react-native-reanimated": "^3.11.0",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
+    "react-native-sqlite-storage": "^6.0.1",
     "react-native-vector-icons": "^10.0.3"
   },
   "devDependencies": {
