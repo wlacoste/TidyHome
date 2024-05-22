@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   fab: {
-    marginBottom: 80,
+    marginBottom: 60,
   },
 });
 
