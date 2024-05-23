@@ -30,7 +30,10 @@ export const Routes = () => {
   const theme = useTheme();
 
   React.useEffect(() => {
-    return changeNavigationBarColor(rgbToHex(theme.colors.surface));
+    return changeNavigationBarColor(
+      rgbToHex(theme.colors.surface),
+      !theme.dark,
+    );
   }, [theme]);
 
   return (
