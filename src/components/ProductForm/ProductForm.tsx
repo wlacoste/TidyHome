@@ -10,6 +10,7 @@ import Text from '../Text';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 interface IProductoForm {
   nombre: string;
@@ -34,7 +35,22 @@ const getListItem = (categorias: ICategoria[]) => {
 };
 
 const ProductForm = ({ onClose }: IProductForm) => {
+  const {
+    control,
+    resetField,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<IProductoForm>({
+    mode: 'onChange',
+  });
+
+  const submit = data => {
+    console.log(data);
+    onClose?.();
+  };
+
   const { categorias, loading: categoriasLoading } = useCategories();
+
   const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
 
   const [displayValue, setDisplayValue] = useState('');
@@ -95,6 +111,7 @@ const ProductForm = ({ onClose }: IProductForm) => {
 
     handleChange(numericValue, 'precio');
     setDisplayValue(formattedValue);
+    return numericValue;
   };
 
   const setFecha = (e: any) => {
@@ -123,76 +140,191 @@ const ProductForm = ({ onClose }: IProductForm) => {
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.content}>
-        <Text style={styles.titulo}>Nuevo Producto</Text>
-        <TextInput
-          label={'Producto'}
-          value={product.nombre}
-          onChangeText={e => handleChange(e, 'nombre')}
+        <Text style={styles.titulo}>Nuevo Productos</Text>
+        <Controller
+          control={control}
+          defaultValue=""
+          name="nombre"
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              label={'Producto'}
+              onChangeText={onChange}
+              value={value}
+              onBlur={onBlur}
+              error={errors.nombre && true}
+            />
+          )}
         />
-        <TextInput
-          keyboardType={'numeric'}
-          label={'Cantidad'}
-          value={product.cantidad}
-          onChangeText={e => handleInputChange(e, 'cantidad')}
+
+        <Controller
+          control={control}
+          defaultValue=""
+          name="cantidad"
+          rules={{
+            required: true,
+            pattern: {
+              value: /^[1-9][0-9]*$/,
+              message: 'Only numbers are allowed and must be greater than zero',
+            },
+            validate: value => {
+              const numberValue = Number(value);
+              return numberValue >= 1 || 'The value must be at least 1';
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              label={'Cantidad'}
+              onChangeText={onChange}
+              value={value}
+              onBlur={onBlur}
+              error={errors.cantidad && true}
+              keyboardType={'numeric'}
+            />
+          )}
         />
-        <TextInput
-          keyboardType={'numeric'}
-          label={'Precio'}
-          value={displayValue}
-          onChangeText={handleCurrencyInput}
-          placeholder="0.00"
-          left={<TextInput.Affix text="$" />}
+        <Controller
+          control={control}
+          defaultValue=""
+          name="precio"
+          rules={{
+            required: false,
+            validate: value => {
+              if (value === '') {
+                return true;
+              }
+
+              const numberValue = Number(value);
+              return numberValue >= 1 || 'The value must be at least 1';
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              keyboardType={'numeric'}
+              label={'Precio'}
+              value={value}
+              onChangeText={onChange}
+              placeholder="0.00"
+              onBlur={onBlur}
+              left={<TextInput.Affix text="$" />}
+              error={errors.precio && true}
+            />
+          )}
         />
+
         <View style={styles.viewUnitario}>
           <Text style={styles.textoUnitario}> Es precio por unidad?</Text>
-          <Switch
-            value={product.isUnitario}
-            onValueChange={e => handleChange(e, 'isUnitario')}
+
+          <Controller
+            control={control}
+            defaultValue={false}
+            name="isUnitario"
+            rules={{
+              required: false,
+              validate: () => {
+                return true;
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <Switch value={value} onValueChange={onChange} />
+            )}
           />
         </View>
 
-        <PaperSelect
-          label={'Categorias'}
-          arrayList={itemsCategorias}
-          selectedArrayList={[]}
-          multiEnable={false}
-          value={product.categoria}
-          onSelection={(value: any) => {
-            setProduct(prevProduct => ({
-              ...prevProduct,
-              categoria: value.text,
-            }));
+        <Controller
+          control={control}
+          defaultValue=""
+          name="categoria"
+          rules={{
+            validate: () => {
+              return true;
+            },
           }}
+          render={({ field: { onChange, value } }) => (
+            <PaperSelect
+              label={'Categorias'}
+              arrayList={itemsCategorias}
+              selectedArrayList={[]}
+              multiEnable={false}
+              value={value}
+              onSelection={(value: any) => {
+                onChange(value.text);
+              }}
+            />
+          )}
         />
         <View style={styles.viewUnitario}>
           <Text style={styles.textoUnitario}>Posee fecha de vencimiento?</Text>
-          <Switch
-            value={openDate}
-            onValueChange={e => {
-              handleChangeDate(e);
+
+          <Controller
+            control={control}
+            defaultValue={false}
+            name="isVence"
+            rules={{
+              required: false,
+              validate: () => {
+                return true;
+              },
             }}
+            render={({ field: { onChange, value } }) => (
+              <Switch
+                value={value}
+                onValueChange={e => {
+                  onChange(e);
+                  handleChangeDate(e);
+                  if (!e) {
+                    resetField('fechaVencimiento');
+                  }
+                }}
+              />
+            )}
           />
         </View>
         <Collapsible collapsed={!openDate}>
           <SafeAreaView>
-            <TextInput
-              onPressIn={showDatePicker}
-              value={product.fechaVencimiento?.toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric',
-              })}
-              placeholder="DD/MM/YYYY"
-              showSoftInputOnFocus={false}
+            <Controller
+              control={control}
+              defaultValue={dayjs().add(2, 'week').toDate()}
+              name="fechaVencimiento"
+              rules={{
+                required: false,
+                validate: () => {
+                  return true;
+                },
+              }}
+              render={({ field: { onChange, value, onBlur } }) => (
+                <TextInput
+                  onPressIn={() => {
+                    DateTimePickerAndroid.open({
+                      value: value ? value : dayjs().add(2, 'week').toDate(),
+                      onChange: e =>
+                        onChange(new Date(e.nativeEvent.timestamp)),
+                      mode: 'date',
+                      minimumDate: dayjs().toDate(),
+                    });
+                  }}
+                  value={value?.toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                  onBlur={onBlur}
+                  placeholder="DD/MM/YYYY"
+                  showSoftInputOnFocus={false}
+                />
+              )}
             />
           </SafeAreaView>
         </Collapsible>
         <Button
           mode="contained"
-          onPress={() => {
-            console.log(product);
-            onClose?.();
-          }}
+          onPress={
+            // () => console.log('hola')
+            handleSubmit(submit)
+            // onClose?.();
+          }
           style={styles.boton}>
           Console
         </Button>
@@ -207,7 +339,7 @@ const styles = StyleSheet.create({
   card: {
     margin: 10,
     width: '95%',
-    borderRadius: 30,
+    borderRadius: 10,
   },
   titulo: {
     fontSize: 20,
