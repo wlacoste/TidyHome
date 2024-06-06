@@ -11,8 +11,9 @@ import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller } from 'react-hook-form';
+import useProducto from '../../app/producto/useProducto';
 
-interface IProductoForm {
+export interface IProductoForm {
   nombre: string;
   cantidad: string | undefined;
   precio: string | undefined;
@@ -44,8 +45,10 @@ const ProductForm = ({ onClose }: IProductForm) => {
     mode: 'onChange',
   });
 
+  const { nuevoProducto } = useProducto();
+
   const submit = data => {
-    console.log(data);
+    nuevoProducto(data);
     onClose?.();
   };
 

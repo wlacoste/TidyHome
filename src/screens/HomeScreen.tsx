@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Categories from '../components/Categorias/Categorias';
@@ -10,6 +10,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, Theme } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Todo from './TodoScreen';
+import useDB from '../hooks/useDB';
+import { deleteSpecifiedTables } from '../service/product-service';
 
 const categoriaName = 'Categoria';
 const inputName = 'Input';
@@ -20,6 +22,9 @@ const HomeScreen = () => {
   const theme = useTheme<Theme>();
   const tema = useTheme();
   const Tab = createBottomTabNavigator();
+
+  useDB();
+  // deleteSpecifiedTables();
 
   return (
     <>
