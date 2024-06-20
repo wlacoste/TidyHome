@@ -22,7 +22,7 @@ const Categories = () => {
     );
   }
   return (
-    <View style={[styles.container, { backgroundColor: 'red' }]}>
+    <View style={[styles.container]}>
       <Text style={styles.text}>categoriassl</Text>
 
       {categorias &&

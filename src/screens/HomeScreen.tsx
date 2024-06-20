@@ -13,10 +13,11 @@ import Todo from './TodoScreen';
 import useDB from '../hooks/useDB';
 import { deleteSpecifiedTables } from '../service/product-service';
 
-const categoriaName = 'Categoria';
-const inputName = 'Input';
-const productoName = 'Producto';
-const todoName = 'Todo';
+const categoriaName = 'Home';
+const inputName = 'Items';
+const productoName = 'Movimiento';
+const estadoName = 'Estado';
+const todoName = 'Notas';
 
 const HomeScreen = () => {
   const theme = useTheme<Theme>();
@@ -58,20 +59,23 @@ const HomeScreen = () => {
               let iconName;
 
               switch (route.name) {
-                case 'Categoria':
-                  iconName = 'home';
+                case 'Home':
+                  iconName = 'home-outline';
                   break;
-                case 'Input':
-                  iconName = 'folder';
+                case 'Items':
+                  iconName = 'receipt-outline';
                   break;
-                case 'Producto':
-                  iconName = 'home';
+                case 'Movimiento':
+                  iconName = 'ticket-outline';
                   break;
-                case 'Todo':
+                case 'Notas':
                   iconName = 'pencil';
                   break;
                 case 'Profile':
                   iconName = 'user';
+                  break;
+                case 'Estado':
+                  iconName = 'stats-chart';
                   break;
                 default:
                   break;
@@ -93,6 +97,11 @@ const HomeScreen = () => {
           <Tab.Screen
             name={inputName}
             component={VisorInput}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name={estadoName}
+            component={Todo}
             options={{ headerShown: false }}
           />
           <Tab.Screen
