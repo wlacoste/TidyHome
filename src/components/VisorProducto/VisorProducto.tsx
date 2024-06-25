@@ -1,22 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { getAllProductsWithMovements } from '../../service/product-service';
 import { Producto } from '../../models';
 import ProductoBar from '../ProductoBar';
+import { useProductContext } from '../../context/productContext';
 
 const VisorProducto = () => {
-  const [productos, setProductos] = useState<Producto[]>([]);
-
-  useEffect(() => {
-    const getProductos = async () => {
-      const p = await getAllProductsWithMovements();
-      console.log('as', p);
-      setProductos(p);
-    };
-
-    getProductos();
-  }, []);
+  const { productos } = useProductContext();
 
   return (
     <View>

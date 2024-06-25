@@ -34,10 +34,16 @@ const useProducto = () => {
   };
 
   const nuevoProducto = async (formu: IProductoForm) => {
-    const { movimiento, producto } = submitProducto(formu);
-    await insertProductWithMovimiento(producto, movimiento)
-      .then(() => console.log('producto anadido'))
-      .catch(err => console.log(err));
+    try {
+      const { movimiento, producto } = submitProducto(formu);
+      await insertProductWithMovimiento(producto, movimiento);
+      console.log('producto anadido');
+      producto.detalle.push(movimiento);
+      return producto;
+    } catch (err) {
+      console.error('Error al añadir producto:', err);
+      throw err;
+    }
   };
 
   return { nuevoProducto };

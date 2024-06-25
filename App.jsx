@@ -6,6 +6,7 @@ import { PaperProvider } from 'react-native-paper';
 import { Routes } from './src/Routes';
 import { UserAuthContextProvider } from './src/context/userAuthContext';
 import { InputProvider } from './src/context/simpleInputContext';
+import ProductProvider from './src/context/productContext';
 import {
   MaterialDarkTheme,
   MaterialLightTheme,
@@ -20,12 +21,16 @@ export default function App() {
   return (
     <NavigationContainer>
       <UserAuthContextProvider>
-        <InputProvider>
-          <PaperProvider
-            theme={scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme}>
-            <Routes />
-          </PaperProvider>
-        </InputProvider>
+        <ProductProvider>
+          <InputProvider>
+            <PaperProvider
+              theme={
+                scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme
+              }>
+              <Routes />
+            </PaperProvider>
+          </InputProvider>
+        </ProductProvider>
       </UserAuthContextProvider>
     </NavigationContainer>
   );

@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller } from 'react-hook-form';
 import useProducto from '../../app/producto/useProducto';
+import { useProductContext } from '../../context/productContext';
 
 export interface IProductoForm {
   nombre: string;
@@ -45,10 +46,10 @@ const ProductForm = ({ onClose }: IProductForm) => {
     mode: 'onChange',
   });
 
-  const { nuevoProducto } = useProducto();
+  const { agregarProducto } = useProductContext();
 
   const submit = data => {
-    nuevoProducto(data);
+    agregarProducto(data);
     onClose?.();
   };
 
