@@ -1,39 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, IconButton, MD3Colors, Text } from 'react-native-paper';
-import { Producto } from '../../models';
-import { StyleSheet, View } from 'react-native';
+import { IMovimientoSimple, MovimientoProducto, Producto } from '../../models';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { useProductContext } from '../../context/productContext';
+import Collapsible from 'react-native-collapsible';
 
 interface IProductoBar {
   producto: Producto;
 }
+
+export function calculateTotal(items: MovimientoProducto[]): number {
+  return items.reduce((total, item) => {
+    if (item.isCompra) {
+      return total + item.cantidad;
+    } else {
+      return total - item.cantidad;
+    }
+  }, 0);
+}
 const ProductoBar = ({ producto }: IProductoBar) => {
+  const { agregarMovimiento } = useProductContext();
   const cantidad = producto.detalle.reduce((acc, transaction) => {
     return transaction.isCompra
       ? acc + transaction.cantidad
       : acc - transaction.cantidad;
   }, 0);
-  console.log(producto);
+
+  const hacerMovimiento = (isCompra: boolean) => {
+    const req: IMovimientoSimple = {
+      idProducto: producto.id,
+      isCompra: isCompra,
+      ultimoMovimiento: producto.detalle[producto.detalle.length - 1],
+      cantidadActual: calculateTotal(producto.detalle),
+    };
+    agregarMovimiento(req);
+  };
+  const [open, setOpen] = useState(true);
 
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.cardContent}>
         <View style={styles.leftSection}>
-          <IconButton icon="chevron-down" size={24} style={styles.icon} />
+          <IconButton
+            icon="chevron-down"
+            size={24}
+            style={styles.icon}
+            onPress={() => setOpen(prev => !prev)}
+          />
           <View>
             <Text style={styles.text}>{producto.nombre}</Text>
             <Text style={styles.textCategoria}>{producto.categoria}</Text>
           </View>
         </View>
         <View style={styles.rightSection}>
-          <Button mode="contained" style={styles.buttonLeft}>
+          <Button
+            mode="contained"
+            style={styles.buttonLeft}
+            onPress={() => hacerMovimiento(false)}>
             -
           </Button>
           <Text style={styles.cantidad}>{cantidad}</Text>
-          <Button mode="contained" style={styles.buttonRight}>
+          <Button
+            mode="contained"
+            style={styles.buttonRight}
+            onPress={() => hacerMovimiento(true)}>
             +
           </Button>
         </View>
       </Card.Content>
+      <Collapsible collapsed={open}>
+        {producto.detalle.map((mov, index) => (
+          <View id={'' + index + mov.id}>
+            <Text>{mov.fechaCreacion}</Text>
+            <Text>{mov.isCompra ? mov.cantidad : '-' + mov.cantidad}</Text>
+          </View>
+        ))}
+      </Collapsible>
     </Card>
   );
 };
@@ -43,6 +85,7 @@ export default ProductoBar;
 const styles = StyleSheet.create({
   card: {
     margin: 5,
+    paddingBottom: 10,
   },
   cardContent: {
     flexDirection: 'row',
@@ -54,8 +97,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    borderWidth: 1,
-    borderColor: 'red',
     marginVertical: 0,
     paddingVertical: 0,
     marginRight: 8,

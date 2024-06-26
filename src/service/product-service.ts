@@ -11,8 +11,34 @@ export const getDBConnection = async () => {
 
 enablePromise(true);
 
-export const createTables = async () => {
+export const tableExists = async (tableName: string): Promise<boolean> => {
   const db = await getDBConnection();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+        [tableName],
+        (_, result) => {
+          resolve(result.rows.length > 0);
+        },
+        (_, error) => {
+          reject(error);
+          return false;
+        },
+      );
+    });
+  });
+};
+
+export const createTables = async () => {
+  const existen = await tableExists('productos');
+  if (existen) {
+    console.log('existen');
+    return;
+  }
+  const db = await getDBConnection();
+
   db.transaction(tx => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS productos (
@@ -184,6 +210,7 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
           if (currentProducto) {
             productos.push(currentProducto);
           }
+          console.log('huraa');
 
           resolve(productos);
         },
@@ -203,11 +230,115 @@ export const addMovimientoProducto = async (movimiento: MovimientoProducto) => {
     db.transaction(tx => {
       tx.executeSql(
         'INSERT INTO movimiento_producto (product_id, fechaCreacion, precio, cantidad, isUnitario, precioUnitario, isVence, fechaVencimiento, isCompra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [{ ...movimiento }],
+        [
+          movimiento.idProducto,
+          movimiento.fechaCreacion,
+          movimiento.precio,
+          movimiento.cantidad,
+          movimiento.isUnitario ? 1 : 0,
+          movimiento.precioUnitario,
+          movimiento.isVence ? 1 : 0,
+          movimiento.fechaVencimiento,
+          movimiento.isCompra ? 1 : 0,
+        ],
         (_, result) => {
           resolve(result);
         },
         (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const updateMovimientoProducto = async (
+  movimiento: MovimientoProducto,
+) => {
+  const db = await getDBConnection();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE movimiento_producto SET product_id = ?, fechaCreacion = ?, precio = ?, cantidad = ?, isUnitario = ?, precioUnitario = ?, isVence = ?, fechaVencimiento = ?, isCompra = ? WHERE id = ?',
+        [
+          movimiento.idProducto,
+          movimiento.fechaCreacion,
+          movimiento.precio,
+          movimiento.cantidad,
+          movimiento.isUnitario ? 1 : 0,
+          movimiento.precioUnitario,
+          movimiento.isVence ? 1 : 0,
+          movimiento.fechaVencimiento,
+          movimiento.isCompra ? 1 : 0,
+          movimiento.id,
+        ],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const deleteMovimientoProducto = async (id: number) => {
+  const db = await getDBConnection();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM movimiento_producto WHERE id = ?',
+        [id],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const getMovimientoProductoById = async (
+  id: number,
+): Promise<MovimientoProducto | null> => {
+  const db = await getDBConnection();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM movimiento_producto WHERE id = ?',
+        [id],
+        (_, result) => {
+          if (result.rows.length > 0) {
+            console.log('rasd');
+            const row = result.rows.item(0);
+            const movimientoProducto: MovimientoProducto = {
+              id: row.id,
+              idProducto: row.product_id,
+              fechaCreacion: row.fechaCreacion,
+              precio: row.precio,
+              cantidad: row.cantidad,
+              isUnitario: Boolean(row.isUnitario),
+              precioUnitario: row.precioUnitario,
+              isVence: Boolean(row.isVence),
+              fechaVencimiento: row.fechaVencimiento,
+              isCompra: Boolean(row.isCompra),
+            };
+
+            resolve(movimientoProducto);
+          } else {
+            console.log('nothing');
+            resolve(null);
+          }
+        },
+        (_, error) => {
+          console.log('rasdasdad');
+
           reject(error);
         },
       );

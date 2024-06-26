@@ -11,7 +11,6 @@ const VisorProducto = () => {
 
   return (
     <View>
-      <Text>Productos</Text>
       {productos.map((producto, index) => (
         // <Card id={'' + index + producto.id}>
         //   <Text>{producto.nombre}</Text>

@@ -37,3 +37,10 @@ export interface MovimientoProducto {
   fechaVencimiento: string;
   isCompra: boolean;
 }
+
+export interface IMovimientoSimple {
+  idProducto: number;
+  isCompra: boolean;
+  ultimoMovimiento: MovimientoProducto;
+  cantidadActual: number;
+}
