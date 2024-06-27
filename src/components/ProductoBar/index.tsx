@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Card, IconButton, MD3Colors, Text } from 'react-native-paper';
+import { Card, IconButton, Text, useTheme } from 'react-native-paper';
 import { IMovimientoSimple, MovimientoProducto, Producto } from '../../models';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useProductContext } from '../../context/productContext';
 import Collapsible from 'react-native-collapsible';
+import Texto from '../Text';
 
 interface IProductoBar {
   producto: Producto;
@@ -35,17 +36,20 @@ const ProductoBar = ({ producto }: IProductoBar) => {
     };
     agregarMovimiento(req);
   };
-  const [open, setOpen] = useState(true);
+  const [collapsed, setCollapsed] = useState(true);
+  const theme = useTheme();
 
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.cardContent}>
         <View style={styles.leftSection}>
           <IconButton
-            icon="chevron-down"
+            icon={
+              collapsed ? 'unfold-more-horizontal' : 'unfold-less-horizontal'
+            }
             size={24}
             style={styles.icon}
-            onPress={() => setOpen(prev => !prev)}
+            onPress={() => setCollapsed(prev => !prev)}
           />
           <View>
             <Text style={styles.text}>{producto.nombre}</Text>
@@ -53,24 +57,26 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           </View>
         </View>
         <View style={styles.rightSection}>
-          <Button
+          <IconButton
             mode="contained"
             style={styles.buttonLeft}
-            onPress={() => hacerMovimiento(false)}>
-            -
-          </Button>
-          <Text style={styles.cantidad}>{cantidad}</Text>
-          <Button
+            onPress={() => hacerMovimiento(false)}
+            icon="minus"
+          />
+          <Text style={[styles.cantidad]}>{cantidad}</Text>
+          <IconButton
+            containerColor={theme.colors.primaryContainer}
+            iconColor={theme.colors.primary}
             mode="contained"
             style={styles.buttonRight}
-            onPress={() => hacerMovimiento(true)}>
-            +
-          </Button>
+            onPress={() => hacerMovimiento(true)}
+            icon="plus"
+          />
         </View>
       </Card.Content>
-      <Collapsible collapsed={open}>
+      <Collapsible collapsed={collapsed}>
         {producto.detalle.map((mov, index) => (
-          <View id={'' + index + mov.id}>
+          <View key={'' + index + mov.id}>
             <Text>{mov.fechaCreacion}</Text>
             <Text>{mov.isCompra ? mov.cantidad : '-' + mov.cantidad}</Text>
           </View>
@@ -94,12 +100,14 @@ const styles = StyleSheet.create({
   },
   leftSection: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
+    marginLeft: -15,
   },
   icon: {
     marginVertical: 0,
     paddingVertical: 0,
-    marginRight: 8,
+    marginRight: 5,
   },
   text: {
     fontSize: 16,
@@ -111,25 +119,40 @@ const styles = StyleSheet.create({
   },
   rightSection: {
     flexDirection: 'row',
+    alignItems: 'flex-end',
+    maxWidth: 136,
   },
   cantidad: {
-    fontSize: 15,
+    fontSize: 20,
+    fontWeight: '700',
+    textAlignVertical: 'center',
+    width: 30,
+
+    textAlign: 'center',
+
+    height: 40,
+    flex: 1,
   },
   buttonLeft: {
     padding: 0,
     margin: 0,
     marginLeft: 8,
-    borderRadius: 0,
-    borderTopStartRadius: 10,
-    borderBottomStartRadius: 10,
-    width: 15,
+    width: 40,
+    height: 40,
   },
   buttonRight: {
     padding: 0,
     margin: 0,
-    marginLeft: 8,
-    borderRadius: 0,
-    borderTopEndRadius: 10,
-    borderBottomEndRadius: 10,
+    width: 40,
+    height: 40,
+  },
+
+  buttonText: {
+    lineHeight: 29,
+    fontSize: 35,
+  },
+  buttonTextPlus: {
+    lineHeight: 26,
+    fontSize: 28,
   },
 });

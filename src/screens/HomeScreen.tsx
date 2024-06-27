@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Categories from '../components/Categorias/Categorias';
 import FabGroup from '../components/FAB/FAB';
@@ -42,12 +42,20 @@ const HomeScreen = () => {
               height: 50,
               elevation: 10,
             },
-            tabBarLabelStyle: {
-              paddingTop: 0,
-              marginTop: -10,
-              marginBottom: 5,
-              fontWeight: '500',
-            },
+
+            tabBarLabel: ({ focused, color }) => (
+              <Text
+                style={{
+                  paddingTop: 0,
+                  marginTop: -10,
+                  marginBottom: 5,
+                  fontWeight: '500',
+                  color: focused ? tema.colors.primary : tema.colors.outline,
+                  fontSize: 10,
+                }}>
+                {route.name}
+              </Text>
+            ),
             tabBarActiveTintColor: tema.colors.onSurface,
             tabBarInactiveTintColor: tema.colors.outline,
             tabBarIconStyle: {
@@ -84,7 +92,7 @@ const HomeScreen = () => {
                 <Ionicons
                   name={iconName}
                   size={19}
-                  color={focused ? tema.colors.onSurface : tema.colors.outline}
+                  color={focused ? tema.colors.primary : tema.colors.outline}
                 />
               );
             },
