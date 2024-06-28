@@ -6,6 +6,7 @@ import { useProductContext } from '../../context/productContext';
 import Collapsible from 'react-native-collapsible';
 import Texto from '../Text';
 import MovimientoDetalle from './MovimientoDetalle';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 interface IProductoBar {
   producto: Producto;
@@ -53,7 +54,10 @@ const ProductoBar = ({ producto }: IProductoBar) => {
             onPress={() => setCollapsed(prev => !prev)}
           />
           <View>
-            <Text style={styles.text}>{producto.nombre}</Text>
+            <Text style={styles.text}>
+              {producto.nombre.charAt(0).toUpperCase() +
+                producto.nombre.slice(1)}
+            </Text>
             <Text style={styles.textCategoria}>{producto.categoria}</Text>
           </View>
         </View>
@@ -76,16 +80,49 @@ const ProductoBar = ({ producto }: IProductoBar) => {
         </View>
       </Card.Content>
       <Collapsible collapsed={collapsed}>
-        {producto.detalle.map((mov, index) => (
-          <>
-            <Divider key={`div${index}${mov.id}`} horizontalInset />
-            <MovimientoDetalle key={`${index}${mov.id}`} mov={mov} />
-          </>
-          // <View key={'' + index + mov.id}>
-          //   <Text>{mov.fechaCreacion}</Text>
-          //   <Text>{mov.isCompra ? mov.cantidad : '-' + mov.cantidad}</Text>
-          // </View>
-        ))}
+        <SwipeListView
+          keyExtractor={(item, index) => item.id.toString()}
+          data={producto.detalle}
+          renderItem={data => <MovimientoDetalle mov={data.item} />}
+          style={styles.contenedorDetalle}
+          renderHiddenItem={(data, rowMap) => (
+            <View style={[styles.hiddenContainer]}>
+              <View
+                style={{
+                  backgroundColor: theme.colors.inverseSurface,
+                  height: 88,
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                  width: '50%',
+                  paddingLeft: 5,
+                }}>
+                <IconButton
+                  icon="trash-can-outline"
+                  iconColor={theme.colors.onPrimary}
+                  size={35}
+                  onPress={() => {}}
+                />
+              </View>
+              <View
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  height: 88,
+                  justifyContent: 'center',
+                  width: '50%',
+                  alignItems: 'flex-end',
+                }}>
+                <IconButton
+                  icon="playlist-edit"
+                  iconColor={theme.colors.onPrimary}
+                  size={35}
+                  onPress={() => {}}
+                />
+              </View>
+            </View>
+          )}
+          leftOpenValue={75}
+          rightOpenValue={-75}
+        />
       </Collapsible>
     </Card>
   );
@@ -160,5 +197,15 @@ const styles = StyleSheet.create({
   buttonTextPlus: {
     lineHeight: 26,
     fontSize: 28,
+  },
+  hiddenContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // alignItems: 'center',
+    flex: 1,
+  },
+  contenedorDetalle: {
+    maxHeight: 360,
+    overflow: 'scroll',
   },
 });
