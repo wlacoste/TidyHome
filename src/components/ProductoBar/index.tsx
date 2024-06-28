@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Card, IconButton, Text, useTheme } from 'react-native-paper';
+import { Card, Divider, IconButton, Text, useTheme } from 'react-native-paper';
 import { IMovimientoSimple, MovimientoProducto, Producto } from '../../models';
 import { StyleSheet, View } from 'react-native';
 import { useProductContext } from '../../context/productContext';
 import Collapsible from 'react-native-collapsible';
 import Texto from '../Text';
+import MovimientoDetalle from './MovimientoDetalle';
 
 interface IProductoBar {
   producto: Producto;
@@ -76,10 +77,14 @@ const ProductoBar = ({ producto }: IProductoBar) => {
       </Card.Content>
       <Collapsible collapsed={collapsed}>
         {producto.detalle.map((mov, index) => (
-          <View key={'' + index + mov.id}>
-            <Text>{mov.fechaCreacion}</Text>
-            <Text>{mov.isCompra ? mov.cantidad : '-' + mov.cantidad}</Text>
-          </View>
+          <>
+            <Divider key={`div${index}${mov.id}`} horizontalInset />
+            <MovimientoDetalle key={`${index}${mov.id}`} mov={mov} />
+          </>
+          // <View key={'' + index + mov.id}>
+          //   <Text>{mov.fechaCreacion}</Text>
+          //   <Text>{mov.isCompra ? mov.cantidad : '-' + mov.cantidad}</Text>
+          // </View>
         ))}
       </Collapsible>
     </Card>
@@ -91,12 +96,13 @@ export default ProductoBar;
 const styles = StyleSheet.create({
   card: {
     margin: 5,
-    paddingBottom: 10,
+    // paddingBottom: 10,
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingBottom: 10,
   },
   leftSection: {
     flexDirection: 'row',

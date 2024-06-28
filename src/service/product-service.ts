@@ -171,7 +171,7 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
                 mp.isVence, mp.fechaVencimiento, mp.isCompra
          FROM productos p
          INNER JOIN movimiento_producto mp ON p.id = mp.product_id
-         ORDER BY p.id, mp.fechaCreacion`,
+         ORDER BY p.nombre, mp.id DESC`,
         [],
         (_, results) => {
           const productos: Producto[] = [];
