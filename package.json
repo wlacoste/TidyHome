@@ -40,7 +40,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-sqlite-storage": "^6.0.1",
     "react-native-swipe-list-view": "^3.2.9",
-    "react-native-vector-icons": "^10.0.3"
+    "react-native-vector-icons": "^10.0.3",
+    "react-native-virtualized-view": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

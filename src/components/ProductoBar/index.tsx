@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Divider, IconButton, Text, useTheme } from 'react-native-paper';
 import { IMovimientoSimple, MovimientoProducto, Producto } from '../../models';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useProductContext } from '../../context/productContext';
 import Collapsible from 'react-native-collapsible';
 import Texto from '../Text';
@@ -22,7 +22,7 @@ export function calculateTotal(items: MovimientoProducto[]): number {
   }, 0);
 }
 const ProductoBar = ({ producto }: IProductoBar) => {
-  const { agregarMovimiento } = useProductContext();
+  const { agregarMovimiento, eliminarMovimiento } = useProductContext();
   const cantidad = producto.detalle.reduce((acc, transaction) => {
     return transaction.isCompra
       ? acc + transaction.cantidad
@@ -33,7 +33,9 @@ const ProductoBar = ({ producto }: IProductoBar) => {
     const req: IMovimientoSimple = {
       idProducto: producto.id,
       isCompra: isCompra,
-      ultimoMovimiento: producto.detalle[producto.detalle.length - 1],
+      ultimoMovimiento: producto.detalle.reduce((max, obj) =>
+        obj.id > max.id ? obj : max,
+      ),
       cantidadActual: calculateTotal(producto.detalle),
     };
     agregarMovimiento(req);
@@ -100,7 +102,9 @@ const ProductoBar = ({ producto }: IProductoBar) => {
                   icon="trash-can-outline"
                   iconColor={theme.colors.onPrimary}
                   size={35}
-                  onPress={() => {}}
+                  onPress={() => {
+                    eliminarMovimiento(data.item.id);
+                  }}
                 />
               </View>
               <View
@@ -122,6 +126,9 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           )}
           leftOpenValue={75}
           rightOpenValue={-75}
+          scrollEnabled={true}
+          disableScrollViewPanResponder={true}
+          nestedScrollEnabled={true}
         />
       </Collapsible>
     </Card>

@@ -21,7 +21,7 @@ const MovimientoDetalle = ({ mov }: IMovimientoDetalle) => {
           <View style={styles.conta}>
             <Text>{mov.isCompra ? 'Adquirido' : 'Consumido'}</Text>
             <Text>Fecha: {mov.fechaCreacion}</Text>
-            <Text>Cantidad: {mov.isCompra ? mov.cantidad : mov.cantidad}</Text>
+            <Text>Cantidad: {mov.cantidad}</Text>
           </View>
           <View style={styles.conta}>
             {mov.fechaVencimiento !== 'undefined' && (

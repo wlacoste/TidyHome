@@ -3,6 +3,7 @@ import { IProductoForm } from '../../components/ProductForm/ProductForm';
 import { Producto, MovimientoProducto, IMovimientoSimple } from '../../models';
 import {
   addMovimientoProducto,
+  deleteMovimientoProducto,
   getMovimientoByProductId,
   insertProductWithMovimiento,
   updateMovimientoProducto,
@@ -65,16 +66,16 @@ const useProducto = () => {
     console.log('fecha2', dayjs().toDate().toLocaleDateString('es-ES'));
     console.log('isUpdatei', isUpdate);
 
+    //TODO arreglar logica
+
     let cantidad = 1;
     if (isUpdate) {
-      cantidad = isCompra
-        ? ultimoMovimiento.cantidad + 1
-        : ultimoMovimiento.cantidad - 1;
+      cantidad = ultimoMovimiento.cantidad + 1;
     }
     console.log('cantidad', cantidad);
     console.log(' actual', cantidadActual);
     console.log(' ultimoMovimiento.cantidad', ultimoMovimiento.cantidad);
-    if (!isCompra && cantidad > cantidadActual) {
+    if (!isCompra && cantidad > cantidadActual + 1) {
       return;
     }
 
@@ -109,7 +110,17 @@ const useProducto = () => {
     }
   };
 
-  return { nuevoProducto, nuevoMovimiento };
+  const borrarMovimiento = async (id: number) => {
+    try {
+      await deleteMovimientoProducto(id);
+      return true;
+    } catch (err) {
+      console.error('No se pudo eliminar el movimiento', err);
+      throw err;
+    }
+  };
+
+  return { nuevoProducto, nuevoMovimiento, borrarMovimiento };
 };
 
 export default useProducto;
