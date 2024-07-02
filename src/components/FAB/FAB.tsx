@@ -4,6 +4,7 @@ import { FAB, Portal, useTheme } from 'react-native-paper';
 import ModalAcciones from '../ModalAcciones/ModalAcciones';
 import ProductForm from '../ProductForm';
 import SimpleForm from '../SimpleInput';
+import { useModal } from '../../context/modalContext';
 
 const FabGroup = () => {
   const theme = useTheme();
@@ -13,34 +14,10 @@ const FabGroup = () => {
 
   const { open } = state;
 
-  const [visible, setVisible] = useState(false);
-
-  const hideModal = () => setVisible(false);
-
-  const [seleccionado, setSeleccionado] = useState<React.ReactNode | undefined>(
-    undefined,
-  );
-
-  const getSeleccionado = (numero: number) => {
-    let seleccion;
-    switch (numero) {
-      case 1:
-        seleccion = <ProductForm onClose={hideModal} />;
-        break;
-      case 2:
-        seleccion = <SimpleForm onClose={hideModal} />;
-        break;
-    }
-    setSeleccionado(seleccion);
-  };
+  const { closeModal, openModal, visible } = useModal();
 
   return (
     <Portal>
-      <ModalAcciones
-        visible={visible}
-        onClose={hideModal}
-        children={seleccionado}
-      />
       <FAB.Group
         open={open}
         visible
@@ -57,8 +34,7 @@ const FabGroup = () => {
             icon: 'package-variant',
             label: 'Producto nuevo',
             onPress: () => {
-              getSeleccionado(1);
-              setVisible(true);
+              openModal(<ProductForm tipo={'nuevo'} onClose={closeModal} />);
             },
           },
           {
@@ -70,8 +46,7 @@ const FabGroup = () => {
             icon: 'pencil',
             label: 'Movimiento Input',
             onPress: () => {
-              getSeleccionado(2);
-              setVisible(true);
+              openModal(<SimpleForm tipo={'nuevo'} onClose={closeModal} />);
             },
           },
         ]}

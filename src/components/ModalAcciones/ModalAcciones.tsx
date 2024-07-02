@@ -1,8 +1,7 @@
 import React from 'react';
-import { Modal } from 'react-native-paper';
+import { Modal, Portal } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
-import ProductForm from '../ProductForm';
-import { rgbaColor } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import { useModal } from '../../context/modalContext';
 
 export interface IModal {
   visible: boolean;
@@ -10,11 +9,18 @@ export interface IModal {
   children: React.ReactNode;
 }
 
-const ModalAcciones = ({ visible, onClose, children }: IModal) => {
+const ModalAcciones = () => {
+  const { visible, closeModal, modalContent } = useModal();
+
   return (
-    <Modal visible={visible} onDismiss={onClose} style={styles.centeredView}>
-      {children}
-    </Modal>
+    <Portal>
+      <Modal
+        visible={visible}
+        onDismiss={closeModal}
+        style={styles.centeredView}>
+        {modalContent}
+      </Modal>
+    </Portal>
   );
 };
 

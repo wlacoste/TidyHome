@@ -6,10 +6,9 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { IMovimientoSimple, Producto } from '../models';
+import { IMovimientoSimple, IProductoForm, Producto } from '../models';
 import { getAllProductsWithMovements } from '../service/product-service';
 import useProducto from '../app/producto/useProducto';
-import { IProductoForm } from '../components/ProductForm/ProductForm';
 import { LayoutAnimation } from 'react-native';
 
 export interface ProductContextTyp {
@@ -46,10 +45,6 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const result = await nuevoMovimiento(mov);
     if (result) {
       const p = await getAllProductsWithMovements();
-      // p.map(a => {
-      //   console.log('detalle de ', a.nombre);
-      //   console.log('detalle ', a.detalle);
-      // });
 
       setProductos(p);
     }

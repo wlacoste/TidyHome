@@ -2,13 +2,13 @@ import { StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Button, Card, TextInput } from 'react-native-paper';
 import Text from '../Text';
-import { IProductForm } from '../ProductForm/ProductForm';
 import { useSimpleInput } from '../../context/simpleInputContext';
 import { IAddData, IGetColeccion, useFireDB } from '../../hooks/useFireDB';
 import auth from '@react-native-firebase/auth';
 import { useUserAuth } from '../../context/userAuthContext';
 import 'react-native-get-random-values';
 import { nanoid } from 'nanoid';
+import { IProductForm } from '../../models';
 
 const SimpleForm = ({ onClose }: IProductForm) => {
   const [product, setProduct] = useState<string | undefined>(undefined);

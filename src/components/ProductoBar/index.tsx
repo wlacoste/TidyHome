@@ -7,6 +7,8 @@ import Collapsible from 'react-native-collapsible';
 import Texto from '../Text';
 import MovimientoDetalle from './MovimientoDetalle';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { useModal } from '../../context/modalContext';
+import ProductForm from '../ProductForm';
 
 interface IProductoBar {
   producto: Producto;
@@ -28,8 +30,19 @@ const ProductoBar = ({ producto }: IProductoBar) => {
       ? acc + transaction.cantidad
       : acc - transaction.cantidad;
   }, 0);
+  const { openModal, closeModal } = useModal();
 
   const hacerMovimiento = (isCompra: boolean) => {
+    if (!producto.detalle.length) {
+      openModal(
+        <ProductForm
+          tipo={'update'}
+          onClose={closeModal}
+          producto={producto}
+        />,
+      );
+      return;
+    }
     const req: IMovimientoSimple = {
       idProducto: producto.id,
       isCompra: isCompra,

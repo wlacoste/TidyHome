@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { IProductoForm } from '../components/ProductForm/ProductForm';
 
 export type ToDoItem = {
   id: number;
@@ -41,6 +40,23 @@ export interface MovimientoProducto {
 export interface IMovimientoSimple {
   idProducto: number;
   isCompra: boolean;
-  ultimoMovimiento: MovimientoProducto;
+  ultimoMovimiento?: MovimientoProducto;
   cantidadActual: number;
+}
+
+export interface IProductoForm {
+  nombre: string;
+  cantidad: string | undefined;
+  precio: string | undefined;
+  isUnitario: boolean;
+  categoria: string;
+  fechaVencimiento: Date | undefined;
+  isVence: boolean;
+  fechaCreacion: string | Date;
+}
+
+export interface IProductForm {
+  tipo: 'update' | 'nuevo';
+  onClose?: () => void;
+  producto?: Producto;
 }

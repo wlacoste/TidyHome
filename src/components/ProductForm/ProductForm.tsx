@@ -5,38 +5,42 @@ import { useCategories } from '../../hooks/useCategories';
 import { Button, Card, Switch, TextInput } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
-import { ICategoria } from '../Categorias/Categorias';
 import Text from '../Text';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller } from 'react-hook-form';
-import useProducto from '../../app/producto/useProducto';
 import { useProductContext } from '../../context/productContext';
+import { IProductForm, IProductoForm, Producto } from '../../models';
+import { getListItem } from '../../utils/getListItems';
 
-export interface IProductoForm {
-  nombre: string;
-  cantidad: string | undefined;
-  precio: string | undefined;
-  isUnitario: boolean;
-  categoria: string;
-  fechaVencimiento: Date | undefined;
-  isVence: boolean;
-  fechaCreacion: string | Date;
-}
+const mapProductoToForm = (producto?: Producto): IProductoForm => {
+  if (!producto) {
+    return {
+      nombre: '',
+      cantidad: undefined,
+      precio: undefined,
+      isUnitario: false,
+      categoria: '',
+      fechaVencimiento: undefined,
+      isVence: false,
+      fechaCreacion: '',
+    };
+  }
 
-export interface IProductForm {
-  onClose?: () => void;
-}
-const getListItem = (categorias: ICategoria[]) => {
-  const items: ListItem[] = categorias.map(categoria => ({
-    _id: categoria.id.toString(),
-    value: categoria.nombre,
-  }));
-  return items;
+  return {
+    nombre: producto.nombre,
+    cantidad: undefined, // You might want to set a default value here
+    precio: undefined, // You might want to set a default value here
+    isUnitario: false, // You might want to determine this based on some logic
+    categoria: producto.categoria,
+    fechaVencimiento: undefined, // You might want to set a default value here
+    isVence: false, // You might want to determine this based on some logic
+    fechaCreacion: producto.fechaCreacion,
+  };
 };
 
-const ProductForm = ({ onClose }: IProductForm) => {
+const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
   const {
     control,
     resetField,
@@ -44,12 +48,17 @@ const ProductForm = ({ onClose }: IProductForm) => {
     handleSubmit,
   } = useForm<IProductoForm>({
     mode: 'onChange',
+    defaultValues: mapProductoToForm(producto),
   });
 
   const { agregarProducto } = useProductContext();
 
   const submit = data => {
-    agregarProducto(data);
+    if (tipo === 'nuevo') {
+      agregarProducto(data);
+    } else {
+      console.log('update producto', data);
+    }
     onClose?.();
   };
 
@@ -68,7 +77,9 @@ const ProductForm = ({ onClose }: IProductForm) => {
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.content}>
-        <Text style={styles.titulo}>Nuevo Productos</Text>
+        <Text style={styles.titulo}>
+          {tipo === 'nuevo' ? 'Nuevo producto' : 'Nuevo movimiento'}
+        </Text>
         <Controller
           control={control}
           defaultValue=""

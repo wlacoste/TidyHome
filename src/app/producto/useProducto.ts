@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
-import { IProductoForm } from '../../components/ProductForm/ProductForm';
-import { Producto, MovimientoProducto, IMovimientoSimple } from '../../models';
+// import { IProductoForm } from '../../components/ProductForm/ProductForm';
+import {
+  Producto,
+  MovimientoProducto,
+  IMovimientoSimple,
+  IProductoForm,
+} from '../../models';
 import {
   addMovimientoProducto,
   deleteMovimientoProducto,
@@ -58,6 +63,11 @@ const useProducto = () => {
     ultimoMovimiento,
     cantidadActual,
   }: IMovimientoSimple) => {
+    //TODO abrir modal de nuevo producto cuando no hay mas movimientos
+    if (!ultimoMovimiento) {
+      return;
+    }
+
     const isUpdate =
       ultimoMovimiento.fechaCreacion ===
         dayjs().toDate().toLocaleDateString('es-ES') &&
@@ -65,8 +75,6 @@ const useProducto = () => {
     console.log('fecha1', ultimoMovimiento.fechaCreacion);
     console.log('fecha2', dayjs().toDate().toLocaleDateString('es-ES'));
     console.log('isUpdatei', isUpdate);
-
-    //TODO arreglar logica
 
     let cantidad = 1;
     if (isUpdate) {
