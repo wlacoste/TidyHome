@@ -233,7 +233,7 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
           mode="contained"
           onPress={handleSubmit(submit)}
           style={styles.boton}>
-          Console
+          Agregar
         </Button>
       </Card.Content>
     </Card>
