@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { FAB, Portal, useTheme } from 'react-native-paper';
 import ModalAcciones from '../ModalAcciones/ModalAcciones';
-import ProductForm from '../ProductForm';
-import SimpleForm from '../SimpleInput';
-import { IProductForm, Producto } from '../../models';
-
-interface IComponenteModal {}
 
 const ComponenteModal = ({ tipo, children, open }) => {
   const [visible, setVisible] = useState(open ? open : false);

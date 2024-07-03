@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Categories from '../components/Categorias/Categorias';

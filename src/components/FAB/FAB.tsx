@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { FAB, Portal, useTheme } from 'react-native-paper';
-import ModalAcciones from '../ModalAcciones/ModalAcciones';
 import ProductForm from '../ProductForm';
 import SimpleForm from '../SimpleInput';
 import { useModal } from '../../context/modalContext';
@@ -14,7 +13,7 @@ const FabGroup = () => {
 
   const { open } = state;
 
-  const { closeModal, openModal, visible } = useModal();
+  const { closeModal, openModal } = useModal();
 
   return (
     <Portal>

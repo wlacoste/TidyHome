@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text as RNText, useTheme } from 'react-native-paper';
 
 import { TextProps as RNTextProps } from 'react-native';

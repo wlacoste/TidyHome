@@ -1,19 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Text } from 'react-native-paper';
-import { getAllProductsWithMovements } from '../../service/product-service';
-import { Producto } from '../../models';
+import React from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
+
 import ProductoBar from '../ProductoBar';
 import { useProductContext } from '../../context/productContext';
 
 const VisorProducto = () => {
   const { productos } = useProductContext();
-
-  const renderItem = ({ item, index }) => (
-    <ProductoBar key={`${index}-${item.id}-${item.nombre}`} producto={item} />
-  );
-
-  const keyExtractor = (item, index) => `${index}-${item.id}-${item.nombre}`;
 
   return (
     <>

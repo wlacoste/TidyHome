@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Divider, IconButton, Text, useTheme } from 'react-native-paper';
+import { Divider, Text, useTheme } from 'react-native-paper';
 import { MovimientoProducto } from '../../models';
 
 export interface IMovimientoDetalle {
@@ -11,10 +11,7 @@ const MovimientoDetalle = ({ mov }: IMovimientoDetalle) => {
   const theme = useTheme();
   return (
     <>
-      <Divider
-        horizontalInset
-        // style={{ backgroundColor: 'theme.colors.inverseSurface' }}
-      />
+      <Divider horizontalInset />
       <View
         style={[
           styles.card,

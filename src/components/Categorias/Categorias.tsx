@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useCategories } from '../../hooks/useCategories';
 import { useTheme } from 'react-native-paper';
 import Text from '../Text';
