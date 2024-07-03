@@ -49,14 +49,14 @@ const HomeScreen = () => {
 
               tabBarLabel: ({ focused, color }) => (
                 <Text
-                  style={{
-                    paddingTop: 0,
-                    marginTop: -10,
-                    marginBottom: 5,
-                    fontWeight: '500',
-                    color: focused ? tema.colors.primary : tema.colors.outline,
-                    fontSize: 10,
-                  }}>
+                  style={[
+                    styles.labelText,
+                    {
+                      color: focused
+                        ? tema.colors.primary
+                        : tema.colors.outline,
+                    },
+                  ]}>
                   {route.name}
                 </Text>
               ),
@@ -140,6 +140,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   barra: {},
+  labelText: {
+    paddingTop: 0,
+    marginTop: -10,
+    marginBottom: 5,
+    fontWeight: '500',
+    fontSize: 10,
+  },
 });
 
 export default HomeScreen;

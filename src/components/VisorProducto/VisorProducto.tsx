@@ -12,7 +12,7 @@ const VisorProducto = () => {
       <ScrollView nestedScrollEnabled style={styles.contenedor}>
         {productos.map((producto, index) => (
           <ProductoBar
-            key={'' + index + producto.id + producto.nombre}
+            key={`${index}-${producto.id}-${producto.nombre}`}
             producto={producto}
           />
         ))}
