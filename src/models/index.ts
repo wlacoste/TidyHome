@@ -45,6 +45,7 @@ export interface IMovimientoSimple {
 }
 
 export interface IProductoForm {
+  id?: number;
   nombre: string;
   cantidad: string | undefined;
   precio: string | undefined;

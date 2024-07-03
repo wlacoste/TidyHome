@@ -13,34 +13,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { useProductContext } from '../../context/productContext';
 import { IProductForm, IProductoForm, Producto } from '../../models';
 import { getListItem } from '../../utils/getListItems';
-
-const mapProductoToForm = (producto?: Producto): IProductoForm => {
-  if (!producto) {
-    return {
-      nombre: '',
-      cantidad: undefined,
-      precio: undefined,
-      isUnitario: false,
-      categoria: '',
-      fechaVencimiento: undefined,
-      isVence: false,
-      fechaCreacion: '',
-    };
-  }
-
-  return {
-    nombre: producto.nombre,
-    cantidad: undefined, // You might want to set a default value here
-    precio: undefined, // You might want to set a default value here
-    isUnitario: false, // You might want to determine this based on some logic
-    categoria: producto.categoria,
-    fechaVencimiento: undefined, // You might want to set a default value here
-    isVence: false, // You might want to determine this based on some logic
-    fechaCreacion: producto.fechaCreacion,
-  };
-};
+import { mapProductoToForm } from '../../utils/transformToProducto';
 
 const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
+  const { categorias, loading: categoriasLoading } = useCategories();
+  const { agregarProducto, primerMovimiento } = useProductContext();
+  const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
+  const [openDate, setOpenDate] = useState(false);
+
   const {
     control,
     resetField,
@@ -51,22 +31,14 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
     defaultValues: mapProductoToForm(producto),
   });
 
-  const { agregarProducto } = useProductContext();
-
   const submit = data => {
     if (tipo === 'nuevo') {
       agregarProducto(data);
     } else {
-      console.log('update producto', data);
+      primerMovimiento({ ...data, id: producto?.id });
     }
     onClose?.();
   };
-
-  const { categorias, loading: categoriasLoading } = useCategories();
-
-  const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
-
-  const [openDate, setOpenDate] = React.useState(false);
 
   useEffect(() => {
     if (categorias) {

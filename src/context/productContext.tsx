@@ -6,7 +6,12 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { IMovimientoSimple, IProductoForm, Producto } from '../models';
+import {
+  IMovimientoSimple,
+  IProductoForm,
+  MovimientoProducto,
+  Producto,
+} from '../models';
 import { getAllProductsWithMovements } from '../service/product-service';
 import useProducto from '../app/producto/useProducto';
 import { LayoutAnimation } from 'react-native';
@@ -15,6 +20,7 @@ export interface ProductContextTyp {
   productos: Producto[];
   setProductos: React.Dispatch<React.SetStateAction<Producto[]>>;
   agregarProducto: (formu: IProductoForm) => Promise<void>;
+  primerMovimiento: (formu: IProductoForm) => Promise<void>;
   agregarMovimiento: (formu: IMovimientoSimple) => Promise<void>;
   eliminarMovimiento: (formu: number) => Promise<void>;
 }
@@ -25,6 +31,7 @@ const defaultProductContext: ProductContextTyp = {
   agregarProducto: async () => {},
   agregarMovimiento: async () => {},
   eliminarMovimiento: async () => {},
+  primerMovimiento: async () => {},
 };
 
 const ProductContext = createContext<ProductContextTyp>(defaultProductContext);
@@ -32,21 +39,54 @@ const ProductContext = createContext<ProductContextTyp>(defaultProductContext);
 const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [productos, setProductos] = useState<Producto[]>([]);
 
-  const { nuevoProducto, nuevoMovimiento, borrarMovimiento } = useProducto();
+  const {
+    nuevoProducto,
+    nuevoMovimiento,
+    borrarMovimiento,
+    primerMovimiento: primerMov,
+  } = useProducto();
+
+  const updateProductoWithMovimiento = (movimiento: MovimientoProducto) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+    setProductos(prevProductos =>
+      prevProductos.map(producto =>
+        producto.id === movimiento.idProducto
+          ? {
+              ...producto,
+              detalle: [
+                movimiento,
+                ...producto.detalle.filter(m => m.id !== movimiento.id),
+              ],
+            }
+          : producto,
+      ),
+    );
+  };
 
   const agregarProducto = async (formu: IProductoForm) => {
     const agregado = await nuevoProducto(formu);
     if (agregado) {
-      setProductos(prev => [...prev, agregado]);
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      setProductos(prev => [agregado, ...prev]);
+    }
+  };
+
+  const primerMovimiento = async (formu: IProductoForm) => {
+    const agregado = await primerMov(formu);
+    if (agregado) {
+      updateProductoWithMovimiento(agregado);
     }
   };
 
   const agregarMovimiento = async (mov: IMovimientoSimple) => {
     const result = await nuevoMovimiento(mov);
     if (result) {
-      const p = await getAllProductsWithMovements();
+      updateProductoWithMovimiento(result);
 
-      setProductos(p);
+      // const p = await getAllProductsWithMovements();
+
+      // setProductos(p);
     }
   };
 
@@ -80,6 +120,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
         agregarProducto,
         agregarMovimiento,
         eliminarMovimiento,
+        primerMovimiento,
       }}>
       {children}
     </ProductContext.Provider>

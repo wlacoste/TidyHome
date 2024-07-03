@@ -34,7 +34,6 @@ export const tableExists = async (tableName: string): Promise<boolean> => {
 export const createTables = async () => {
   const existen = await tableExists('productos');
   if (existen) {
-    console.log('existen');
     return;
   }
   const db = await getDBConnection();
@@ -131,8 +130,6 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
           if (currentProducto) {
             productos.push(currentProducto);
           }
-          console.log('huraa');
-
           resolve(productos);
         },
         error => {
@@ -236,7 +233,6 @@ export const getMovimientoProductoById = async (
         [id],
         (_, result) => {
           if (result.rows.length > 0) {
-            console.log('rasd');
             const row = result.rows.item(0);
             const movimientoProducto: MovimientoProducto = {
               id: row.id,
@@ -253,13 +249,10 @@ export const getMovimientoProductoById = async (
 
             resolve(movimientoProducto);
           } else {
-            console.log('nothing');
             resolve(null);
           }
         },
         (_, error) => {
-          console.log('rasdasdad');
-
           reject(error);
         },
       );
@@ -267,6 +260,24 @@ export const getMovimientoProductoById = async (
   });
 };
 
+// export const getMovimientoByProductId = async (productId: number) => {
+//   const db = await getDBConnection();
+
+//   return new Promise((resolve, reject) => {
+//     db.transaction(tx => {
+//       tx.executeSql(
+//         'SELECT * FROM movimiento_producto WHERE product_id = ?',
+//         [productId],
+//         (_, result) => {
+//           resolve(result.rows.raw());
+//         },
+//         (_, error) => {
+//           reject(error);
+//         },
+//       );
+//     });
+//   });
+// };
 export const getMovimientoByProductId = async (productId: number) => {
   const db = await getDBConnection();
 
@@ -276,9 +287,12 @@ export const getMovimientoByProductId = async (productId: number) => {
         'SELECT * FROM movimiento_producto WHERE product_id = ?',
         [productId],
         (_, result) => {
-          resolve(result.rows.raw());
+          const rows = result.rows.raw();
+          console.log(`Query successful, found ${rows.length} rows`);
+          resolve(rows);
         },
         (_, error) => {
+          console.error('Query failed', error);
           reject(error);
         },
       );

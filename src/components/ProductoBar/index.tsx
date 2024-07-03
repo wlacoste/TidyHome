@@ -103,14 +103,13 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           renderHiddenItem={(data, rowMap) => (
             <View style={[styles.hiddenContainer]}>
               <View
-                style={{
-                  backgroundColor: theme.colors.inverseSurface,
-                  height: 88,
-                  justifyContent: 'center',
-                  alignItems: 'flex-start',
-                  width: '50%',
-                  paddingLeft: 5,
-                }}>
+                style={[
+                  styles.xscroll,
+                  styles.leftScroll,
+                  {
+                    backgroundColor: theme.colors.inverseSurface,
+                  },
+                ]}>
                 <IconButton
                   icon="trash-can-outline"
                   iconColor={theme.colors.onPrimary}
@@ -121,13 +120,13 @@ const ProductoBar = ({ producto }: IProductoBar) => {
                 />
               </View>
               <View
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  height: 88,
-                  justifyContent: 'center',
-                  width: '50%',
-                  alignItems: 'flex-end',
-                }}>
+                style={[
+                  styles.xscroll,
+                  styles.rightScroll,
+                  {
+                    backgroundColor: theme.colors.primary,
+                  },
+                ]}>
                 <IconButton
                   icon="playlist-edit"
                   iconColor={theme.colors.onPrimary}
@@ -227,5 +226,18 @@ const styles = StyleSheet.create({
   contenedorDetalle: {
     maxHeight: 360,
     overflow: 'scroll',
+  },
+  xscroll: {
+    height: 86,
+    justifyContent: 'center',
+    width: '50%',
+    marginTop: 1,
+  },
+  rightScroll: {
+    alignItems: 'flex-end',
+  },
+  leftScroll: {
+    alignItems: 'flex-start',
+    paddingLeft: 5,
   },
 });

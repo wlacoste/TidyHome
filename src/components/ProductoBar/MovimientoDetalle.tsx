@@ -11,7 +11,10 @@ const MovimientoDetalle = ({ mov }: IMovimientoDetalle) => {
   const theme = useTheme();
   return (
     <>
-      <Divider />
+      <Divider
+        horizontalInset
+        // style={{ backgroundColor: 'theme.colors.inverseSurface' }}
+      />
       <View
         style={[
           styles.card,

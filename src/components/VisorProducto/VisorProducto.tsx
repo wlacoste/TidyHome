@@ -17,15 +17,7 @@ const VisorProducto = () => {
 
   return (
     <>
-      <View style={styles.texto}>
-        <Text>Espacio</Text>
-      </View>
-      {/* <FlatList
-        data={productos}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-      /> */}
-      <ScrollView nestedScrollEnabled>
+      <ScrollView nestedScrollEnabled style={styles.contenedor}>
         {productos.map((producto, index) => (
           <ProductoBar
             key={'' + index + producto.id + producto.nombre}
@@ -40,7 +32,7 @@ const VisorProducto = () => {
 export default VisorProducto;
 
 const styles = StyleSheet.create({
-  texto: {
-    height: 400,
+  contenedor: {
+    paddingTop: 10,
   },
 });

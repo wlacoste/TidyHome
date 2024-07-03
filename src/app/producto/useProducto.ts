@@ -9,44 +9,16 @@ import {
 import {
   addMovimientoProducto,
   deleteMovimientoProducto,
-  getMovimientoByProductId,
+  getMovimientoProductoById,
   insertProductWithMovimiento,
   updateMovimientoProducto,
 } from '../../service/product-service';
+import { transformToProducto } from '../../utils/transformToProducto';
 
 const useProducto = () => {
-  const submitProducto = (formu: IProductoForm) => {
-    const producto: Producto = {
-      id: 0,
-      nombre: formu.nombre,
-      categoria: formu.categoria,
-      fechaCreacion: dayjs().toDate().toLocaleDateString('es-ES'),
-      detalle: [],
-    };
-    const precio = formu.precio ? Number(formu.precio) : 0;
-    const movimiento: MovimientoProducto = {
-      id: 0,
-      idProducto: 0,
-      fechaCreacion: dayjs().toDate().toLocaleDateString('es-ES'),
-      precio: formu.isUnitario ? precio * Number(formu.cantidad) : precio,
-      cantidad: formu.cantidad ? Number(formu.cantidad) : 1,
-      isUnitario: formu.isUnitario,
-      precioUnitario: formu.isUnitario
-        ? precio
-        : precio / Number(formu.cantidad),
-      isVence: formu.isVence,
-      fechaVencimiento:
-        formu.fechaVencimiento?.toLocaleDateString('es-ES') + '',
-      isCompra: true,
-    };
-    console.log('producto', producto);
-    console.log('movimiento', movimiento);
-    return { producto, movimiento };
-  };
-
-  const nuevoProducto = async (formu: IProductoForm) => {
+  const nuevoProducto = async (formulario: IProductoForm) => {
     try {
-      const { movimiento, producto } = submitProducto(formu);
+      const { movimiento, producto } = transformToProducto(formulario);
       await insertProductWithMovimiento(producto, movimiento);
       console.log('producto anadido');
       producto.detalle.push(movimiento);
@@ -57,6 +29,10 @@ const useProducto = () => {
     }
   };
 
+  const primerMovimiento = async (formulario: IProductoForm) => {
+    const { movimiento } = transformToProducto(formulario);
+    return await persistirMovimiento(movimiento, false);
+  };
   const nuevoMovimiento = async ({
     idProducto,
     isCompra,
@@ -80,9 +56,6 @@ const useProducto = () => {
     if (isUpdate) {
       cantidad = ultimoMovimiento.cantidad + 1;
     }
-    console.log('cantidad', cantidad);
-    console.log(' actual', cantidadActual);
-    console.log(' ultimoMovimiento.cantidad', ultimoMovimiento.cantidad);
     if (!isCompra && cantidad > cantidadActual + 1) {
       return;
     }
@@ -100,18 +73,25 @@ const useProducto = () => {
       isCompra: isCompra,
     };
 
+    return await persistirMovimiento(movimiento, isUpdate);
+  };
+
+  const persistirMovimiento = async (
+    movimiento: MovimientoProducto,
+    isUpdate: boolean,
+  ) => {
     try {
       let result = isUpdate
         ? await updateMovimientoProducto(movimiento) //insertedId undefined
         : await addMovimientoProducto(movimiento);
 
-      const res = isUpdate
+      const idUpdate = !isUpdate
         ? (result as { insertId: number }).insertId
-        : ultimoMovimiento.id;
-      console.log('resultados', result, res);
-      const nuevoAs = await getMovimientoByProductId(res);
-      console.log('nuevoAs,', nuevoAs);
-      return result;
+        : movimiento.id;
+      console.log('resultados', result, idUpdate);
+      const movimientoGuadado = await getMovimientoProductoById(idUpdate);
+      console.log('nuevoAs,', movimientoGuadado);
+      return movimientoGuadado;
     } catch (err) {
       console.error('Error al actualizar movimiento', err);
       throw err;
@@ -128,7 +108,12 @@ const useProducto = () => {
     }
   };
 
-  return { nuevoProducto, nuevoMovimiento, borrarMovimiento };
+  return {
+    nuevoProducto,
+    nuevoMovimiento,
+    borrarMovimiento,
+    primerMovimiento,
+  };
 };
 
 export default useProducto;
