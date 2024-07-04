@@ -3,7 +3,7 @@ import {
   enablePromise,
   openDatabase,
 } from 'react-native-sqlite-storage';
-import { IProducto, MovimientoProducto, Producto } from '../models';
+import { IProducto, MovimientoProducto, Producto } from '../models/productos';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'cleanApp.db', location: 'default' });

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Divider, IconButton, Text, useTheme } from 'react-native-paper';
-import { IMovimientoSimple, MovimientoProducto, Producto } from '../../models';
+import { IMovimientoSimple, MovimientoProducto, Producto } from '../../models/productos';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useProductContext } from '../../context/productContext';
 import Collapsible from 'react-native-collapsible';

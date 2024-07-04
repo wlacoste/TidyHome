@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Divider, Text, useTheme } from 'react-native-paper';
-import { MovimientoProducto } from '../../models';
+import { MovimientoProducto } from '../../models/productos';
 
 export interface IMovimientoDetalle {
   mov: MovimientoProducto;

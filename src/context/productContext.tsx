@@ -11,7 +11,7 @@ import {
   IProductoForm,
   MovimientoProducto,
   Producto,
-} from '../models';
+} from '../models/productos';
 import { getAllProductsWithMovements } from '../service/product-service';
 import useProducto from '../app/producto/useProducto';
 import { LayoutAnimation } from 'react-native';

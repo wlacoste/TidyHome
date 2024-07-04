@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 // import { ToDoItemComponent } from './components/ToDoItem';
-import { ToDoItem } from '../models';
+import { ToDoItem } from '../models/productos';
 import {
   getDBConnection,
   getTodoItems,

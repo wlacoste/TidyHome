@@ -6,7 +6,7 @@ import { IAddData, IGetColeccion, useFireDB } from '../../hooks/useFireDB';
 import auth from '@react-native-firebase/auth';
 import 'react-native-get-random-values';
 import { nanoid } from 'nanoid';
-import { IProductForm } from '../../models';
+import { IProductForm } from '../../models/productos';
 
 const SimpleForm = ({ onClose }: IProductForm) => {
   const [product, setProduct] = useState<string | undefined>(undefined);

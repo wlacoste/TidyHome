@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { IProductoForm, Producto, MovimientoProducto } from '../models';
+import { IProductoForm, Producto, MovimientoProducto } from '../models/productos';
 
 export const transformToProducto = (formu: IProductoForm) => {
   const producto: Producto = {

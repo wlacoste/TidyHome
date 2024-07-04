@@ -3,7 +3,7 @@ import {
   enablePromise,
   openDatabase,
 } from 'react-native-sqlite-storage';
-import { ToDoItem } from '../models';
+import { ToDoItem } from '../models/productos';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'todo-data.db', location: 'default' });

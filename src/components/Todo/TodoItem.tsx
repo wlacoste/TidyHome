@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
-import { ToDoItem } from '../../models';
+import { ToDoItem } from '../../models/productos';
 export const ToDoItemComponent: React.FC<{
   todo: ToDoItem;
   deleteItem: Function;

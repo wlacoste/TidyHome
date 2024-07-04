@@ -5,7 +5,7 @@ import {
   MovimientoProducto,
   IMovimientoSimple,
   IProductoForm,
-} from '../../models';
+} from '../../models/productos';
 import {
   addMovimientoProducto,
   deleteMovimientoProducto,

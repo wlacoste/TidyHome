@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller } from 'react-hook-form';
 import { useProductContext } from '../../context/productContext';
-import { IProductForm, IProductoForm } from '../../models';
+import { IProductForm, IProductoForm } from '../../models/productos';
 import { getListItem } from '../../utils/getListItems';
 import { mapProductoToForm } from '../../utils/transformToProducto';
 
