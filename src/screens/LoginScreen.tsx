@@ -4,7 +4,7 @@ import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
 
-export type LoginScreenProps = NativeStackScreenProps<any, 'Login'>;
+type LoginScreenProps = NativeStackScreenProps<any, 'Login'>;
 
 const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [mail, setMail] = useState('');

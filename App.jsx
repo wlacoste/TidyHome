@@ -19,7 +19,8 @@ export default function App() {
   const scheme = useColorScheme();
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme}>
       <UserAuthContextProvider>
         <ProductProvider>
           <InputProvider>

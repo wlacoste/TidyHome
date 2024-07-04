@@ -1,25 +1,34 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import Categories from '../components/Categorias/Categorias';
 import FabGroup from '../components/FAB/FAB';
 import VisorProducto from '../components/VisorProducto/VisorProducto';
 import VisorInput from './VisorInput';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, Theme } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  Theme,
+  useNavigation,
+} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Todo from './TodoScreen';
 import useDB from '../hooks/useDB';
 import { deleteSpecifiedTables } from '../service/product-service';
 import { ModalProvider } from '../context/modalContext';
 import ModalAcciones from '../components/ModalAcciones/ModalAcciones';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootNavigationProp } from '../models/routeTypes';
 
-const categoriaName = 'Home';
-const inputName = 'Items';
-const productoName = 'Movimiento';
-const estadoName = 'Estado';
-const todoName = 'Notas';
+// import { useNavigation } from '@react-navigation/native';
+// export type HomeProps = NativeStackScreenProps<any, any>;
+
+// const categoriaName = 'Home';
+// const inputName = 'Items';
+// const productoName = 'Movimiento';
+// const estadoName = 'Estado';
+// const todoName = 'Notas';
 
 const HomeScreen = () => {
   const theme = useTheme<Theme>();
@@ -34,100 +43,96 @@ const HomeScreen = () => {
       <ModalProvider>
         <FabGroup />
         <ModalAcciones />
-        <NavigationContainer independent={true} theme={theme}>
-          <Tab.Navigator
-            sceneContainerStyle={styles.barra}
-            initialRouteName={categoriaName}
-            screenOptions={({ route }) => ({
-              tabBarStyle: {
-                backgroundColor: tema.colors.surface,
-                borderTopWidth: 0,
-                borderTopColor: tema.colors.elevation.level5,
-                height: 50,
-                elevation: 10,
-              },
+        <Tab.Navigator
+          sceneContainerStyle={styles.barra}
+          initialRouteName={'Home'}
+          screenOptions={({ route }) => ({
+            tabBarStyle: {
+              backgroundColor: tema.colors.surface,
+              borderTopWidth: 0,
+              borderTopColor: tema.colors.elevation.level5,
+              height: 50,
+              elevation: 10,
+            },
 
-              tabBarLabel: ({ focused, color }) => (
-                <Text
-                  style={[
-                    styles.labelText,
-                    {
-                      color: focused
-                        ? tema.colors.primary
-                        : tema.colors.outline,
-                    },
-                  ]}>
-                  {route.name}
-                </Text>
-              ),
-              tabBarActiveTintColor: tema.colors.onSurface,
-              tabBarInactiveTintColor: tema.colors.outline,
-              tabBarIconStyle: {
-                paddingBottom: 0,
-                marginBottom: 0,
-                height: 7,
-              },
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
+            tabBarLabel: ({ focused, color }) => (
+              <Text
+                style={[
+                  styles.labelText,
+                  {
+                    color: focused ? tema.colors.primary : tema.colors.outline,
+                  },
+                ]}>
+                {route.name}
+              </Text>
+            ),
+            tabBarActiveTintColor: tema.colors.onSurface,
+            tabBarInactiveTintColor: tema.colors.outline,
+            tabBarIconStyle: {
+              paddingBottom: 0,
+              marginBottom: 0,
+              height: 7,
+            },
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
 
-                switch (route.name) {
-                  case 'Home':
-                    iconName = 'home-outline';
-                    break;
-                  case 'Items':
-                    iconName = 'receipt-outline';
-                    break;
-                  case 'Movimiento':
-                    iconName = 'ticket-outline';
-                    break;
-                  case 'Notas':
-                    iconName = 'pencil';
-                    break;
-                  case 'Profile':
-                    iconName = 'user';
-                    break;
-                  case 'Estado':
-                    iconName = 'stats-chart';
-                    break;
-                  default:
-                    break;
-                }
-                return (
-                  <Ionicons
-                    name={iconName}
-                    size={19}
-                    color={focused ? tema.colors.primary : tema.colors.outline}
-                  />
-                );
-              },
-            })}>
-            <Tab.Screen
-              name={categoriaName}
-              component={Categories}
-              options={{ headerShown: false }}
-            />
-            <Tab.Screen
-              name={inputName}
-              component={VisorInput}
-              options={{ headerShown: false }}
-            />
-            <Tab.Screen
-              name={estadoName}
-              component={Todo}
-              options={{ headerShown: false }}
-            />
-            <Tab.Screen
-              name={productoName}
-              component={VisorProducto}
-              options={{ headerShown: false }}
-            />
-            <Tab.Screen
-              name={todoName}
-              component={Todo}
-              options={{ headerShown: false }}
-            />
-          </Tab.Navigator>
-        </NavigationContainer>
+              switch (route.name) {
+                case 'Home':
+                  iconName = 'home-outline';
+                  break;
+                case 'Items':
+                  iconName = 'receipt-outline';
+                  break;
+                case 'Movimiento':
+                  iconName = 'ticket-outline';
+                  break;
+                case 'Notas':
+                  iconName = 'pencil';
+                  break;
+                case 'Profile':
+                  iconName = 'user';
+                  break;
+                case 'Estado':
+                  iconName = 'stats-chart';
+                  break;
+                default:
+                  break;
+              }
+              return (
+                <Ionicons
+                  name={iconName}
+                  size={19}
+                  color={focused ? tema.colors.primary : tema.colors.outline}
+                />
+              );
+            },
+          })}>
+          <Tab.Screen
+            name={'Home'}
+            component={Categories}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name={'Items'}
+            component={VisorInput}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name={'Estado'}
+            component={Todo}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name={'Movimiento'}
+            component={VisorProducto}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name={'Notas'}
+            component={Todo}
+            options={{ headerShown: false }}
+          />
+        </Tab.Navigator>
       </ModalProvider>
     </>
   );
