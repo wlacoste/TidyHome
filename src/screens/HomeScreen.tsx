@@ -19,7 +19,10 @@ import { deleteSpecifiedTables } from '../service/product-service';
 import { ModalProvider } from '../context/modalContext';
 import ModalAcciones from '../components/ModalAcciones/ModalAcciones';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootNavigationProp } from '../models/routeTypes';
+import { RootNavigationProp, TabParamList } from '../models/routeTypes';
+import TestView from '../components/TestView/TestView';
+import SettingsMenu from './Settings';
+import SettingsStackNavigator from '../navigator/SettingNavigator';
 
 // import { useNavigation } from '@react-navigation/native';
 // export type HomeProps = NativeStackScreenProps<any, any>;
@@ -33,7 +36,7 @@ import { RootNavigationProp } from '../models/routeTypes';
 const HomeScreen = () => {
   const theme = useTheme<Theme>();
   const tema = useTheme();
-  const Tab = createBottomTabNavigator();
+  const Tab = createBottomTabNavigator<TabParamList>();
 
   useDB();
   // deleteSpecifiedTables();
@@ -45,7 +48,7 @@ const HomeScreen = () => {
         <ModalAcciones />
         <Tab.Navigator
           sceneContainerStyle={styles.barra}
-          initialRouteName={'Home'}
+          initialRouteName={'Items'}
           screenOptions={({ route }) => ({
             tabBarStyle: {
               backgroundColor: tema.colors.surface,
@@ -77,9 +80,9 @@ const HomeScreen = () => {
               let iconName;
 
               switch (route.name) {
-                case 'Home':
-                  iconName = 'home-outline';
-                  break;
+                // case 'Home':
+                //   iconName = 'home-outline';
+                //   break;
                 case 'Items':
                   iconName = 'receipt-outline';
                   break;
@@ -89,11 +92,14 @@ const HomeScreen = () => {
                 case 'Notas':
                   iconName = 'pencil';
                   break;
-                case 'Profile':
-                  iconName = 'user';
-                  break;
+                // case 'Profile':
+                //   iconName = 'user';
+                //   break;
                 case 'Estado':
                   iconName = 'stats-chart';
+                  break;
+                case 'Settings':
+                  iconName = 'cog-outline';
                   break;
                 default:
                   break;
@@ -107,29 +113,39 @@ const HomeScreen = () => {
               );
             },
           })}>
-          <Tab.Screen
+          {/* <Tab.Screen
             name={'Home'}
             component={Categories}
             options={{ headerShown: false }}
-          />
+          /> */}
           <Tab.Screen
+            key={'1'}
             name={'Items'}
             component={VisorInput}
             options={{ headerShown: false }}
           />
           <Tab.Screen
+            key={'2'}
             name={'Estado'}
             component={Todo}
             options={{ headerShown: false }}
           />
           <Tab.Screen
+            key={'3'}
             name={'Movimiento'}
             component={VisorProducto}
             options={{ headerShown: false }}
           />
           <Tab.Screen
+            key={'4'}
             name={'Notas'}
             component={Todo}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            key={'5'}
+            name={'Settings'}
+            component={SettingsStackNavigator}
             options={{ headerShown: false }}
           />
         </Tab.Navigator>
