@@ -7,6 +7,7 @@ import { Routes } from './src/Routes';
 import { UserAuthContextProvider } from './src/context/userAuthContext';
 import { InputProvider } from './src/context/simpleInputContext';
 import ProductProvider from './src/context/productContext';
+import CategoryProvider from './src/context/categoryContext';
 import {
   MaterialDarkTheme,
   MaterialLightTheme,
@@ -24,12 +25,14 @@ export default function App() {
       <UserAuthContextProvider>
         <ProductProvider>
           <InputProvider>
-            <PaperProvider
-              theme={
-                scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme
-              }>
-              <Routes />
-            </PaperProvider>
+            <CategoryProvider>
+              <PaperProvider
+                theme={
+                  scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme
+                }>
+                <Routes />
+              </PaperProvider>
+            </CategoryProvider>
           </InputProvider>
         </ProductProvider>
       </UserAuthContextProvider>

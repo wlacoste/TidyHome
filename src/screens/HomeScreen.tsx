@@ -121,7 +121,7 @@ const HomeScreen = () => {
           <Tab.Screen
             key={'1'}
             name={'Items'}
-            component={VisorInput}
+            component={Categories}
             options={{ headerShown: false }}
           />
           <Tab.Screen

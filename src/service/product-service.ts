@@ -3,7 +3,12 @@ import {
   enablePromise,
   openDatabase,
 } from 'react-native-sqlite-storage';
-import { IProducto, MovimientoProducto, Producto } from '../models/productos';
+import {
+  DefaultCategories,
+  IProducto,
+  MovimientoProducto,
+  Producto,
+} from '../models/productos';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'cleanApp.db', location: 'default' });
@@ -40,12 +45,43 @@ export const createTables = async () => {
 
   db.transaction(tx => {
     tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS categories (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        icon TEXT,
+        isEnabled INTEGER DEFAULT 1
+      );`,
+      [],
+      () => {
+        console.log('Categories table created successfully');
+      },
+      error => {
+        console.error('Error creating categories table: ', error);
+      },
+    );
+    DefaultCategories.forEach(category => {
+      tx.executeSql(
+        'INSERT OR IGNORE INTO categories (id, name, icon, isEnabled) VALUES (?, ?, ?, ?);',
+        [category.id, category.name, category.icon, category.isEnabled ? 1 : 0],
+        () => console.log(`Default category "${category.name}" inserted`),
+        (_, error) => {
+          console.error(
+            `Error inserting default category "${category.name}":`,
+            error,
+          );
+          return false;
+        },
+      );
+    });
+
+    tx.executeSql(
       `CREATE TABLE IF NOT EXISTS productos (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT,
-          categoria TEXT,
-          fechaCreacion TEXT
-        );`,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT,
+        categoria_id INTEGER,
+        fechaCreacion TEXT,
+        FOREIGN KEY (categoria_id) REFERENCES categories (id) ON DELETE SET NULL
+      );`,
       [],
       () => {
         console.log('Products table created successfully');
@@ -221,7 +257,7 @@ export const deleteMovimientoProducto = async (id: number) => {
   });
 };
 
-export const getMovimientoProductoById = async (
+export const getMovimientoById = async (
   id: number,
 ): Promise<MovimientoProducto | null> => {
   const db = await getDBConnection();
@@ -278,7 +314,7 @@ export const getMovimientoProductoById = async (
 //     });
 //   });
 // };
-export const getMovimientoByProductId = async (productId: number) => {
+export const getMovimientosByProduct = async (productId: number) => {
   const db = await getDBConnection();
 
   return new Promise((resolve, reject) => {
@@ -300,25 +336,50 @@ export const getMovimientoByProductId = async (productId: number) => {
   });
 };
 
+// export const insertProduct = async (
+//   name: string,
+//   categoria: string,
+//   fechaCreacion: string,
+// ) => {
+//   const db = await getDBConnection();
+
+//   return new Promise<void>((resolve, reject) => {
+//     db.transaction(tx => {
+//       tx.executeSql(
+//         'INSERT INTO productos (name, categoria, fechaCreacion) VALUES (?, ?, ?);',
+//         [name, categoria, fechaCreacion],
+//         (_, result) => {
+//           console.log('Product inserted successfully', result);
+//           resolve();
+//         },
+//         error => {
+//           console.error('Error inserting product: ', error);
+//           reject(error);
+//         },
+//       );
+//     });
+//   });
+// };
 export const insertProduct = async (
   name: string,
-  categoria: string,
+  categoryId: number,
   fechaCreacion: string,
-) => {
+): Promise<number> => {
   const db = await getDBConnection();
 
-  return new Promise<void>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO productos (name, categoria, fechaCreacion) VALUES (?, ?, ?);',
-        [name, categoria, fechaCreacion],
+        'INSERT INTO productos (nombre, categoria_id, fechaCreacion) VALUES (?, ?, ?);',
+        [name, categoryId, fechaCreacion],
         (_, result) => {
           console.log('Product inserted successfully', result);
-          resolve();
+          resolve(result.insertId);
         },
-        error => {
+        (_, error) => {
           console.error('Error inserting product: ', error);
           reject(error);
+          return false;
         },
       );
     });
@@ -334,8 +395,8 @@ export const insertProductWithMovimiento = async (
   return new Promise<void>((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO productos (nombre, categoria, fechaCreacion) VALUES (?, ?, ?);',
-        [producto.nombre, producto.categoria, producto.fechaCreacion],
+        'INSERT INTO productos (nombre, categoria_id, fechaCreacion) VALUES (?, ?, ?);',
+        [producto.nombre, producto.categoria.id, producto.fechaCreacion],
         (tx, result) => {
           const productId = result.insertId; // Get the ID of the newly inserted product
 
@@ -379,7 +440,7 @@ export const deleteSpecifiedTables = async (): Promise<void> => {
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
-      const tablesToDelete = ['productos', 'movimiento_producto'];
+      const tablesToDelete = ['productos', 'movimiento_producto', 'categories'];
       tablesToDelete.forEach(table => {
         tx.executeSql(
           `DROP TABLE IF EXISTS ${table};`,

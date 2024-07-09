@@ -9,7 +9,7 @@ import {
 import {
   addMovimientoProducto,
   deleteMovimientoProducto,
-  getMovimientoProductoById,
+  getMovimientoById,
   insertProductWithMovimiento,
   updateMovimientoProducto,
 } from '../../service/product-service';
@@ -89,7 +89,7 @@ const useProducto = () => {
         ? (result as { insertId: number }).insertId
         : movimiento.id;
       console.log('resultados', result, idUpdate);
-      const movimientoGuadado = await getMovimientoProductoById(idUpdate);
+      const movimientoGuadado = await getMovimientoById(idUpdate);
       console.log('nuevoAs,', movimientoGuadado);
       return movimientoGuadado;
     } catch (err) {

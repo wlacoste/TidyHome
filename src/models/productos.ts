@@ -16,10 +16,17 @@ export type IProducto = {
   fechaCreacion: string;
 };
 
+export interface Categoria {
+  id: number;
+  name: string;
+  icon: string;
+  isEnabled: boolean;
+}
+
 export interface Producto {
   id: number;
   nombre: string;
-  categoria: string;
+  categoria: Categoria;
   fechaCreacion: string;
   detalle: MovimientoProducto[];
 }
@@ -61,3 +68,18 @@ export interface IProductForm {
   onClose?: () => void;
   producto?: Producto;
 }
+
+export const DefaultCategories: Categoria[] = [
+  {
+    id: 1,
+    name: 'alimentos',
+    icon: 'pencil',
+    isEnabled: true,
+  },
+  {
+    id: 2,
+    name: 'compras',
+    icon: 'cog',
+    isEnabled: true,
+  },
+];
