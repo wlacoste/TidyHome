@@ -23,18 +23,18 @@ export default function App() {
     <NavigationContainer
       theme={scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme}>
       <UserAuthContextProvider>
-        <ProductProvider>
-          <InputProvider>
-            <CategoryProvider>
+        <CategoryProvider>
+          <ProductProvider>
+            <InputProvider>
               <PaperProvider
                 theme={
                   scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme
                 }>
                 <Routes />
               </PaperProvider>
-            </CategoryProvider>
-          </InputProvider>
-        </ProductProvider>
+            </InputProvider>
+          </ProductProvider>
+        </CategoryProvider>
       </UserAuthContextProvider>
     </NavigationContainer>
   );

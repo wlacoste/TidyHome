@@ -124,9 +124,10 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
       tx.executeSql(
         `SELECT p.*, mp.id as mp_id, mp.fechaCreacion as mp_fechaCreacion, 
                 mp.precio, mp.cantidad, mp.isUnitario, mp.precioUnitario, 
-                mp.isVence, mp.fechaVencimiento, mp.isCompra
+                mp.isVence, mp.fechaVencimiento, mp.isCompra, ct.name, ct.icon, ct.isEnabled
          FROM productos p
          INNER JOIN movimiento_producto mp ON p.id = mp.product_id
+         INNER JOIN categories ct ON p.categoria_id = ct.id
          ORDER BY p.nombre, mp.id DESC`,
         [],
         (_, results) => {
@@ -143,7 +144,12 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
               currentProducto = {
                 id: row.id,
                 nombre: row.nombre,
-                categoria: row.categoria,
+                categoria: {
+                  id: row.categoria_id,
+                  icon: row.icon,
+                  name: row.name,
+                  isEnabled: row.isEnabled,
+                },
                 fechaCreacion: row.fechaCreacion,
                 detalle: [],
               };

@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { useCategories } from '../../hooks/useCategories';
+// import { useCategories } from '../../hooks/useCategories';
 import { Button, Card, Switch, TextInput } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
@@ -14,9 +14,11 @@ import { useProductContext } from '../../context/productContext';
 import { IProductForm, IProductoForm } from '../../models/productos';
 import { getListItem } from '../../utils/getListItems';
 import { mapProductoToForm } from '../../utils/transformToProducto';
+import { useCategories } from '../../context/categoryContext';
 
 const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
-  const { categorias, loading: categoriasLoading } = useCategories();
+  // const { categorias, loading: categoriasLoading } = useCategories();
+  const { categories: categorias } = useCategories();
   const { agregarProducto, primerMovimiento } = useProductContext();
   const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
   const [openDate, setOpenDate] = useState(false);
@@ -42,7 +44,12 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
 
   useEffect(() => {
     if (categorias) {
-      setItemsCategorias(getListItem(categorias));
+      setItemsCategorias(
+        categorias.map(categoria => ({
+          _id: categoria.id.toString(),
+          value: categoria.name,
+        })),
+      );
     }
   }, [categorias]);
 
@@ -146,9 +153,10 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
 
         <Controller
           control={control}
-          defaultValue=""
+          // defaultValue=
           name="categoria"
           rules={{
+            required: true,
             validate: () => {
               return true;
             },
@@ -159,9 +167,13 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
               arrayList={itemsCategorias}
               selectedArrayList={[]}
               multiEnable={false}
-              value={value}
+              value={
+                itemsCategorias.find(item => item._id === value)
+                  ? itemsCategorias.find(item => item._id === value)?.value + ''
+                  : ''
+              }
               onSelection={(value: any) => {
-                onChange(value.text);
+                onChange(value.selectedList[0]._id);
               }}
             />
           )}

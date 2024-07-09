@@ -10,7 +10,7 @@ export type IProducto = {
   cantidad: number;
   precio: number;
   isUnitario: boolean;
-  categoria: string;
+  categoria: Categoria;
   fechaVencimiento: string;
   isVence: boolean;
   fechaCreacion: string;

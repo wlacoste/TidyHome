@@ -14,11 +14,19 @@ import {
   updateMovimientoProducto,
 } from '../../service/product-service';
 import { transformToProducto } from '../../utils/transformToProducto';
+import { useCategories } from '../../context/categoryContext';
 
 const useProducto = () => {
+  const { categories } = useCategories();
   const nuevoProducto = async (formulario: IProductoForm) => {
     try {
-      const { movimiento, producto } = transformToProducto(formulario);
+      const categoria = categories.find(
+        item => item.id === Number(formulario.categoria),
+      );
+      const { movimiento, producto } = transformToProducto(
+        formulario,
+        categoria!,
+      );
       await insertProductWithMovimiento(producto, movimiento);
       console.log('producto anadido');
       producto.detalle.push(movimiento);
@@ -30,7 +38,10 @@ const useProducto = () => {
   };
 
   const primerMovimiento = async (formulario: IProductoForm) => {
-    const { movimiento } = transformToProducto(formulario);
+    const categoria = categories.find(
+      item => item.id === Number(formulario.categoria),
+    );
+    const { movimiento } = transformToProducto(formulario, categoria!);
     return await persistirMovimiento(movimiento, false);
   };
   const nuevoMovimiento = async ({

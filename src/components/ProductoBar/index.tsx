@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Card, Divider, IconButton, Text, useTheme } from 'react-native-paper';
-import { IMovimientoSimple, MovimientoProducto, Producto } from '../../models/productos';
+import {
+  IMovimientoSimple,
+  MovimientoProducto,
+  Producto,
+} from '../../models/productos';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useProductContext } from '../../context/productContext';
 import Collapsible from 'react-native-collapsible';
@@ -73,7 +77,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
               {producto.nombre.charAt(0).toUpperCase() +
                 producto.nombre.slice(1)}
             </Text>
-            <Text style={styles.textCategoria}>{producto.categoria}</Text>
+            <Text style={styles.textCategoria}>{producto.categoria.name}</Text>
           </View>
         </View>
         <View style={styles.rightSection}>

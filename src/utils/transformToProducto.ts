@@ -1,11 +1,19 @@
 import dayjs from 'dayjs';
-import { IProductoForm, Producto, MovimientoProducto } from '../models/productos';
+import {
+  IProductoForm,
+  Producto,
+  MovimientoProducto,
+  Categoria,
+} from '../models/productos';
 
-export const transformToProducto = (formu: IProductoForm) => {
+export const transformToProducto = (
+  formu: IProductoForm,
+  categoria: Categoria,
+) => {
   const producto: Producto = {
     id: formu.id ? formu.id : 0,
     nombre: formu.nombre,
-    categoria: formu.categoria,
+    categoria: categoria,
     fechaCreacion: dayjs().toDate().toLocaleDateString('es-ES'),
     detalle: [],
   };
@@ -44,7 +52,7 @@ export const mapProductoToForm = (producto?: Producto): IProductoForm => {
     cantidad: undefined, // You might want to set a default value here
     precio: undefined, // You might want to set a default value here
     isUnitario: false, // You might want to determine this based on some logic
-    categoria: producto.categoria,
+    categoria: producto.categoria.id.toString(),
     fechaVencimiento: undefined, // You might want to set a default value here
     isVence: false, // You might want to determine this based on some logic
     fechaCreacion: producto.fechaCreacion,
