@@ -11,10 +11,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller } from 'react-hook-form';
 import { useProductContext } from '../../context/productContext';
-import { IProductForm, IProductoForm } from '../../models/productos';
+import { Categoria, IProductForm, IProductoForm } from '../../models/productos';
 import { getListItem } from '../../utils/getListItems';
 import { mapProductoToForm } from '../../utils/transformToProducto';
 import { useCategories } from '../../context/categoryContext';
+import CategorySelector from '../CategorySelector/CategorySelector';
 
 const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
   // const { categorias, loading: categoriasLoading } = useCategories();
@@ -22,6 +23,15 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
   const { agregarProducto, primerMovimiento } = useProductContext();
   const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
   const [openDate, setOpenDate] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Categoria | null>(
+    null,
+  );
+  const { categories } = useCategories();
+
+  const handleCategorySelect = (category: Categoria) => {
+    // Handle the selected category (e.g., update form state)
+    console.log('Selected category:', category);
+  };
 
   const {
     control,
@@ -150,6 +160,10 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
             )}
           />
         </View>
+        <CategorySelector
+          categories={categories}
+          onSelect={handleCategorySelect}
+        />
 
         <Controller
           control={control}
