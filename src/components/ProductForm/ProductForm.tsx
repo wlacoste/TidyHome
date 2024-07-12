@@ -166,11 +166,22 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
             )}
           />
         </View>
-        <CategorySelector
-          categories={categories}
+        <Controller<IProductoFormSecond>
           control={control}
-          name="categoria"
-          error={errors.categoria as FieldError | undefined}
+          name={'categoria'}
+          defaultValue={undefined}
+          rules={{
+            required: 'Category is required',
+            validate: value => value !== undefined,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <CategorySelector
+              categories={categories}
+              value={value as Categoria | undefined}
+              onChange={onChange}
+              error={errors.categoria as FieldError | undefined}
+            />
+          )}
         />
 
         {/* <Controller

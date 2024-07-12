@@ -30,23 +30,25 @@ import { Control, Controller, FieldError, useWatch } from 'react-hook-form';
 // }
 interface CategorySelectorProps {
   categories: Categoria[];
-  control: Control<IProductoFormSecond>;
-  name: 'categoria';
+  // control: Control<IProductoFormSecond>;
+  // name: 'categoria';
   error?: FieldError;
+  value: Categoria | undefined;
+  onChange: (value: Categoria) => void;
 }
 
 const CategorySelector: React.FC<CategorySelectorProps> = ({
   categories,
-  control,
-  name,
+  value,
+  onChange,
   error,
 }) => {
   const [visible, setVisible] = useState(false);
 
-  const selectedCategory = useWatch({
-    control,
-    name: 'categoria',
-  });
+  // const selectedCategory = useWatch({
+  //   control,
+  //   name: 'categoria',
+  // });
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
@@ -58,7 +60,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   const theme = useTheme();
 
   useEffect(() => {
-    console.log(selectedCategory);
+    // console.log(selectedCategory);
     console.log('errors', error);
   }, [error]);
 
@@ -76,13 +78,13 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
           <IconButton
             icon={category.icon}
             iconColor={
-              selectedCategory?.id !== category.id
+              value?.id !== category.id
                 ? theme.colors.onSurface
                 : theme.colors.inverseSurface
             }
             style={{
               backgroundColor:
-                selectedCategory?.id !== category.id
+                value?.id !== category.id
                   ? theme.colors.surfaceVariant
                   : theme.colors.inversePrimary,
             }}
@@ -96,7 +98,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         </View>
       </TouchableRipple>
     ),
-    [theme.colors, selectedCategory],
+    [theme.colors, value],
   );
 
   return (
@@ -104,10 +106,10 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
       <Button
         mode="outlined"
         onPress={showModal}
-        icon={selectedCategory?.icon}
+        icon={value?.icon}
         // style={styles.boton}
         style={[styles.boton, error ? { borderColor: 'red' } : null]}>
-        {selectedCategory ? selectedCategory.name : 'Seleccionar Categoría'}
+        {value ? value.name : 'Seleccionar Categoría'}
       </Button>
       {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
 
@@ -120,24 +122,14 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
             { backgroundColor: theme.colors.background },
           ]}>
           <Text style={styles.modalTitle}>Seleccionar una categoría</Text>
-          <Controller<IProductoFormSecond>
-            control={control}
-            name={name}
-            defaultValue={undefined}
-            rules={{
-              required: 'Category is required',
-              validate: value => value !== undefined,
-            }}
-            render={({ field: { onChange, value } }) => (
-              <FlatList
-                data={categories}
-                renderItem={({ item }) => renderItem({ item, onChange, value })}
-                keyExtractor={item => item.id.toString()}
-                numColumns={4}
-                contentContainerStyle={styles.container}
-              />
-            )}
+          <FlatList
+            data={categories}
+            renderItem={({ item }) => renderItem({ item, onChange, value })}
+            keyExtractor={item => item.id.toString()}
+            numColumns={4}
+            contentContainerStyle={styles.container}
           />
+
           <IconButton
             icon="close"
             size={24}
