@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TestView from '../components/TestView/TestView';
 import { SettingsList } from '../models/routeTypes';
 import SettingsMenu from '../screens/Settings';
+import ResetTables from '../components/ResetTables/Reset';
 
 const SettingsStack = createNativeStackNavigator<SettingsList>();
 
@@ -21,7 +22,7 @@ function SettingsStackNavigator() {
       />
       <SettingsStack.Screen name="Reminder" component={TestView} />
       <SettingsStack.Screen name="RegularPayments" component={TestView} />
-      <SettingsStack.Screen name="Currency" component={TestView} />
+      <SettingsStack.Screen name="Currency" component={ResetTables} />
       {/* Add other settings screens here */}
     </SettingsStack.Navigator>
   );

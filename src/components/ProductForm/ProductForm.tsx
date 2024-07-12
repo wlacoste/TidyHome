@@ -9,9 +9,14 @@ import Text from '../Text';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, FieldError } from 'react-hook-form';
 import { useProductContext } from '../../context/productContext';
-import { Categoria, IProductForm, IProductoForm } from '../../models/productos';
+import {
+  Categoria,
+  IProductForm,
+  IProductoForm,
+  IProductoFormSecond,
+} from '../../models/productos';
 import { getListItem } from '../../utils/getListItems';
 import { mapProductoToForm } from '../../utils/transformToProducto';
 import { useCategories } from '../../context/categoryContext';
@@ -38,17 +43,18 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
     resetField,
     formState: { errors },
     handleSubmit,
-  } = useForm<IProductoForm>({
+  } = useForm<IProductoFormSecond>({
     mode: 'onChange',
     defaultValues: mapProductoToForm(producto),
   });
 
   const submit = data => {
-    if (tipo === 'nuevo') {
-      agregarProducto(data);
-    } else {
-      primerMovimiento({ ...data, id: producto?.id });
-    }
+    console.log('submit data', data);
+    // if (tipo === 'nuevo') {
+    //   agregarProducto(data);
+    // } else {
+    //   primerMovimiento({ ...data, id: producto?.id });
+    // }
     onClose?.();
   };
 
@@ -162,10 +168,12 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
         </View>
         <CategorySelector
           categories={categories}
-          onSelect={handleCategorySelect}
+          control={control}
+          name="categoria"
+          error={errors.categoria as FieldError | undefined}
         />
 
-        <Controller
+        {/* <Controller
           control={control}
           // defaultValue=
           name="categoria"
@@ -191,7 +199,7 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
               }}
             />
           )}
-        />
+        /> */}
         <View style={styles.viewUnitario}>
           <Text style={styles.textoUnitario}>Posee fecha de vencimiento?</Text>
 

@@ -8,7 +8,7 @@ import { Text } from 'react-native-paper';
 const VisorProducto = () => {
   const { productos } = useProductContext();
   console.log(productos);
-  console.log(productos[0].detalle);
+  // console.log(productos[0].detalle);
 
   return (
     <>

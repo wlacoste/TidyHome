@@ -4,16 +4,14 @@ import {
   Producto,
   MovimientoProducto,
   Categoria,
+  IProductoFormSecond,
 } from '../models/productos';
 
-export const transformToProducto = (
-  formu: IProductoForm,
-  categoria: Categoria,
-) => {
+export const transformToProducto = (formu: IProductoFormSecond) => {
   const producto: Producto = {
     id: formu.id ? formu.id : 0,
     nombre: formu.nombre,
-    categoria: categoria,
+    categoria: formu.categoria!,
     fechaCreacion: dayjs().toDate().toLocaleDateString('es-ES'),
     detalle: [],
   };
@@ -33,14 +31,14 @@ export const transformToProducto = (
   return { producto, movimiento };
 };
 
-export const mapProductoToForm = (producto?: Producto): IProductoForm => {
+export const mapProductoToForm = (producto?: Producto): IProductoFormSecond => {
   if (!producto) {
     return {
       nombre: '',
       cantidad: undefined,
       precio: undefined,
       isUnitario: false,
-      categoria: '',
+      categoria: undefined,
       fechaVencimiento: undefined,
       isVence: false,
       fechaCreacion: '',
@@ -52,7 +50,7 @@ export const mapProductoToForm = (producto?: Producto): IProductoForm => {
     cantidad: undefined, // You might want to set a default value here
     precio: undefined, // You might want to set a default value here
     isUnitario: false, // You might want to determine this based on some logic
-    categoria: producto.categoria.id.toString(),
+    categoria: producto.categoria,
     fechaVencimiento: undefined, // You might want to set a default value here
     isVence: false, // You might want to determine this based on some logic
     fechaCreacion: producto.fechaCreacion,
