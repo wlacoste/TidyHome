@@ -1,18 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sure to install this package
-import {
-  Categoria,
-  DefaultCategories,
-  IProductoFormSecond,
-} from '../../models/productos';
-import { useCategories } from '../../context/categoryContext';
+import React, { useCallback, useState } from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { Categoria } from '../../models/productos';
 import {
   Button,
   IconButton,
@@ -22,16 +10,11 @@ import {
   TouchableRipple,
   useTheme,
 } from 'react-native-paper';
-import { Control, Controller, FieldError, useWatch } from 'react-hook-form';
+import { FieldError } from 'react-hook-form';
 
-// interface CategorySelectorProps {
-//   categories: Categoria[];
-//   onSelect: (category: Categoria) => void;
-// }
 interface CategorySelectorProps {
   categories: Categoria[];
-  // control: Control<IProductoFormSecond>;
-  // name: 'categoria';
+
   error?: FieldError;
   value: Categoria | undefined;
   onChange: (value: Categoria) => void;
@@ -44,29 +27,13 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   error,
 }) => {
   const [visible, setVisible] = useState(false);
-
-  // const selectedCategory = useWatch({
-  //   control,
-  //   name: 'categoria',
-  // });
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  // const handleSelectCategory = (category: Categoria) => {
-  //   setSelectedCategory(category);
-  //   // onSelect(category);
-  //   hideModal();
-  // };
   const theme = useTheme();
-
-  useEffect(() => {
-    // console.log(selectedCategory);
-    console.log('errors', error);
-  }, [error]);
 
   const renderItem = useCallback(
     ({ item: category, onChange, value }) => (
-      // console.log('value', value)
       <TouchableRipple
         key={category.id}
         style={styles.categoryItem}
@@ -107,12 +74,13 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         mode="outlined"
         onPress={showModal}
         icon={value?.icon}
-        // style={styles.boton}
-        style={[styles.boton, error ? { borderColor: 'red' } : null]}>
+        style={[
+          styles.boton,
+          error ? { borderColor: theme.colors.error } : null,
+        ]}
+        textColor={error ? theme.colors.error : theme.colors.primary}>
         {value ? value.name : 'Seleccionar Categoría'}
       </Button>
-      {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
-
       <Portal>
         <Modal
           visible={visible}

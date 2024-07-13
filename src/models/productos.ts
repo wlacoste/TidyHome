@@ -57,22 +57,22 @@ export interface IProductoForm {
   cantidad: string | undefined;
   precio: string | undefined;
   isUnitario: boolean;
-  categoria: string;
-  fechaVencimiento: Date | undefined;
-  isVence: boolean;
-  fechaCreacion: string | Date;
-}
-export interface IProductoFormSecond {
-  id?: number;
-  nombre: string;
-  cantidad: string | undefined;
-  precio: string | undefined;
-  isUnitario: boolean;
   categoria?: Categoria;
   fechaVencimiento: Date | undefined;
   isVence: boolean;
   fechaCreacion: string | Date;
 }
+// export interface IProductoFormSecond {
+//   id?: number;
+//   nombre: string;
+//   cantidad: string | undefined;
+//   precio: string | undefined;
+//   isUnitario: boolean;
+//   categoria?: Categoria;
+//   fechaVencimiento: Date | undefined;
+//   isVence: boolean;
+//   fechaCreacion: string | Date;
+// }
 
 export interface IProductForm {
   tipo: 'update' | 'nuevo';

@@ -9,7 +9,6 @@ import React, {
 import {
   IMovimientoSimple,
   IProductoForm,
-  IProductoFormSecond,
   MovimientoProducto,
   Producto,
 } from '../models/productos';
@@ -20,8 +19,8 @@ import { LayoutAnimation } from 'react-native';
 export interface ProductContextTyp {
   productos: Producto[];
   setProductos: React.Dispatch<React.SetStateAction<Producto[]>>;
-  agregarProducto: (formu: IProductoFormSecond) => Promise<void>;
-  primerMovimiento: (formu: IProductoFormSecond) => Promise<void>;
+  agregarProducto: (formu: IProductoForm) => Promise<void>;
+  primerMovimiento: (formu: IProductoForm) => Promise<void>;
   agregarMovimiento: (formu: IMovimientoSimple) => Promise<void>;
   eliminarMovimiento: (formu: number) => Promise<void>;
 }
@@ -65,7 +64,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
     );
   };
 
-  const agregarProducto = async (formu: IProductoFormSecond) => {
+  const agregarProducto = async (formu: IProductoForm) => {
     const agregado = await nuevoProducto(formu);
     if (agregado) {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -73,7 +72,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const primerMovimiento = async (formu: IProductoFormSecond) => {
+  const primerMovimiento = async (formu: IProductoForm) => {
     const agregado = await primerMov(formu);
     if (agregado) {
       updateProductoWithMovimiento(agregado);

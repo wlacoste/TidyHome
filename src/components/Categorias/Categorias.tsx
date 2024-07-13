@@ -23,13 +23,6 @@ const Categories = () => {
       </View>
     );
   }
-  // if (categoriasLoading) {
-  //   return (
-  //     <View>
-  //       <Text>Cargando...</Text>
-  //     </View>
-  //   );
-  // }
   return (
     <View style={[styles.container]}>
       <Text style={styles.text}>categoriassl</Text>

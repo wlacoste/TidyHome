@@ -11,12 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { useProductContext } from '../../context/productContext';
-import {
-  Categoria,
-  IProductForm,
-  IProductoForm,
-  IProductoFormSecond,
-} from '../../models/productos';
+import { Categoria, IProductForm, IProductoForm } from '../../models/productos';
 import { getListItem } from '../../utils/getListItems';
 import { mapProductoToForm } from '../../utils/transformToProducto';
 import { useCategories } from '../../context/categoryContext';
@@ -43,18 +38,18 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
     resetField,
     formState: { errors },
     handleSubmit,
-  } = useForm<IProductoFormSecond>({
+  } = useForm<IProductoForm>({
     mode: 'onChange',
     defaultValues: mapProductoToForm(producto),
   });
 
   const submit = data => {
-    console.log('submit data', data);
-    // if (tipo === 'nuevo') {
-    //   agregarProducto(data);
-    // } else {
-    //   primerMovimiento({ ...data, id: producto?.id });
-    // }
+    // console.log('submit data', data);
+    if (tipo === 'nuevo') {
+      agregarProducto(data);
+    } else {
+      primerMovimiento({ ...data, id: producto?.id });
+    }
     onClose?.();
   };
 
@@ -166,7 +161,7 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
             )}
           />
         </View>
-        <Controller<IProductoFormSecond>
+        <Controller<IProductoForm>
           control={control}
           name={'categoria'}
           defaultValue={undefined}

@@ -3,11 +3,9 @@ import {
   IProductoForm,
   Producto,
   MovimientoProducto,
-  Categoria,
-  IProductoFormSecond,
 } from '../models/productos';
 
-export const transformToProducto = (formu: IProductoFormSecond) => {
+export const transformToProducto = (formu: IProductoForm) => {
   const producto: Producto = {
     id: formu.id ? formu.id : 0,
     nombre: formu.nombre,
@@ -31,7 +29,7 @@ export const transformToProducto = (formu: IProductoFormSecond) => {
   return { producto, movimiento };
 };
 
-export const mapProductoToForm = (producto?: Producto): IProductoFormSecond => {
+export const mapProductoToForm = (producto?: Producto): IProductoForm => {
   if (!producto) {
     return {
       nombre: '',

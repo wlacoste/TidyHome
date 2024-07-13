@@ -5,7 +5,6 @@ import {
   MovimientoProducto,
   IMovimientoSimple,
   IProductoForm,
-  IProductoFormSecond,
 } from '../../models/productos';
 import {
   addMovimientoProducto,
@@ -19,7 +18,7 @@ import { useCategories } from '../../context/categoryContext';
 
 const useProducto = () => {
   const { categories } = useCategories();
-  const nuevoProducto = async (formulario: IProductoFormSecond) => {
+  const nuevoProducto = async (formulario: IProductoForm) => {
     try {
       // const categoria = categories.find(
       //   item => item.id === Number(formulario.categoria),
@@ -35,7 +34,7 @@ const useProducto = () => {
     }
   };
 
-  const primerMovimiento = async (formulario: IProductoFormSecond) => {
+  const primerMovimiento = async (formulario: IProductoForm) => {
     const { movimiento } = transformToProducto(formulario);
     return await persistirMovimiento(movimiento, false);
   };
