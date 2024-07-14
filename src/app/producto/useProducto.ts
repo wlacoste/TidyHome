@@ -14,20 +14,15 @@ import {
   updateMovimientoProducto,
 } from '../../service/product-service';
 import { transformToProducto } from '../../utils/transformToProducto';
-import { useCategories } from '../../context/categoryContext';
 
 const useProducto = () => {
-  const { categories } = useCategories();
   const nuevoProducto = async (formulario: IProductoForm) => {
     try {
-      // const categoria = categories.find(
-      //   item => item.id === Number(formulario.categoria),
-      // );
       const { movimiento, producto } = transformToProducto(formulario);
-      await insertProductWithMovimiento(producto, movimiento);
-      console.log('producto anadido');
-      producto.detalle.push(movimiento);
-      return producto;
+      const resultado = await insertProductWithMovimiento(producto, movimiento);
+      console.log('resultado', resultado);
+      // producto.detalle.push(movimiento);
+      return resultado;
     } catch (err) {
       console.error('Error al añadir producto:', err);
       throw err;
@@ -53,9 +48,6 @@ const useProducto = () => {
       ultimoMovimiento.fechaCreacion ===
         dayjs().toDate().toLocaleDateString('es-ES') &&
       ultimoMovimiento.isCompra === isCompra;
-    console.log('fecha1', ultimoMovimiento.fechaCreacion);
-    console.log('fecha2', dayjs().toDate().toLocaleDateString('es-ES'));
-    console.log('isUpdatei', isUpdate);
 
     let cantidad = 1;
     if (isUpdate) {

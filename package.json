@@ -40,6 +40,7 @@
     "react-native-screens": "~3.29.0",
     "react-native-sqlite-storage": "^6.0.1",
     "react-native-swipe-list-view": "^3.2.9",
+    "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-virtualized-view": "^1.0.0"
   },

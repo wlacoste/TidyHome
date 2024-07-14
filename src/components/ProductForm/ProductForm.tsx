@@ -44,7 +44,7 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
   });
 
   const submit = data => {
-    // console.log('submit data', data);
+    console.log('submit data', data);
     if (tipo === 'nuevo') {
       agregarProducto(data);
     } else {

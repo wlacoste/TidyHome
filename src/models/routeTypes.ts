@@ -18,7 +18,7 @@ export type TabParamList = {
   Home: undefined;
   Items: undefined;
   Estado: undefined;
-  Movimiento: undefined;
+  Productos: undefined;
   Notas: undefined;
   Ajustes: NavigatorScreenParams<SettingsList>;
 };

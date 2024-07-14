@@ -18,8 +18,12 @@ function ProductStackNavigator() {
       <ProductoStack.Screen
         name="ProductoDetalle"
         component={ProductoDetalle}
-        options={{ title: 'Detalle' }}
+        options={({ route }) => ({
+          title: route.params.producto.nombre,
+        })}
       />
+
+      {/* Add other settings screens here */}
     </ProductoStack.Navigator>
   );
 }

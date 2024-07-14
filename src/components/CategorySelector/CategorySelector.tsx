@@ -34,13 +34,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
 
   const renderItem = useCallback(
     ({ item: category, onChange, value }) => (
-      <TouchableRipple
-        key={category.id}
-        style={styles.categoryItem}
-        onPress={() => {
-          onChange(category);
-          hideModal();
-        }}>
+      <TouchableRipple key={category.id} style={styles.categoryItem}>
         <View style={styles.iconContainer}>
           <IconButton
             icon={category.icon}
@@ -49,6 +43,10 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
                 ? theme.colors.onSurface
                 : theme.colors.inverseSurface
             }
+            onPress={() => {
+              onChange(category);
+              hideModal();
+            }}
             style={{
               backgroundColor:
                 value?.id !== category.id

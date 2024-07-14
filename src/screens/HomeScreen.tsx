@@ -69,7 +69,7 @@ const HomeScreen = () => {
                 case 'Items':
                   iconName = 'receipt-outline';
                   break;
-                case 'Movimiento':
+                case 'Productos':
                   iconName = 'ticket-outline';
                   break;
                 case 'Notas':
@@ -115,7 +115,7 @@ const HomeScreen = () => {
           />
           <Tab.Screen
             key={'3'}
-            name={'Movimiento'}
+            name={'Productos'}
             component={ProductStackNavigator}
             options={{ headerShown: false }}
           />

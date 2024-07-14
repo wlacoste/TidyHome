@@ -24,9 +24,7 @@ const MovimientoDetalle = ({ mov }: IMovimientoDetalle) => {
             <Text>Cantidad: {mov.cantidad}</Text>
           </View>
           <View style={styles.conta}>
-            {mov.fechaVencimiento !== 'undefined' && (
-              <Text>Vence: {mov.fechaVencimiento}</Text>
-            )}
+            {mov.fechaVencimiento && <Text>Vence: {mov.fechaVencimiento}</Text>}
             <Text>
               Valor: {mov.precioUnitario} x {mov.cantidad}
             </Text>

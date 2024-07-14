@@ -392,19 +392,68 @@ export const insertProduct = async (
   });
 };
 
+// export const insertProductWithMovimiento = async (
+//   producto: Producto,
+//   movimiento: MovimientoProducto,
+// ) => {
+//   const db = await getDBConnection();
+
+//   return new Promise<void>((resolve, reject) => {
+//     db.transaction(tx => {
+//       tx.executeSql(
+//         'INSERT INTO productos (nombre, categoria_id, fechaCreacion) VALUES (?, ?, ?);',
+//         [producto.nombre, producto.categoria.id, producto.fechaCreacion],
+//         (tx, result) => {
+//           const productId = result.insertId; // Get the ID of the newly inserted product
+
+//           tx.executeSql(
+//             `INSERT INTO movimiento_producto (product_id, fechaCreacion, precio, cantidad, isUnitario, precioUnitario, isVence, fechaVencimiento, isCompra)
+//              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+//             [
+//               productId,
+//               movimiento.fechaCreacion,
+//               movimiento.precio,
+//               movimiento.cantidad,
+//               movimiento.isUnitario,
+//               movimiento.precioUnitario,
+//               movimiento.isVence,
+//               movimiento.fechaVencimiento,
+//               movimiento.isCompra,
+//             ],
+//             () => {
+//               console.log(
+//                 'Product and movimiento_producto inserted successfully',
+//               );
+//               resolve();
+//             },
+//             error => {
+//               console.error('Error inserting movimiento_producto: ', error);
+//               reject(error);
+//             },
+//           );
+//         },
+//         error => {
+//           console.error('Error inserting product: ', error);
+//           reject(error);
+//         },
+//       );
+//     });
+//   });
+// };
+
 export const insertProductWithMovimiento = async (
-  producto: Producto,
-  movimiento: MovimientoProducto,
-) => {
+  producto: Omit<Producto, 'id' | 'detalle'>,
+  movimiento: Omit<MovimientoProducto, 'id' | 'idProducto'>,
+): Promise<Producto> => {
   const db = await getDBConnection();
 
-  return new Promise<void>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
         'INSERT INTO productos (nombre, categoria_id, fechaCreacion) VALUES (?, ?, ?);',
         [producto.nombre, producto.categoria.id, producto.fechaCreacion],
         (tx, result) => {
-          const productId = result.insertId; // Get the ID of the newly inserted product
+          const productId = result.insertId;
 
           tx.executeSql(
             `INSERT INTO movimiento_producto (product_id, fechaCreacion, precio, cantidad, isUnitario, precioUnitario, isVence, fechaVencimiento, isCompra) 
@@ -420,11 +469,22 @@ export const insertProductWithMovimiento = async (
               movimiento.fechaVencimiento,
               movimiento.isCompra,
             ],
-            () => {
-              console.log(
-                'Product and movimiento_producto inserted successfully',
-              );
-              resolve();
+            (tx, movResult) => {
+              // Create the inserted MovimientoProducto object
+              const insertedMovimiento: MovimientoProducto = {
+                ...movimiento,
+                id: movResult.insertId,
+                idProducto: productId,
+              };
+
+              // Create the inserted Producto object
+              const insertedProduct: Producto = {
+                ...producto,
+                id: productId,
+                detalle: [insertedMovimiento],
+              };
+
+              resolve(insertedProduct);
             },
             error => {
               console.error('Error inserting movimiento_producto: ', error);

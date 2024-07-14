@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   Divider,
+  Icon,
   IconButton,
   Text,
   useTheme,
@@ -74,27 +75,33 @@ const ProductoBar = ({ producto }: IProductoBar) => {
     <Card style={styles.card}>
       <Card.Content style={styles.cardContent}>
         <View style={styles.leftSection}>
-          <IconButton
+          {/* <IconButton
             icon={
               collapsed ? 'unfold-more-horizontal' : 'unfold-less-horizontal'
             }
             size={24}
             style={styles.icon}
             onPress={() => setCollapsed(prev => !prev)}
-          />
-          <View>
+          /> */}
+          <View style={styles.leftSectionContent}>
             <Text style={styles.text}>
               {producto.nombre.charAt(0).toUpperCase() +
                 producto.nombre.slice(1)}
             </Text>
-            <Text style={styles.textCategoria}>{producto.categoria.name}</Text>
+            <View style={styles.categoriaContainer}>
+              <Icon source={producto.categoria.icon} size={12} />
+              <Text style={styles.textCategoria}>
+                {producto.categoria.name}
+              </Text>
+            </View>
           </View>
-          <Button
+          <IconButton
+            style={styles.buttonChev}
             icon={'chevron-right'}
             onPress={() => navigation.navigate('ProductoDetalle', { producto })}
-            children={undefined}
           />
         </View>
+
         <View style={styles.rightSection}>
           <IconButton
             mode="contained"
@@ -113,7 +120,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           />
         </View>
       </Card.Content>
-      <Collapsible collapsed={collapsed}>
+      {/* <Collapsible collapsed={collapsed}>
         <SwipeListView
           keyExtractor={(item, index) => item.id.toString()}
           data={producto.detalle}
@@ -161,7 +168,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           disableScrollViewPanResponder={true}
           nestedScrollEnabled={true}
         />
-      </Collapsible>
+      </Collapsible> */}
     </Card>
   );
 };
@@ -171,6 +178,8 @@ export default ProductoBar;
 const styles = StyleSheet.create({
   card: {
     margin: 5,
+    // borderColor: 'red',
+    // borderWidth: 1,
     // paddingBottom: 10,
   },
   cardContent: {
@@ -183,7 +192,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     alignSelf: 'flex-start',
-    marginLeft: -15,
+
+    // marginLeft: -15,
+  },
+  leftSectionContent: {
+    // padding: 0,
+    // marginTop: 0,
+  },
+  categoriaContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 3,
   },
   icon: {
     marginVertical: 0,
@@ -196,12 +215,13 @@ const styles = StyleSheet.create({
   },
   textCategoria: {
     fontSize: 12,
-    lineHeight: 12,
+    lineHeight: 13,
   },
   rightSection: {
+    alignSelf: 'flex-end',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    maxWidth: 136,
+    maxWidth: 132,
   },
   cantidad: {
     fontSize: 20,
@@ -217,12 +237,19 @@ const styles = StyleSheet.create({
   buttonLeft: {
     padding: 0,
     margin: 0,
-    marginLeft: 8,
+    // marginLeft: 8,
     width: 40,
     height: 40,
   },
   buttonRight: {
     padding: 0,
+    margin: 0,
+    width: 40,
+    height: 40,
+  },
+  buttonChev: {
+    padding: 0,
+    marginLeft: 5,
     margin: 0,
     width: 40,
     height: 40,

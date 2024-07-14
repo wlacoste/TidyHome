@@ -23,7 +23,9 @@ export const transformToProducto = (formu: IProductoForm) => {
     isUnitario: formu.isUnitario,
     precioUnitario: formu.isUnitario ? precio : precio / Number(formu.cantidad),
     isVence: formu.isVence,
-    fechaVencimiento: formu.fechaVencimiento?.toLocaleDateString('es-ES') + '',
+    fechaVencimiento: formu.isVence
+      ? formu.fechaVencimiento?.toLocaleDateString('es-ES') + ''
+      : '',
     isCompra: true,
   };
   return { producto, movimiento };
