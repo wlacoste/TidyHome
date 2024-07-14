@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Card, Divider, IconButton, Text, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Card,
+  Divider,
+  IconButton,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import {
   IMovimientoSimple,
   MovimientoProducto,
@@ -13,6 +20,8 @@ import MovimientoDetalle from './MovimientoDetalle';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useModal } from '../../context/modalContext';
 import ProductForm from '../ProductForm';
+import { useNavigation } from '@react-navigation/native';
+import { RootNavigationProp } from '../../models/routeTypes';
 
 interface IProductoBar {
   producto: Producto;
@@ -35,6 +44,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
       : acc - transaction.cantidad;
   }, 0);
   const { openModal, closeModal } = useModal();
+  const navigation = useNavigation<RootNavigationProp>();
 
   const hacerMovimiento = (isCompra: boolean) => {
     if (!producto.detalle.length) {
@@ -79,6 +89,11 @@ const ProductoBar = ({ producto }: IProductoBar) => {
             </Text>
             <Text style={styles.textCategoria}>{producto.categoria.name}</Text>
           </View>
+          <Button
+            icon={'chevron-right'}
+            onPress={() => navigation.navigate('ProductoDetalle', { producto })}
+            children={undefined}
+          />
         </View>
         <View style={styles.rightSection}>
           <IconButton

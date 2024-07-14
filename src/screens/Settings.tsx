@@ -9,10 +9,10 @@ import {
 import { NavigatorScreenParams, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RootNavigationProp, SettingsList } from '../models/routeTypes';
+import { useTheme } from 'react-native-paper';
 
 const SettingsMenu = () => {
   const navigation = useNavigation<RootNavigationProp>();
-
   const menuItems = [
     { icon: 'person', title: 'Perfil', route: 'Profile' },
     {
@@ -20,33 +20,40 @@ const SettingsMenu = () => {
       title: 'Ajustes de la categoría',
       route: 'CategorySettings',
     },
-    { icon: 'attach-money', title: 'Moneda', route: 'Currency' },
-    { icon: 'alarm', title: 'Recordatorio', route: 'Reminder' },
-    { icon: 'payment', title: 'Pagos Regulares', route: 'RegularPayments' },
-    {
-      icon: 'date-range',
-      title: 'Fecha de inicio mensual',
-      route: 'MonthlyStartDate',
-      isVIP: true,
-    },
+    { icon: 'attach-money', title: 'Reset base', route: 'Currency' },
+    // { icon: 'alarm', title: 'Recordatorio', route: 'Reminder' },
+    // { icon: 'payment', title: 'Pagos Regulares', route: 'RegularPayments' },
+    // {
+    //   icon: 'date-range',
+    //   title: 'Fecha de inicio mensual',
+    //   route: 'MonthlyStartDate',
+    // },
     { icon: 'color-lens', title: 'Temas', route: 'Themes' },
-    { icon: 'format-size', title: 'Tamaño de fuente', route: 'FontSize' },
-    {
-      icon: 'dashboard',
-      title: 'Ajustes de la página de inicio',
-      route: 'HomePageSettings',
-    },
-    { icon: 'account-balance', title: 'Cuentas', route: 'Accounts' },
-    { icon: 'assessment', title: 'Presupuesto', route: 'Budget' },
+    // {
+    //   icon: 'dashboard',
+    //   title: 'Ajustes de la página de inicio',
+    //   route: 'HomePageSettings',
+    // },
+    // { icon: 'account-balance', title: 'Cuentas', route: 'Accounts' },
+    // { icon: 'assessment', title: 'Presupuesto', route: 'Budget' },
     {
       icon: 'import-export',
       title: 'Exportar datos',
       route: 'ExportData',
-      isVIP: true,
     },
-    { icon: 'lock', title: 'Contraseña', route: 'Password', isVIP: true },
+    {
+      icon: 'message',
+      title: 'Comentarios',
+      route: 'Comentarios',
+    },
+    {
+      icon: 'info',
+      title: 'About',
+      route: 'About',
+    },
+    // { icon: 'lock', title: 'Contraseña', route: 'Password' },
   ];
-
+  const theme = useTheme();
   return (
     <ScrollView style={styles.container}>
       {menuItems.map((item, index) => (
@@ -54,17 +61,12 @@ const SettingsMenu = () => {
           key={index}
           style={styles.menuItem}
           onPress={() =>
-            navigation.navigate('Settings', {
+            navigation.navigate('Ajustes', {
               screen: item.route as keyof SettingsList,
             })
           }>
-          <Icon name={item.icon} size={24} color="#FFD700" />
+          <Icon name={item.icon} size={24} color={theme.colors.primary} />
           <Text style={styles.menuText}>{item.title}</Text>
-          {item.isVIP && (
-            <View style={styles.vipBadge}>
-              <Text style={styles.vipText}>VIP</Text>
-            </View>
-          )}
           <Icon name="chevron-right" size={24} color="#555" />
         </TouchableOpacity>
       ))}

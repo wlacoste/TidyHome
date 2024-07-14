@@ -1,37 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import Categories from '../components/Categorias/Categorias';
 import FabGroup from '../components/FAB/FAB';
 import VisorProducto from '../components/VisorProducto/VisorProducto';
-import VisorInput from './VisorInput';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  NavigationContainer,
-  Theme,
-  useNavigation,
-} from '@react-navigation/native';
+import { Theme } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Todo from './TodoScreen';
 import useDB from '../hooks/useDB';
-import { deleteSpecifiedTables } from '../service/product-service';
 import { ModalProvider } from '../context/modalContext';
 import ModalAcciones from '../components/ModalAcciones/ModalAcciones';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootNavigationProp, TabParamList } from '../models/routeTypes';
-import TestView from '../components/TestView/TestView';
-import SettingsMenu from './Settings';
+import { TabParamList } from '../models/routeTypes';
 import SettingsStackNavigator from '../navigator/SettingNavigator';
-
-// import { useNavigation } from '@react-navigation/native';
-// export type HomeProps = NativeStackScreenProps<any, any>;
-
-// const categoriaName = 'Home';
-// const inputName = 'Items';
-// const productoName = 'Movimiento';
-// const estadoName = 'Estado';
-// const todoName = 'Notas';
+import ProductStackNavigator from '../navigator/ProductNavigator';
 
 const HomeScreen = () => {
   const theme = useTheme<Theme>();
@@ -98,7 +81,7 @@ const HomeScreen = () => {
                 case 'Estado':
                   iconName = 'stats-chart';
                   break;
-                case 'Settings':
+                case 'Ajustes':
                   iconName = 'cog-outline';
                   break;
                 default:
@@ -133,7 +116,7 @@ const HomeScreen = () => {
           <Tab.Screen
             key={'3'}
             name={'Movimiento'}
-            component={VisorProducto}
+            component={ProductStackNavigator}
             options={{ headerShown: false }}
           />
           <Tab.Screen
@@ -144,7 +127,7 @@ const HomeScreen = () => {
           />
           <Tab.Screen
             key={'5'}
-            name={'Settings'}
+            name={'Ajustes'}
             component={SettingsStackNavigator}
             options={{ headerShown: false }}
           />

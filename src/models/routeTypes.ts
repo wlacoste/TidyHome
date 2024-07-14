@@ -4,6 +4,7 @@ import {
   CompositeNavigationProp,
   NavigatorScreenParams,
 } from '@react-navigation/native';
+import { Producto } from './productos';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -19,8 +20,7 @@ export type TabParamList = {
   Estado: undefined;
   Movimiento: undefined;
   Notas: undefined;
-  Settings: NavigatorScreenParams<SettingsList>;
-  // Add other tab screens here
+  Ajustes: NavigatorScreenParams<SettingsList>;
 };
 export type SettingsList = {
   SettingsMenu: undefined;
@@ -30,18 +30,26 @@ export type SettingsList = {
   RegularPayments: undefined;
   MonthlyStartDate: undefined;
   Themes: undefined;
-  FontSize: undefined;
   HomePageSettings: undefined;
   Accounts: undefined;
   Budget: undefined;
   ExportData: undefined;
   Password: undefined;
+  Comentarios: undefined;
+  About: undefined;
+};
+export type ProductoList = {
+  Producto: undefined;
+  ProductoDetalle: { producto: Producto };
 };
 
 export type RootNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<RootStackParamList>,
   CompositeNavigationProp<
-    BottomTabNavigationProp<TabParamList>,
-    NativeStackNavigationProp<SettingsList>
+    NativeStackNavigationProp<ProductoList>,
+    CompositeNavigationProp<
+      BottomTabNavigationProp<TabParamList>,
+      NativeStackNavigationProp<SettingsList>
+    >
   >
 >;
