@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import { Categoria } from '../../models/productos';
 import {
   Button,
+  Icon,
   IconButton,
   Modal,
   Portal,
@@ -34,26 +35,35 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
 
   const renderItem = useCallback(
     ({ item: category, onChange, value }) => (
-      <TouchableRipple key={category.id} style={styles.categoryItem}>
+      <TouchableRipple
+        borderless
+        key={category.id}
+        style={styles.categoryItem}
+        onPress={() => {
+          onChange(category);
+          hideModal();
+        }}>
         <View style={styles.iconContainer}>
-          <IconButton
-            icon={category.icon}
-            iconColor={
-              value?.id !== category.id
-                ? theme.colors.onSurface
-                : theme.colors.inverseSurface
-            }
-            onPress={() => {
-              onChange(category);
-              hideModal();
-            }}
-            style={{
-              backgroundColor:
+          <View
+            style={[
+              styles.botonSelector,
+              {
+                backgroundColor:
+                  value?.id !== category.id
+                    ? theme.colors.surfaceVariant
+                    : theme.colors.inversePrimary,
+              },
+            ]}>
+            <Icon
+              source={category.icon}
+              color={
                 value?.id !== category.id
-                  ? theme.colors.surfaceVariant
-                  : theme.colors.inversePrimary,
-            }}
-          />
+                  ? theme.colors.onSurface
+                  : theme.colors.inverseSurface
+              }
+              size={22}
+            />
+          </View>
           <Text
             style={styles.categoryName}
             numberOfLines={1}
@@ -125,7 +135,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
+  botonSelector: {
+    borderRadius: 100,
+    padding: 10,
+    marginBottom: 2,
+  },
   modalTitle: {
     padding: 10,
     fontSize: 18,
@@ -134,10 +148,10 @@ const styles = StyleSheet.create({
   },
   categoryItem: {
     width: '23%',
-    marginBottom: 15,
+    marginBottom: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 10,
     marginHorizontal: '1%',
   },
   categoryName: {

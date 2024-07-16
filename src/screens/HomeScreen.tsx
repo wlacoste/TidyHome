@@ -15,11 +15,13 @@ import ModalAcciones from '../components/ModalAcciones/ModalAcciones';
 import { TabParamList } from '../models/routeTypes';
 import SettingsStackNavigator from '../navigator/SettingNavigator';
 import ProductStackNavigator from '../navigator/ProductNavigator';
+import useIsTabScreen from '../hooks/useTabScreen';
 
 const HomeScreen = () => {
   const theme = useTheme<Theme>();
   const tema = useTheme();
   const Tab = createBottomTabNavigator<TabParamList>();
+  const isTabScreen = useIsTabScreen();
 
   useDB();
   // deleteSpecifiedTables();
@@ -27,7 +29,7 @@ const HomeScreen = () => {
   return (
     <>
       <ModalProvider>
-        <FabGroup />
+        {isTabScreen && <FabGroup />}
         <ModalAcciones />
         <Tab.Navigator
           sceneContainerStyle={styles.barra}

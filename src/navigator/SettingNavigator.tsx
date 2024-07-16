@@ -13,7 +13,7 @@ function SettingsStackNavigator() {
       <SettingsStack.Screen
         name="SettingsMenu"
         component={SettingsMenu}
-        options={{ title: 'Ajustes' }}
+        options={{ title: 'Ajustes', headerShown: false }}
       />
 
       <SettingsStack.Screen

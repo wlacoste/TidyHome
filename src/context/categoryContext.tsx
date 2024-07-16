@@ -60,7 +60,11 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const refreshCategories = async (database: SQLiteDatabase | null = db) => {
     if (database) {
-      const fetchedCategories = await getAllCategories(database);
+      let fetchedCategories = await getAllCategories(database);
+      if (fetchedCategories.length === 0) {
+        await resetCategoriesToDefault(database);
+        fetchedCategories = await getAllCategories(database);
+      }
       setCategories(fetchedCategories);
     }
   };

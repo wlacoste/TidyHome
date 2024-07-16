@@ -26,30 +26,26 @@ export const Routes = () => {
 
   return (
     <Stack.Navigator>
-      {user === null ? (
-        <>
-          <Stack.Screen
-            component={LoginScreen}
-            name="Login"
-            options={{ headerShown: false }}
-          />
+      <>
+        <Stack.Screen
+          component={LoginScreen}
+          name="Login"
+          // options={{ headerShown: false }}
+        />
 
-          <Stack.Screen
-            component={SignupScreen}
-            name="Signup"
-            options={{ headerShown: false }}
-          />
-        </>
-      ) : (
-        <>
-          <Stack.Screen
-            component={HomeScreen}
-            name="Start"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen component={TestView} name="Test" />
-        </>
-      )}
+        <Stack.Screen
+          component={SignupScreen}
+          name="Signup"
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          component={HomeScreen}
+          name="Start"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen component={TestView} name="Test" />
+      </>
     </Stack.Navigator>
   );
 };

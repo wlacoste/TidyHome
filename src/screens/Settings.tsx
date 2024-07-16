@@ -10,52 +10,41 @@ import { NavigatorScreenParams, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RootNavigationProp, SettingsList } from '../models/routeTypes';
 import { useTheme } from 'react-native-paper';
+import { useUserAuth } from '../context/userAuthContext';
 
 const SettingsMenu = () => {
   const navigation = useNavigation<RootNavigationProp>();
-  const menuItems = [
-    { icon: 'person', title: 'Perfil', route: 'Profile' },
-    {
-      icon: 'category',
-      title: 'Ajustes de la categoría',
-      route: 'CategorySettings',
-    },
-    { icon: 'attach-money', title: 'Reset base', route: 'Currency' },
-    // { icon: 'alarm', title: 'Recordatorio', route: 'Reminder' },
-    // { icon: 'payment', title: 'Pagos Regulares', route: 'RegularPayments' },
-    // {
-    //   icon: 'date-range',
-    //   title: 'Fecha de inicio mensual',
-    //   route: 'MonthlyStartDate',
-    // },
-    { icon: 'color-lens', title: 'Temas', route: 'Themes' },
-    // {
-    //   icon: 'dashboard',
-    //   title: 'Ajustes de la página de inicio',
-    //   route: 'HomePageSettings',
-    // },
-    // { icon: 'account-balance', title: 'Cuentas', route: 'Accounts' },
-    // { icon: 'assessment', title: 'Presupuesto', route: 'Budget' },
-    {
-      icon: 'import-export',
-      title: 'Exportar datos',
-      route: 'ExportData',
-    },
-    {
-      icon: 'message',
-      title: 'Comentarios',
-      route: 'Comentarios',
-    },
-    {
-      icon: 'info',
-      title: 'About',
-      route: 'About',
-    },
-    // { icon: 'lock', title: 'Contraseña', route: 'Password' },
-  ];
+  const { user, logOut } = useUserAuth();
+
   const theme = useTheme();
   return (
     <ScrollView style={styles.container}>
+      <View>
+        <Text>Hola, {user?.email}</Text>
+        {!user && (
+          <>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                navigation.navigate('Login');
+              }}>
+              <Text>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                navigation.navigate('Signup');
+              }}>
+              <Text>Register</Text>
+            </TouchableOpacity>
+          </>
+        )}
+        {user && (
+          <TouchableOpacity style={styles.menuItem} onPress={() => logOut()}>
+            <Text>Cerrar sesion</Text>
+          </TouchableOpacity>
+        )}
+      </View>
       {menuItems.map((item, index) => (
         <TouchableOpacity
           key={index}
@@ -107,3 +96,43 @@ const styles = StyleSheet.create({
 });
 
 export default SettingsMenu;
+const menuItems = [
+  { icon: 'person', title: 'Perfil', route: 'Profile' },
+  {
+    icon: 'category',
+    title: 'Ajustes de la categoría',
+    route: 'CategorySettings',
+  },
+  { icon: 'attach-money', title: 'Reset base', route: 'Currency' },
+  // { icon: 'alarm', title: 'Recordatorio', route: 'Reminder' },
+  // { icon: 'payment', title: 'Pagos Regulares', route: 'RegularPayments' },
+  // {
+  //   icon: 'date-range',
+  //   title: 'Fecha de inicio mensual',
+  //   route: 'MonthlyStartDate',
+  // },
+  { icon: 'color-lens', title: 'Temas', route: 'Themes' },
+  // {
+  //   icon: 'dashboard',
+  //   title: 'Ajustes de la página de inicio',
+  //   route: 'HomePageSettings',
+  // },
+  // { icon: 'account-balance', title: 'Cuentas', route: 'Accounts' },
+  // { icon: 'assessment', title: 'Presupuesto', route: 'Budget' },
+  {
+    icon: 'import-export',
+    title: 'Exportar datos',
+    route: 'ExportData',
+  },
+  {
+    icon: 'message',
+    title: 'Comentarios',
+    route: 'Comentarios',
+  },
+  {
+    icon: 'info',
+    title: 'About',
+    route: 'About',
+  },
+  // { icon: 'lock', title: 'Contraseña', route: 'Password' },
+];
