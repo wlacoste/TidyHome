@@ -5,13 +5,14 @@ import { MovimientoProducto } from '../../models/productos';
 
 export interface IMovimientoDetalle {
   mov: MovimientoProducto;
+  showDivider: boolean;
 }
 
-const MovimientoDetalle = ({ mov }: IMovimientoDetalle) => {
+const MovimientoDetalle = ({ mov, showDivider }: IMovimientoDetalle) => {
   const theme = useTheme();
   return (
     <>
-      <Divider horizontalInset />
+      {showDivider && <Divider horizontalInset />}
       <View
         style={[
           styles.card,
@@ -26,9 +27,9 @@ const MovimientoDetalle = ({ mov }: IMovimientoDetalle) => {
           <View style={styles.conta}>
             {mov.fechaVencimiento && <Text>Vence: {mov.fechaVencimiento}</Text>}
             <Text>
-              Valor: {mov.precioUnitario} x {mov.cantidad}
+              Valor: {mov.precioUnitario.toFixed(2)} x {mov.cantidad}
             </Text>
-            <Text>Total: {mov.precioUnitario * mov.cantidad}</Text>
+            <Text>Total: {(mov.precioUnitario * mov.cantidad).toFixed(2)}</Text>
             <Text>id: {mov.id}</Text>
           </View>
         </View>

@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { StyleSheet } from 'react-native';
+import { Modal } from 'react-native-paper';
 
 interface ModalContextType {
   visible: boolean;
@@ -36,10 +38,23 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
     <ModalContext.Provider
       value={{ visible, openModal, closeModal, modalContent }}>
       {children}
+      <Modal
+        visible={visible}
+        onDismiss={closeModal}
+        style={styles.centeredView}>
+        {modalContent}
+      </Modal>
     </ModalContext.Provider>
   );
 };
 
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+});
 export const useModal = () => {
   return useContext(ModalContext);
 };

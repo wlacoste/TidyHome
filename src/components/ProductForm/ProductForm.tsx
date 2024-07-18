@@ -1,4 +1,9 @@
-import { StyleSheet, View } from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 // import { useCategories } from '../../hooks/useCategories';
@@ -17,16 +22,26 @@ import { mapProductoToForm } from '../../utils/transformToProducto';
 import { useCategories } from '../../context/categoryContext';
 import CategorySelector from '../CategorySelector/CategorySelector';
 
+const DismissKeyboardView = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <View style={{ flex: 1 }}>{children}</View>
+  </TouchableWithoutFeedback>
+);
+
 const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
   // const { categorias, loading: categoriasLoading } = useCategories();
-  const { categories: categorias } = useCategories();
+  const {
+    categories: categorias,
+    loading,
+    refreshCategories,
+  } = useCategories();
   const { agregarProducto, primerMovimiento } = useProductContext();
   const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
   const [openDate, setOpenDate] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Categoria | null>(
     null,
   );
-  const { categories } = useCategories();
+  // const { categories, loading } = useCategories();
 
   const handleCategorySelect = (category: Categoria) => {
     // Handle the selected category (e.g., update form state)
@@ -84,6 +99,7 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
               value={value}
               onBlur={onBlur}
               error={errors.nombre && true}
+              autoCapitalize="sentences"
             />
           )}
         />
@@ -164,6 +180,7 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
         <Controller<IProductoForm>
           control={control}
           name={'categoria'}
+          disabled={loading}
           defaultValue={undefined}
           rules={{
             required: 'Category is required',
@@ -171,7 +188,7 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
           }}
           render={({ field: { onChange, value } }) => (
             <CategorySelector
-              categories={categories}
+              categories={categorias}
               value={value as Categoria | undefined}
               onChange={onChange}
               error={errors.categoria as FieldError | undefined}

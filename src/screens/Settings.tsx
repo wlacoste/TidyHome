@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import { TouchableOpacity, StyleSheet, ScrollView, View } from 'react-native';
 import { NavigatorScreenParams, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RootNavigationProp, SettingsList } from '../models/routeTypes';
-import { useTheme } from 'react-native-paper';
+import { Divider, Text, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
 
 const SettingsMenu = () => {
@@ -18,7 +12,8 @@ const SettingsMenu = () => {
 
   const theme = useTheme();
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View>
         <Text>Hola, {user?.email}</Text>
         {!user && (
@@ -44,20 +39,23 @@ const SettingsMenu = () => {
             <Text>Cerrar sesion</Text>
           </TouchableOpacity>
         )}
+        <Divider />
       </View>
       {menuItems.map((item, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.menuItem}
-          onPress={() =>
-            navigation.navigate('Ajustes', {
-              screen: item.route as keyof SettingsList,
-            })
-          }>
-          <Icon name={item.icon} size={24} color={theme.colors.primary} />
-          <Text style={styles.menuText}>{item.title}</Text>
-          <Icon name="chevron-right" size={24} color="#555" />
-        </TouchableOpacity>
+        <View key={index}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() =>
+              navigation.navigate('Ajustes', {
+                screen: item.route as keyof SettingsList,
+              })
+            }>
+            <Icon name={item.icon} size={24} color={theme.colors.primary} />
+            <Text style={styles.menuText}>{item.title}</Text>
+            <Icon name="chevron-right" size={24} color="#555" />
+          </TouchableOpacity>
+          <Divider />
+        </View>
       ))}
     </ScrollView>
   );
@@ -72,11 +70,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#333',
   },
   menuText: {
-    color: 'white',
+    // color: 'white',
     fontSize: 16,
     marginLeft: 15,
     flex: 1,

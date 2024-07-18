@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 // import { useCategories } from '../../hooks/useCategories';
-import { useTheme } from 'react-native-paper';
+import { Icon, useTheme } from 'react-native-paper';
 import Text from '../Text';
 import { useCategories } from '../../context/categoryContext';
 
@@ -12,11 +12,11 @@ export interface ICategoria {
 
 const Categories = () => {
   // const { categorias, loading: categoriasLoading } = useCategories();
-  const { categories: categorias } = useCategories();
+  const { categories: categorias, loading } = useCategories();
 
   const theme = useTheme();
 
-  if (categorias.length === 0) {
+  if (loading) {
     return (
       <View>
         <Text>Cargando...</Text>
@@ -29,7 +29,10 @@ const Categories = () => {
 
       {categorias &&
         categorias.map((i, index) => (
-          <Text key={index + i.name}>{i.name}</Text>
+          <View key={index + i.name}>
+            <Text>{i.name}</Text>
+            <Icon size={15} source={i.icon} />
+          </View>
         ))}
     </View>
   );

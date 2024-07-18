@@ -4,6 +4,7 @@ import { FAB, Portal, useTheme } from 'react-native-paper';
 import ProductForm from '../ProductForm';
 import SimpleForm from '../SimpleInput';
 import { useModal } from '../../context/modalContext';
+import TestView from '../TestView/TestView';
 
 const FabGroup = () => {
   const theme = useTheme();
@@ -40,6 +41,11 @@ const FabGroup = () => {
             icon: 'swap-horizontal',
             label: 'Movimiento nuevo',
             onPress: () => console.log('Pressed email'),
+          },
+          {
+            icon: 'swap-horizontal',
+            label: 'Simple Context',
+            onPress: () => openModal(<TestView />),
           },
           {
             icon: 'pencil',

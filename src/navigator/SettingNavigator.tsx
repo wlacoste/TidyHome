@@ -4,6 +4,9 @@ import TestView from '../components/TestView/TestView';
 import { SettingsList } from '../models/routeTypes';
 import SettingsMenu from '../screens/Settings';
 import ResetTables from '../components/ResetTables/Reset';
+import About from '../screens/About';
+import ThemeSwitcher from '../screens/Theme';
+import ProductForm from '../components/ProductForm';
 
 const SettingsStack = createNativeStackNavigator<SettingsList>();
 
@@ -24,6 +27,9 @@ function SettingsStackNavigator() {
       <SettingsStack.Screen name="Reminder" component={TestView} />
       <SettingsStack.Screen name="RegularPayments" component={TestView} />
       <SettingsStack.Screen name="Currency" component={ResetTables} />
+      <SettingsStack.Screen name="About" component={About} />
+      <SettingsStack.Screen name="Themes" component={ThemeSwitcher} />
+      {/* <SettingsStack.Screen name="ExportData" component={ProductForm} /> */}
       {/* Add other settings screens here */}
     </SettingsStack.Navigator>
   );

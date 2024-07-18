@@ -19,7 +19,9 @@ function ProductStackNavigator() {
         name="ProductoDetalle"
         component={ProductoDetalle}
         options={({ route }) => ({
-          title: route.params.producto.nombre,
+          // title: route.params.producto.nombre,
+          title: 'Detalles',
+          headerShown: false,
         })}
       />
 

@@ -8,6 +8,8 @@ import { UserAuthContextProvider } from './src/context/userAuthContext';
 import { InputProvider } from './src/context/simpleInputContext';
 import ProductProvider from './src/context/productContext';
 import CategoryProvider from './src/context/categoryContext';
+import SimpleProvider from './src/context/simpleContext';
+import { ThemeProvider } from './src/context/themeContext';
 import {
   MaterialDarkTheme,
   MaterialLightTheme,
@@ -20,23 +22,25 @@ export default function App() {
   const scheme = useColorScheme();
 
   return (
-    <NavigationContainer
-      theme={scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme}>
+    // <NavigationContainer
+    //   theme={scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme}>
+    <ThemeProvider>
       <UserAuthContextProvider>
+        {/* <PaperProvider
+          theme={scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme}> */}
         <CategoryProvider>
-          <ProductProvider>
-            <InputProvider>
-              <PaperProvider
-                theme={
-                  scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme
-                }>
+          <SimpleProvider>
+            <ProductProvider>
+              <InputProvider>
                 <Routes />
-              </PaperProvider>
-            </InputProvider>
-          </ProductProvider>
+              </InputProvider>
+            </ProductProvider>
+          </SimpleProvider>
         </CategoryProvider>
+        {/* </PaperProvider> */}
       </UserAuthContextProvider>
-    </NavigationContainer>
+    </ThemeProvider>
+    // </NavigationContainer>
   );
 }
 

@@ -40,7 +40,7 @@ export type SettingsList = {
 };
 export type ProductoList = {
   Producto: undefined;
-  ProductoDetalle: { producto: Producto };
+  ProductoDetalle: { productoId: number };
 };
 
 export type RootNavigationProp = CompositeNavigationProp<

@@ -28,6 +28,11 @@ export const Routes = () => {
     <Stack.Navigator>
       <>
         <Stack.Screen
+          component={HomeScreen}
+          name="Start"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           component={LoginScreen}
           name="Login"
           // options={{ headerShown: false }}
@@ -39,11 +44,6 @@ export const Routes = () => {
           options={{ headerShown: false }}
         />
 
-        <Stack.Screen
-          component={HomeScreen}
-          name="Start"
-          options={{ headerShown: false }}
-        />
         <Stack.Screen component={TestView} name="Test" />
       </>
     </Stack.Navigator>

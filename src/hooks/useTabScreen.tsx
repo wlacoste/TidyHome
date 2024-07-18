@@ -6,6 +6,8 @@ const useIsTabScreen = () => {
     const route = state.routes[state.index];
     const routeName = getFocusedRouteNameFromRoute(route) ?? route.name;
     const tabScreens = ['Home', 'Items', 'Estado', 'Productos', 'Notas'];
+
+    // console.log(state.routes);
     return tabScreens.includes(routeName);
   });
 };

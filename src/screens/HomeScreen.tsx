@@ -30,10 +30,10 @@ const HomeScreen = () => {
     <>
       <ModalProvider>
         {isTabScreen && <FabGroup />}
-        <ModalAcciones />
+        {/* <ModalAcciones /> */}
         <Tab.Navigator
           sceneContainerStyle={styles.barra}
-          initialRouteName={'Items'}
+          initialRouteName={'Productos'}
           screenOptions={({ route }) => ({
             tabBarStyle: {
               backgroundColor: tema.colors.surface,

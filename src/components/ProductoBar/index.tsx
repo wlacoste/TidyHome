@@ -98,7 +98,11 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           <IconButton
             style={styles.buttonChev}
             icon={'chevron-right'}
-            onPress={() => navigation.navigate('ProductoDetalle', { producto })}
+            onPress={() =>
+              navigation.navigate('ProductoDetalle', {
+                productoId: producto.id,
+              })
+            }
           />
         </View>
 

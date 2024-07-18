@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Portal } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useModal } from '../../context/modalContext';
 
 export interface IModal {
