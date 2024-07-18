@@ -17,6 +17,7 @@ import { rgbToHex } from '../../utils/rgbToHex';
 import { Appbar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Producto } from '../../models/productos';
+import MenuComponent from './AccionesProducto';
 
 type Props = NativeStackScreenProps<ProductoList, 'ProductoDetalle'>;
 
@@ -49,7 +50,8 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
           onPress={() => navigation.goBack()}
         />
         <Appbar.Content title="Detalles" subtitle={'Subtitle'} />
-        <Appbar.Action icon={'dots-vertical'} onPress={() => {}} />
+        {/* <Appbar.Action icon={'dots-vertical'} onPress={() => {}} /> */}
+        <MenuComponent id={producto.id} />
       </Appbar.Header>
       <View style={styles.tituloContainer}>
         <Icon

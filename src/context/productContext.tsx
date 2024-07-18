@@ -23,6 +23,7 @@ export interface ProductContextTyp {
   primerMovimiento: (formu: IProductoForm) => Promise<void>;
   agregarMovimiento: (formu: IMovimientoSimple) => Promise<void>;
   eliminarMovimiento: (formu: number) => Promise<void>;
+  loading: boolean;
 }
 
 const defaultProductContext: ProductContextTyp = {
@@ -32,12 +33,14 @@ const defaultProductContext: ProductContextTyp = {
   agregarMovimiento: async () => {},
   eliminarMovimiento: async () => {},
   primerMovimiento: async () => {},
+  loading: false,
 };
 
 const ProductContext = createContext<ProductContextTyp>(defaultProductContext);
 
 const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [productos, setProductos] = useState<Producto[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const {
     nuevoProducto,
@@ -105,8 +108,15 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const getProductos = async () => {
-      const p = await getAllProductsWithMovements();
-      setProductos(p);
+      setLoading(true);
+      try {
+        const p = await getAllProductsWithMovements();
+        setProductos(p);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getProductos();
@@ -121,6 +131,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
         agregarMovimiento,
         eliminarMovimiento,
         primerMovimiento,
+        loading,
       }}>
       {children}
     </ProductContext.Provider>

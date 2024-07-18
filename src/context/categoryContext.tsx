@@ -64,7 +64,6 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
   useEffect(() => {
     const initDB = async () => {
       setLoading(true); // Set loading to true when starting initialization
-      console.log('setLoading True');
       try {
         const database = await getDBConnection();
         setDb(database);
@@ -73,7 +72,6 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
         console.error('Failed to initialize database:', error);
       } finally {
         setLoading(false); // Set loading to false when done, regardless of success or failure
-        console.log('categories', categories);
       }
     };
     initDB();
@@ -86,8 +84,6 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
         await resetCategoriesToDefault(database);
         fetchedCategories = await getAllCategories(database);
       }
-      console.log('categories categories', categories);
-      console.log('fetched categories', fetchedCategories);
       setCategories(fetchedCategories);
     }
   };
