@@ -7,6 +7,8 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
+import { toastConfig } from '../utils/toastConfig';
+import Toast from 'react-native-toast-message';
 
 const CombinedDefaultTheme = {
   ...NavigationDefaultTheme,
@@ -74,6 +76,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         <NavigationContainer theme={theme}>{children}</NavigationContainer>
       </PaperProvider>
       {/* </NavigationContainer> */}
+      <Toast config={toastConfig(theme)} />
     </ThemeContext.Provider>
   );
 };

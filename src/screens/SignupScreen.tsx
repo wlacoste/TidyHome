@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
+import { LoginScreenProps } from './LoginScreen';
 
-const SignupScreen = () => {
+const SignupScreen = ({ navigation }: LoginScreenProps) => {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [mail, setMail] = useState('');
@@ -12,10 +13,18 @@ const SignupScreen = () => {
   const { signUp } = useUserAuth();
   const theme = useTheme();
 
-  const handleSignUp = () => {
-    if (mail.trim() && password.trim() && nombre.trim() && apellido.trim()) {
-      signUp(mail, password, nombre, apellido);
+  const handleSignUp = async () => {
+    if (
+      !mail.trim() ||
+      !password.trim() ||
+      !nombre.trim() ||
+      !apellido.trim()
+    ) {
+      return;
     }
+    await signUp(mail, password, nombre, apellido).then(() =>
+      navigation.navigate('Productos'),
+    );
   };
 
   return (

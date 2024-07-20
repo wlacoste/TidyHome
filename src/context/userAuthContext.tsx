@@ -1,8 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import Toast from 'react-native-toast-message';
 
 interface UserAuthContextType {
   user: FirebaseAuthTypes.User | null;
@@ -15,7 +15,7 @@ interface UserAuthContextType {
     password: string,
     nombre: string,
     apellido: string,
-  ) => Promise<void>;
+  ) => Promise<any>;
   logOut: () => void;
 }
 const defaultValue: UserAuthContextType = {
@@ -52,11 +52,24 @@ const UserAuthContextProvider = ({ children }: any) => {
       .then(userCredential => {
         // const user = userCredential.user;
         // Save the user data to the "Users" collection
+
         return usersCollection.doc(userCredential.user.uid).set({
           email: userCredential.user.email,
           uid: userCredential.user.uid,
           nombre: nombre,
           apellido: apellido,
+        });
+      })
+      .then(() => {
+        Toast.show({
+          type: 'success',
+          text1: 'Usuario registrado',
+        });
+      })
+      .catch(error => {
+        Toast.show({
+          type: 'error',
+          text1: 'Ha ocurrido un error al registrar el usuario',
         });
       });
   }
