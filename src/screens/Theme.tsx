@@ -1,10 +1,9 @@
 import React from 'react';
-import { RadioButton, useTheme } from 'react-native-paper';
+import { RadioButton } from 'react-native-paper';
 import { useCustomTheme } from '../context/themeContext';
 
 const ThemeSwitcher: React.FC = () => {
   const { toggleTheme, themeType } = useCustomTheme();
-  const theme = useTheme();
 
   return (
     <RadioButton.Group

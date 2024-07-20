@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
-import { useColorScheme } from 'react-native';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { StyleSheet, useColorScheme } from 'react-native';
 import { MaterialDarkTheme, MaterialLightTheme } from '../theme/themeOptions';
-import { PaperProvider } from 'react-native-paper';
+import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   DarkTheme as NavigationDarkTheme,
@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/native';
 import { toastConfig } from '../utils/toastConfig';
 import Toast from 'react-native-toast-message';
+import { getTheme, initDatabase, saveTheme } from '../service/theme-service';
 
 const CombinedDefaultTheme = {
   ...NavigationDefaultTheme,
@@ -27,17 +28,14 @@ const CombinedDarkTheme = {
   },
 };
 
-// Create a context for the theme
 const ThemeContext = createContext({
   toggleTheme: (theme: 'light' | 'dark' | 'system') => {},
   themeType: 'system' as 'light' | 'dark' | 'system',
   theme: CombinedDefaultTheme,
 });
 
-// Custom hook to use the theme context
 export const useCustomTheme = () => useContext(ThemeContext);
 
-// Theme provider component
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -45,19 +43,55 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   const [themeType, setThemeType] = useState<'light' | 'dark' | 'system'>(
     'system',
   );
+  const [isLoading, setIsLoading] = useState(true);
 
-  const toggleTheme = (theme: 'light' | 'dark' | 'system') => {
+  useEffect(() => {
+    const initializeTheme = async () => {
+      try {
+        await initDatabase();
+        const savedTheme = await getTheme();
+        setThemeType(savedTheme);
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Hubo un error al obtener el tema',
+        });
+        console.error('Failed to initialize theme:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeTheme();
+  }, []);
+
+  const toggleTheme = async (theme: 'light' | 'dark' | 'system') => {
     setThemeType(theme);
+    try {
+      await saveTheme(theme);
+      Toast.show({
+        type: 'success',
+        text1: `Se cambió el tema a ${theme}`,
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Hubo un error al cambiar el tema',
+      });
+      console.error('Failed to save theme:', error);
+    }
   };
 
-  //   const theme =
-  //     themeType === 'system'
-  //       ? colorScheme === 'dark'
-  //         ? MaterialDarkTheme
-  //         : MaterialLightTheme
-  //       : themeType === 'dark'
-  //       ? MaterialDarkTheme
-  //       : MaterialLightTheme;
+  if (isLoading) {
+    return (
+      <ActivityIndicator
+        style={styles.loading}
+        animating={true}
+        size={'large'}
+      />
+    );
+  }
+
   const theme =
     themeType === 'system'
       ? colorScheme === 'dark'
@@ -66,17 +100,19 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
       : themeType === 'dark'
       ? CombinedDarkTheme
       : CombinedDefaultTheme;
-  const scheme = useColorScheme();
 
   return (
     <ThemeContext.Provider value={{ toggleTheme, themeType, theme }}>
-      {/* <NavigationContainer
-         theme={scheme === 'dark' ? MaterialDarkTheme : MaterialLightTheme}>*/}
       <PaperProvider theme={theme}>
         <NavigationContainer theme={theme}>{children}</NavigationContainer>
       </PaperProvider>
-      {/* </NavigationContainer> */}
       <Toast config={toastConfig(theme)} />
     </ThemeContext.Provider>
   );
 };
+
+const styles = StyleSheet.create({
+  loading: {
+    flexGrow: 1,
+  },
+});
