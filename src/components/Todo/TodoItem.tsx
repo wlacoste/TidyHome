@@ -21,16 +21,19 @@ export const ToDoItemComponent: React.FC<{
 };
 const styles = StyleSheet.create({
   todoContainer: {
+    display: 'flex',
+    flexDirection: 'row',
     marginTop: 10,
-    paddingHorizontal: 24,
-    backgroundColor: 'deepskyblue',
+    paddingHorizontal: 12,
+    // backgroundColor: 'deepskyblue',
     marginLeft: 20,
     marginRight: 20,
     borderRadius: 10,
-    borderColor: 'black',
+    // borderColor: 'black',
     borderWidth: 1,
   },
   todoTextContainer: {
+    width: '90%',
     justifyContent: 'center',
     flexDirection: 'row',
   },

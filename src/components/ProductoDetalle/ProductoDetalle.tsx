@@ -11,20 +11,23 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProductoList } from '../../models/routeTypes';
 import { Icon, IconButton, Text, useTheme } from 'react-native-paper';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import MovimientoDetalle from '../ProductoBar/MovimientoDetalle';
+import MovimientoDetalle, {
+  IMovimientoDetalle,
+} from '../ProductoBar/MovimientoDetalle';
 import { useProductContext } from '../../context/productContext';
 import { rgbToHex } from '../../utils/rgbToHex';
 import { Appbar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { Producto } from '../../models/productos';
+import { MovimientoProducto, Producto } from '../../models/productos';
 import MenuComponent from './AccionesProducto';
+import DataTableComponent from '../DataTable';
 
 type Props = NativeStackScreenProps<ProductoList, 'ProductoDetalle'>;
 
 const ProductoDetalle: React.FC<Props> = ({ route }) => {
   const { productoId } = route.params;
   const theme = useTheme();
-  const { eliminarMovimiento, productos } = useProductContext();
+  const { productos } = useProductContext();
   const navigation = useNavigation();
   const [producto, setProducto] = useState<Producto | null>(null);
 
@@ -70,6 +73,19 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
         <View style={styles.metrica} />
       </View>
       <View>
+        <Text>Movimientos:</Text>
+
+        <DataTableComponent<MovimientoProducto, IMovimientoDetalle>
+          items={producto.detalle}
+          renderItem={MovimientoDetalle}
+          getItemProps={(item, index, array) => ({
+            mov: item,
+            showDivider: index !== array.length - 1,
+            theme: theme,
+          })}
+        />
+      </View>
+      {/* <View>
         <Text>Movimientos:</Text>
         <SwipeListView
           keyExtractor={(item, index) => item.id.toString()}
@@ -120,7 +136,7 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
           disableScrollViewPanResponder={true}
           nestedScrollEnabled={true}
         />
-      </View>
+      </View> */}
     </ScrollView>
   );
 };
