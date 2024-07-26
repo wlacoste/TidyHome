@@ -1,5 +1,5 @@
 import { SQLiteDatabase } from 'react-native-sqlite-storage';
-import { Categoria, DefaultCategories } from '../models/productos';
+import { Categoria, DefaultCategories } from '../models/categorias';
 import { getDBConnection } from './product-service';
 
 export const insertCategory = async (

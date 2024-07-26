@@ -66,6 +66,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const toggleTheme = async (theme: 'light' | 'dark' | 'system') => {
+    if (theme === themeType) {
+      return;
+    }
     setThemeType(theme);
     try {
       await saveTheme(theme);

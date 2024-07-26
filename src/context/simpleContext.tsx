@@ -14,7 +14,7 @@ import {
   toggleCategoryEnabled,
   resetCategoriesToDefault,
 } from '../service/category-service';
-import { Categoria } from '../models/productos';
+import { Categoria } from '../models/categorias';
 import { getDBConnection } from '../service/product-service';
 
 interface SimpleContextType {

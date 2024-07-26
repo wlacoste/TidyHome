@@ -14,6 +14,7 @@ import {
   updateMovimientoProducto,
 } from '../../service/product-service';
 import { transformToProducto } from '../../utils/transformToProducto';
+import Toast from 'react-native-toast-message';
 
 const useProducto = () => {
   const nuevoProducto = async (formulario: IProductoForm) => {
@@ -21,6 +22,10 @@ const useProducto = () => {
       const { movimiento, producto } = transformToProducto(formulario);
       const resultado = await insertProductWithMovimiento(producto, movimiento);
       console.log('resultado', resultado);
+      Toast.show({
+        type: 'success',
+        text1: `Producto ${producto.nombre} añadido correctamente`,
+      });
       // producto.detalle.push(movimiento);
       return resultado;
     } catch (err) {
@@ -38,6 +43,7 @@ const useProducto = () => {
     isCompra,
     ultimoMovimiento,
     cantidadActual,
+    recordatorio,
   }: IMovimientoSimple) => {
     //TODO abrir modal de nuevo producto cuando no hay mas movimientos
     if (!ultimoMovimiento) {
@@ -68,6 +74,7 @@ const useProducto = () => {
       isVence: ultimoMovimiento.isVence,
       fechaVencimiento: ultimoMovimiento.fechaVencimiento,
       isCompra: isCompra,
+      recordatorio: recordatorio ? recordatorio : '',
     };
 
     return await persistirMovimiento(movimiento, isUpdate);

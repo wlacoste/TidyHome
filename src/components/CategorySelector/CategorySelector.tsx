@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { Categoria } from '../../models/productos';
+import { Categoria } from '../../models/categorias';
 import {
   Button,
   Icon,

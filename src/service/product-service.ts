@@ -3,12 +3,8 @@ import {
   enablePromise,
   openDatabase,
 } from 'react-native-sqlite-storage';
-import {
-  DefaultCategories,
-  IProducto,
-  MovimientoProducto,
-  Producto,
-} from '../models/productos';
+import { IProducto, MovimientoProducto, Producto } from '../models/productos';
+import { DefaultCategories } from '../models/categorias';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'cleanApp.db', location: 'default' });
@@ -80,6 +76,9 @@ export const createTables = async () => {
         nombre TEXT,
         categoria_id INTEGER,
         fechaCreacion TEXT,
+        agregarListaCompra INTEGER DEFAULT 0,
+        cantidadDeAdvertencia INTEGER DEFAULT 0,
+        seguirEstadistica INTEGER DEFAULT 1,
         FOREIGN KEY (categoria_id) REFERENCES categories (id) ON DELETE SET NULL
       );`,
       [],
@@ -103,6 +102,7 @@ export const createTables = async () => {
           isVence INTEGER,
           fechaVencimiento string,
           isCompra INTEGER,
+          recordatorio string DEFAULT '',
           FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
         );`,
       [],
@@ -124,7 +124,7 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
       tx.executeSql(
         `SELECT p.*, mp.id as mp_id, mp.fechaCreacion as mp_fechaCreacion, 
                 mp.precio, mp.cantidad, mp.isUnitario, mp.precioUnitario, 
-                mp.isVence, mp.fechaVencimiento, mp.isCompra, ct.name, ct.icon, ct.isEnabled
+                mp.isVence, mp.fechaVencimiento, mp.isCompra,mp.recordatorio, ct.name, ct.icon, ct.isEnabled
          FROM productos p
          INNER JOIN movimiento_producto mp ON p.id = mp.product_id
          INNER JOIN categories ct ON p.categoria_id = ct.id
@@ -148,8 +148,11 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
                   id: row.categoria_id,
                   icon: row.icon,
                   name: row.name,
-                  isEnabled: row.isEnabled,
+                  isEnabled: Boolean(row.isEnabled),
                 },
+                agregarListaCompra: row.agregarListaCompra,
+                cantidadAdvertencia: row.cantidadDeAdvertencia,
+                seguirEstadistica: row.seguirEstadistica,
                 fechaCreacion: row.fechaCreacion,
                 detalle: [],
               };
@@ -166,6 +169,7 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
               isVence: Boolean(row.isVence),
               fechaVencimiento: row.fechaVencimiento,
               isCompra: Boolean(row.isCompra),
+              recordatorio: row.recordatorio,
             });
           }
 
@@ -189,7 +193,7 @@ export const addMovimientoProducto = async (movimiento: MovimientoProducto) => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO movimiento_producto (product_id, fechaCreacion, precio, cantidad, isUnitario, precioUnitario, isVence, fechaVencimiento, isCompra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO movimiento_producto (product_id, fechaCreacion, precio, cantidad, isUnitario, precioUnitario, isVence, fechaVencimiento, isCompra, recordatorio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
           movimiento.idProducto,
           movimiento.fechaCreacion,
@@ -200,6 +204,7 @@ export const addMovimientoProducto = async (movimiento: MovimientoProducto) => {
           movimiento.isVence ? 1 : 0,
           movimiento.fechaVencimiento,
           movimiento.isCompra ? 1 : 0,
+          movimiento.recordatorio,
         ],
         (_, result) => {
           resolve(result);
@@ -220,7 +225,7 @@ export const updateMovimientoProducto = async (
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'UPDATE movimiento_producto SET product_id = ?, fechaCreacion = ?, precio = ?, cantidad = ?, isUnitario = ?, precioUnitario = ?, isVence = ?, fechaVencimiento = ?, isCompra = ? WHERE id = ?',
+        'UPDATE movimiento_producto SET product_id = ?, fechaCreacion = ?, precio = ?, cantidad = ?, isUnitario = ?, precioUnitario = ?, isVence = ?, fechaVencimiento = ?, isCompra = ? , recordatorio = ? WHERE id = ?',
         [
           movimiento.idProducto,
           movimiento.fechaCreacion,
@@ -231,6 +236,7 @@ export const updateMovimientoProducto = async (
           movimiento.isVence ? 1 : 0,
           movimiento.fechaVencimiento,
           movimiento.isCompra ? 1 : 0,
+          movimiento.recordatorio,
           movimiento.id,
         ],
         (_, result) => {
@@ -287,6 +293,7 @@ export const getMovimientoById = async (
               isVence: Boolean(row.isVence),
               fechaVencimiento: row.fechaVencimiento,
               isCompra: Boolean(row.isCompra),
+              recordatorio: row.recordatorio,
             };
 
             resolve(movimientoProducto);

@@ -12,6 +12,9 @@ export const transformToProducto = (formu: IProductoForm) => {
     categoria: formu.categoria!,
     fechaCreacion: dayjs().toDate().toLocaleDateString('es-ES'),
     detalle: [],
+    agregarListaCompra: false,
+    cantidadAdvertencia: 0,
+    seguirEstadistica: true,
   };
   const precio = formu.precio ? Number(formu.precio) : 0;
   const movimiento: MovimientoProducto = {
@@ -27,6 +30,7 @@ export const transformToProducto = (formu: IProductoForm) => {
       ? formu.fechaVencimiento?.toLocaleDateString('es-ES') + ''
       : '',
     isCompra: true,
+    recordatorio: '',
   };
   return { producto, movimiento };
 };

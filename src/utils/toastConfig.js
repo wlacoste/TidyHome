@@ -64,6 +64,7 @@ const CustomToast = ({ props, text1, text2, theme }) => {
           style={{
             display: 'flex',
             flexDirection: 'column',
+            width: '90%',
           }}>
           <Text
             style={{
