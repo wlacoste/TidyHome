@@ -113,6 +113,52 @@ export const createTables = async () => {
         console.error('Error creating bought dates table: ', error);
       },
     );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS ListaCompras (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fechaCreacion TEXT
+      );`,
+      [],
+      () => {
+        console.log('ListaCompras table created successfully');
+      },
+      error => {
+        console.error('Error creating table: ListaCompras', error);
+      },
+    );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS ProductosPorLista (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        idListaCompra INTEGER,
+        idProducto INTEGER,
+        cantidad INTEGER,
+        FOREIGN KEY (idListaCompra) REFERENCES ListaCompras (id) ON DELETE CASCADE,
+        FOREIGN KEY (idProducto) REFERENCES Producto (id) ON DELETE CASCADE
+    );`,
+      [],
+      () => {
+        console.log('ProductosPorLista table created successfully');
+      },
+      error => {
+        console.error('Error creating table: ProductosPorLista', error);
+      },
+    );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS ProductoPorComprar (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        idProductosPorLista INTEGER,
+        nombre TEXT,
+        cantidad INTEGER,
+        FOREIGN KEY (idProductosPorLista) REFERENCES ProductosPorLista (id) ON DELETE CASCADE
+    );`,
+      [],
+      () => {
+        console.log('ProductoPorComprar table created successfully');
+      },
+      error => {
+        console.error('Error creating table: ProductoPorComprar', error);
+      },
+    );
   });
 };
 
