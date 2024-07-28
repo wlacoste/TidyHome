@@ -40,6 +40,7 @@ export type SettingsList = {
 };
 export type ProductoList = {
   Producto: undefined;
+  ProductoForm: undefined;
   ProductoDetalle: { productoId: number };
 };
 

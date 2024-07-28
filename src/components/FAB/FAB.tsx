@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { FAB, Portal, useTheme } from 'react-native-paper';
 import ProductForm from '../GestorProductos/ProductForm';
@@ -6,6 +6,8 @@ import SimpleForm from '../SimpleInput';
 import { useModal } from '../../context/modalContext';
 import TestView from '../TestView/TestView';
 import { useFab } from '../../context/fabContext';
+import { useNavigation } from '@react-navigation/native';
+import { ProductoList, RootNavigationProp } from '../../models/routeTypes';
 
 const FabGroup = () => {
   const theme = useTheme();
@@ -19,8 +21,11 @@ const FabGroup = () => {
 
   const { shouldBeVisible, isTabScreen } = useFab();
 
-  const bottomPosition = isTabScreen && shouldBeVisible ? 0 : -136;
+  const bottomPosition = useMemo(() => {
+    return isTabScreen && shouldBeVisible ? 0 : -136;
+  }, [isTabScreen, shouldBeVisible]);
 
+  const navigation = useNavigation<RootNavigationProp>();
   return (
     <Portal>
       <FAB.Group
@@ -40,6 +45,13 @@ const FabGroup = () => {
             label: 'Producto nuevo',
             onPress: () => {
               openModal(<ProductForm onClose={closeModal} />);
+            },
+          },
+          {
+            icon: 'package-variant',
+            label: 'Producto nuevo 2',
+            onPress: () => {
+              navigation.navigate('ProductoForm');
             },
           },
           {
