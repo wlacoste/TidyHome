@@ -7,11 +7,9 @@ export const FabProvider = ({ children }) => {
   const [shouldBeVisible, setIsFabVisible] = useState(false);
 
   const showFab = () => {
-    console.log('showFabCalled');
     setIsFabVisible(true);
   };
   const hideFab = () => {
-    console.log('hideFabCalled');
     setIsFabVisible(false);
   };
 

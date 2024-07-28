@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { LayoutAnimation, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { FAB, Portal, useTheme } from 'react-native-paper';
 import ProductForm from '../ProductForm';
 import SimpleForm from '../SimpleInput';
@@ -18,10 +18,6 @@ const FabGroup = () => {
   const { closeModal, openModal } = useModal();
 
   const { shouldBeVisible, isTabScreen } = useFab();
-
-  // useEffect(() => {
-  //   LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-  // }, [isTabScreen, isTabScreen]);
 
   const bottomPosition = isTabScreen && shouldBeVisible ? 0 : -136;
 

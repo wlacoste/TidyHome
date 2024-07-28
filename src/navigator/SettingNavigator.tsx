@@ -6,7 +6,6 @@ import SettingsMenu from '../screens/Settings';
 import ResetTables from '../components/ResetTables/Reset';
 import About from '../screens/About';
 import ThemeSwitcher from '../screens/Theme';
-import ProductForm from '../components/ProductForm';
 
 const SettingsStack = createNativeStackNavigator<SettingsList>();
 

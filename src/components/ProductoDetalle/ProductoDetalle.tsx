@@ -31,21 +31,30 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation();
   const [producto, setProducto] = useState<Producto | null>(null);
   const { showFab, hideFab } = useFab();
+  const [backButtonPressed, setBackButtonPressed] = useState(false);
+
+  const goBack = () => {
+    setBackButtonPressed(() => true);
+    navigation.goBack();
+  };
 
   useFocusEffect(
     useCallback(() => {
-      // This runs when the screen comes into focus
       const timer = setTimeout(() => {
         hideFab();
       }, 150);
 
-      // This runs when the screen goes out of focus
       return () => {
-        navigation.goBack();
         clearTimeout(timer);
         showFab();
+        setBackButtonPressed(prev => {
+          if (!prev) {
+            navigation.goBack();
+          }
+          return false;
+        });
       };
-    }, []),
+    }, [backButtonPressed]),
   );
 
   useEffect(() => {
@@ -65,10 +74,7 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
   return (
     <ScrollView>
       <Appbar.Header style={styles.header}>
-        <Appbar.Action
-          icon="chevron-left"
-          onPress={() => navigation.goBack()}
-        />
+        <Appbar.Action icon="chevron-left" onPress={goBack} />
         <Appbar.Content title="Detalles" subtitle={'Subtitle'} />
         {/* <Appbar.Action icon={'dots-vertical'} onPress={() => {}} /> */}
         <MenuComponent id={producto.id} />
