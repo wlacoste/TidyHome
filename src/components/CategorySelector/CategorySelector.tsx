@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Keyboard } from 'react-native';
 import { Categoria } from '../../models/categorias';
 import {
   Button,
@@ -12,7 +12,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { FieldError } from 'react-hook-form';
-import { CategoryContext, useCategories } from '../../context/categoryContext';
+import { CategoryContext } from '../../context/categoryContext';
 
 interface CategorySelectorProps {
   categories: Categoria[];
@@ -27,7 +27,6 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   onChange,
   error,
 }) => {
-  // const { categories, loading } = useCategories();
   const { categories } = useContext(CategoryContext);
 
   const [visible, setVisible] = useState(false);
@@ -81,25 +80,15 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
     [theme.colors, value],
   );
 
-  // return <Text>Loading{loading}</Text>;
-  // return (
-  //   <View style={[styles.container]}>
-  //     {categories &&
-  //       categories.map((i, index) => (
-  //         <View key={index + i.name}>
-  //           <Text>{i.name}</Text>
-  //           <Icon size={15} source={i.icon} />
-  //         </View>
-  //       ))}
-  //   </View>
-  // );
-
   return (
     <View>
       <Button
         focusable
         mode="outlined"
-        onPress={() => showModal()}
+        onPress={() => {
+          Keyboard.dismiss();
+          showModal();
+        }}
         icon={value?.icon}
         style={[
           styles.boton,
