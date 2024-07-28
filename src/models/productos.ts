@@ -63,7 +63,6 @@ export interface IProductoForm {
 }
 
 export interface IProductForm {
-  tipo: 'update' | 'nuevo';
   onClose?: () => void;
-  producto?: Producto;
+  producto: Producto;
 }

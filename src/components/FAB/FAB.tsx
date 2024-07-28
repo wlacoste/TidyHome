@@ -39,7 +39,7 @@ const FabGroup = () => {
             icon: 'package-variant',
             label: 'Producto nuevo',
             onPress: () => {
-              openModal(<ProductForm tipo={'nuevo'} onClose={closeModal} />);
+              openModal(<ProductForm onClose={closeModal} />);
             },
           },
           {
@@ -56,7 +56,7 @@ const FabGroup = () => {
             icon: 'pencil',
             label: 'Movimiento Input',
             onPress: () => {
-              openModal(<SimpleForm tipo={'nuevo'} onClose={closeModal} />);
+              openModal(<SimpleForm onClose={closeModal} />);
             },
           },
         ]}

@@ -23,6 +23,7 @@ import { useModal } from '../../../context/modalContext';
 import ProductForm from '../ProductForm';
 import { useNavigation } from '@react-navigation/native';
 import { RootNavigationProp } from '../../../models/routeTypes';
+import PrimerMovimiento from '../ProductForm/NuevoMovimiento';
 
 interface IProductoBar {
   producto: Producto;
@@ -49,13 +50,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
 
   const hacerMovimiento = (isCompra: boolean) => {
     if (!producto.detalle.length) {
-      openModal(
-        <ProductForm
-          tipo={'update'}
-          onClose={closeModal}
-          producto={producto}
-        />,
-      );
+      openModal(<PrimerMovimiento onClose={closeModal} producto={producto} />);
       return;
     }
     const req: IMovimientoSimple = {

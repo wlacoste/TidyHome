@@ -14,12 +14,9 @@ import { mapProductoToForm } from '../../../utils/transformToProducto';
 import { useCategories } from '../../../context/categoryContext';
 import CategorySelector from '../../CategorySelector/CategorySelector';
 
-export interface INuevoProducto {
-  onClose?: () => void;
-}
-const ProductForm = ({ onClose }: INuevoProducto) => {
-  const { loading } = useCategories();
-  const { agregarProducto, primerMovimiento } = useProductContext();
+const PrimerMovimiento = ({ onClose, producto }: IProductForm) => {
+  //   const { loading } = useCategories();
+  const { primerMovimiento } = useProductContext();
   const [openDate, setOpenDate] = useState(false);
 
   const {
@@ -29,22 +26,13 @@ const ProductForm = ({ onClose }: INuevoProducto) => {
     handleSubmit,
   } = useForm<IProductoForm>({
     mode: 'onChange',
-    defaultValues: {
-      nombre: '',
-      cantidad: undefined,
-      precio: undefined,
-      isUnitario: false,
-      categoria: undefined,
-      fechaVencimiento: undefined,
-      isVence: false,
-      fechaCreacion: '',
-    },
+    defaultValues: mapProductoToForm(producto),
   });
 
   const submit = data => {
     console.log('submit data', data);
 
-    agregarProducto(data);
+    primerMovimiento({ ...data, id: producto?.id });
 
     onClose?.();
   };
@@ -52,25 +40,8 @@ const ProductForm = ({ onClose }: INuevoProducto) => {
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.content}>
-        <Text style={styles.titulo}>Nuevo producto</Text>
-        <Controller
-          control={control}
-          defaultValue=""
-          name="nombre"
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label={'Producto'}
-              onChangeText={onChange}
-              value={value}
-              onBlur={onBlur}
-              error={errors.nombre && true}
-              autoCapitalize="sentences"
-            />
-          )}
-        />
+        <Text style={styles.titulo}>Nuevo movimiento {producto.nombre}</Text>
+        <Text style={styles.titulo}>Categoria: {producto.categoria.name}</Text>
 
         <Controller
           control={control}
@@ -145,24 +116,7 @@ const ProductForm = ({ onClose }: INuevoProducto) => {
             )}
           />
         </View>
-        <Controller<IProductoForm>
-          control={control}
-          name={'categoria'}
-          disabled={loading}
-          defaultValue={undefined}
-          rules={{
-            required: 'Category is required',
-            validate: value => value !== undefined,
-          }}
-          render={({ field: { onChange, value } }) => (
-            <CategorySelector
-              // categories={categorias}
-              value={value as Categoria | undefined}
-              onChange={onChange}
-              error={errors.categoria as FieldError | undefined}
-            />
-          )}
-        />
+
         <View style={styles.viewUnitario}>
           <Text style={styles.textoUnitario}>Posee fecha de vencimiento?</Text>
 
@@ -237,7 +191,7 @@ const ProductForm = ({ onClose }: INuevoProducto) => {
   );
 };
 
-export default ProductForm;
+export default PrimerMovimiento;
 
 const styles = StyleSheet.create({
   card: {
