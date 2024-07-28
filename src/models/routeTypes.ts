@@ -37,6 +37,7 @@ export type SettingsList = {
   Password: undefined;
   Comentarios: undefined;
   About: undefined;
+  CategorySettings: undefined;
 };
 export type ProductoList = {
   Producto: undefined;
