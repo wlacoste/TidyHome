@@ -8,8 +8,8 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import { MovimientoProducto } from '../../models/productos';
-import { useProductContext } from '../../context/productContext';
+import { MovimientoProducto } from '../../../models/productos';
+import { useProductContext } from '../../../context/productContext';
 
 export interface IMovimientoDetalle {
   mov: MovimientoProducto;

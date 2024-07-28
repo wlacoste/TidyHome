@@ -7,19 +7,17 @@ import {
   ScrollView,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ProductoList } from '../../models/routeTypes';
+import { ProductoList } from '../../../models/routeTypes';
 import { Icon, Text, useTheme } from 'react-native-paper';
-import MovimientoDetalle, {
-  IMovimientoDetalle,
-} from '../ProductoBar/MovimientoDetalle';
-import { useProductContext } from '../../context/productContext';
-import { rgbToHex } from '../../utils/rgbToHex';
+import MovimientoDetalle, { IMovimientoDetalle } from './MovimientoDetalle';
+import { useProductContext } from '../../../context/productContext';
+import { rgbToHex } from '../../../utils/rgbToHex';
 import { Appbar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { MovimientoProducto, Producto } from '../../models/productos';
+import { MovimientoProducto, Producto } from '../../../models/productos';
 import MenuComponent from './AccionesProducto';
-import DataTableComponent from '../DataTable';
-import { useFab } from '../../context/fabContext';
+import DataTableComponent from '../../DataTable';
+import { useFab } from '../../../context/fabContext';
 import { useFocusEffect } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<ProductoList, 'ProductoDetalle'>;

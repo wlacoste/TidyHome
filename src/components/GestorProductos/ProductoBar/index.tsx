@@ -12,17 +12,17 @@ import {
   IMovimientoSimple,
   MovimientoProducto,
   Producto,
-} from '../../models/productos';
+} from '../../../models/productos';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { useProductContext } from '../../context/productContext';
+import { useProductContext } from '../../../context/productContext';
 import Collapsible from 'react-native-collapsible';
-import Texto from '../Text';
-import MovimientoDetalle from './MovimientoDetalle';
+import Texto from '../../Text';
+import MovimientoDetalle from '../ProductoDetalle/MovimientoDetalle';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { useModal } from '../../context/modalContext';
+import { useModal } from '../../../context/modalContext';
 import ProductForm from '../ProductForm';
 import { useNavigation } from '@react-navigation/native';
-import { RootNavigationProp } from '../../models/routeTypes';
+import { RootNavigationProp } from '../../../models/routeTypes';
 
 interface IProductoBar {
   producto: Producto;

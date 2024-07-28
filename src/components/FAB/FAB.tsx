@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { FAB, Portal, useTheme } from 'react-native-paper';
-import ProductForm from '../ProductForm';
+import ProductForm from '../GestorProductos/ProductForm';
 import SimpleForm from '../SimpleInput';
 import { useModal } from '../../context/modalContext';
 import TestView from '../TestView/TestView';

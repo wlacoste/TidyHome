@@ -1,8 +1,8 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ProductoList } from '../models/routeTypes';
-import ProductoDetalle from '../components/ProductoDetalle/ProductoDetalle';
-import VisorProducto from '../components/VisorProducto/VisorProducto';
+import ProductoDetalle from '../components/GestorProductos/ProductoDetalle/ProductoDetalle';
+import VisorProducto from '../screens/VisorProducto';
 
 const ProductoStack = createNativeStackNavigator<ProductoList>();
 

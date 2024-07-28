@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import ProductoBar from '../ProductoBar';
-import { useProductContext } from '../../context/productContext';
+import ProductoBar from '../components/GestorProductos/ProductoBar';
+import { useProductContext } from '../context/productContext';
 import { ActivityIndicator, Text } from 'react-native-paper';
-import { useFab } from '../../context/fabContext';
+import { useFab } from '../context/fabContext';
 
 const VisorProducto = () => {
   const { productos, loading } = useProductContext();
@@ -13,7 +13,6 @@ const VisorProducto = () => {
 
   useEffect(() => {
     showFab();
-    console.log('show fab');
     // return () => hideFab(); // Hide when unmounting
   }, []);
 

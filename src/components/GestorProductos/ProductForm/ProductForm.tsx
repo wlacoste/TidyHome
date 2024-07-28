@@ -10,18 +10,18 @@ import dayjs from 'dayjs';
 import { Button, Card, Switch, TextInput } from 'react-native-paper';
 import { PaperSelect } from 'react-native-paper-select';
 import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
-import Text from '../Text';
+import Text from '../../Text';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller, FieldError } from 'react-hook-form';
-import { useProductContext } from '../../context/productContext';
-import { IProductForm, IProductoForm } from '../../models/productos';
-import { Categoria } from '../../models/categorias';
-import { getListItem } from '../../utils/getListItems';
-import { mapProductoToForm } from '../../utils/transformToProducto';
-import { useCategories } from '../../context/categoryContext';
-import CategorySelector from '../CategorySelector/CategorySelector';
+import { useProductContext } from '../../../context/productContext';
+import { IProductForm, IProductoForm } from '../../../models/productos';
+import { Categoria } from '../../../models/categorias';
+import { getListItem } from '../../../utils/getListItems';
+import { mapProductoToForm } from '../../../utils/transformToProducto';
+import { useCategories } from '../../../context/categoryContext';
+import CategorySelector from '../../CategorySelector/CategorySelector';
 
 const DismissKeyboardView = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
