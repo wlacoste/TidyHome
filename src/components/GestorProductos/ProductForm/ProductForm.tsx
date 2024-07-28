@@ -1,15 +1,7 @@
-import {
-  Keyboard,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
-// import { useCategories } from '../../hooks/useCategories';
 import { Button, Card, Switch, TextInput } from 'react-native-paper';
-import { PaperSelect } from 'react-native-paper-select';
-import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import Text from '../../Text';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,36 +10,14 @@ import { useForm, Controller, FieldError } from 'react-hook-form';
 import { useProductContext } from '../../../context/productContext';
 import { IProductForm, IProductoForm } from '../../../models/productos';
 import { Categoria } from '../../../models/categorias';
-import { getListItem } from '../../../utils/getListItems';
 import { mapProductoToForm } from '../../../utils/transformToProducto';
 import { useCategories } from '../../../context/categoryContext';
 import CategorySelector from '../../CategorySelector/CategorySelector';
 
-const DismissKeyboardView = ({ children }) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    <View style={{ flex: 1 }}>{children}</View>
-  </TouchableWithoutFeedback>
-);
-
 const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
-  // const { categorias, loading: categoriasLoading } = useCategories();
-  const {
-    categories: categorias,
-    loading,
-    refreshCategories,
-  } = useCategories();
+  const { loading } = useCategories();
   const { agregarProducto, primerMovimiento } = useProductContext();
-  const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
   const [openDate, setOpenDate] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Categoria | null>(
-    null,
-  );
-  // const { categories, loading } = useCategories();
-
-  const handleCategorySelect = (category: Categoria) => {
-    // Handle the selected category (e.g., update form state)
-    console.log('Selected category:', category);
-  };
 
   const {
     control,
@@ -68,17 +38,6 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
     }
     onClose?.();
   };
-
-  useEffect(() => {
-    if (categorias) {
-      setItemsCategorias(
-        categorias.map(categoria => ({
-          _id: categoria.id.toString(),
-          value: categoria.name,
-        })),
-      );
-    }
-  }, [categorias]);
 
   return (
     <Card style={styles.card}>
@@ -189,7 +148,7 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
           }}
           render={({ field: { onChange, value } }) => (
             <CategorySelector
-              categories={categorias}
+              // categories={categorias}
               value={value as Categoria | undefined}
               onChange={onChange}
               error={errors.categoria as FieldError | undefined}

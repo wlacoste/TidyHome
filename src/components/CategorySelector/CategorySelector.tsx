@@ -15,7 +15,7 @@ import { FieldError } from 'react-hook-form';
 import { CategoryContext } from '../../context/categoryContext';
 
 interface CategorySelectorProps {
-  categories: Categoria[];
+  // categories: Categoria[];
 
   error?: FieldError;
   value: Categoria | undefined;
