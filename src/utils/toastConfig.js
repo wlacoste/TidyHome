@@ -1,9 +1,4 @@
 import React from 'react';
-import Toast, {
-  BaseToast,
-  ErrorToast,
-  SuccessToast,
-} from 'react-native-toast-message';
 import { View, Text, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-paper';
 
@@ -37,6 +32,7 @@ const CustomToast = ({ props, text1, text2, theme }) => {
   return (
     <View
       style={{
+        marginTop: -10,
         height: 60,
         width: '90%',
         borderRadius: 8,

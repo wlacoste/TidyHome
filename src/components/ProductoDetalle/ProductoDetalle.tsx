@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
   Dimensions,
   LayoutAnimation,
-  SafeAreaView,
   ScrollView,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProductoList } from '../../models/routeTypes';
-import { Icon, IconButton, Text, useTheme } from 'react-native-paper';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { Icon, Text, useTheme } from 'react-native-paper';
 import MovimientoDetalle, {
   IMovimientoDetalle,
 } from '../ProductoBar/MovimientoDetalle';
@@ -21,6 +19,8 @@ import { useNavigation } from '@react-navigation/native';
 import { MovimientoProducto, Producto } from '../../models/productos';
 import MenuComponent from './AccionesProducto';
 import DataTableComponent from '../DataTable';
+import { useFab } from '../../context/fabContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<ProductoList, 'ProductoDetalle'>;
 
@@ -30,6 +30,23 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
   const { productos } = useProductContext();
   const navigation = useNavigation();
   const [producto, setProducto] = useState<Producto | null>(null);
+  const { showFab, hideFab } = useFab();
+
+  useFocusEffect(
+    useCallback(() => {
+      // This runs when the screen comes into focus
+      const timer = setTimeout(() => {
+        hideFab();
+      }, 150);
+
+      // This runs when the screen goes out of focus
+      return () => {
+        navigation.goBack();
+        clearTimeout(timer);
+        showFab();
+      };
+    }, []),
+  );
 
   useEffect(() => {
     const foundProducto = productos.find(prod => prod.id === productoId);

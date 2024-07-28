@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import ProductoBar from '../ProductoBar';
 import { useProductContext } from '../../context/productContext';
 import { ActivityIndicator, Text } from 'react-native-paper';
+import { useFab } from '../../context/fabContext';
 
 const VisorProducto = () => {
   const { productos, loading } = useProductContext();
+
+  const { showFab, hideFab } = useFab();
+
+  useEffect(() => {
+    showFab();
+    console.log('show fab');
+    // return () => hideFab(); // Hide when unmounting
+  }, []);
 
   if (loading) {
     return (

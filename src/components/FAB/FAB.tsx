@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { LayoutAnimation, StyleSheet } from 'react-native';
 import { FAB, Portal, useTheme } from 'react-native-paper';
 import ProductForm from '../ProductForm';
 import SimpleForm from '../SimpleInput';
 import { useModal } from '../../context/modalContext';
 import TestView from '../TestView/TestView';
+import { useFab } from '../../context/fabContext';
 
 const FabGroup = () => {
   const theme = useTheme();
@@ -16,19 +17,27 @@ const FabGroup = () => {
 
   const { closeModal, openModal } = useModal();
 
+  const { shouldBeVisible, isTabScreen } = useFab();
+
+  // useEffect(() => {
+  //   LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+  // }, [isTabScreen, isTabScreen]);
+
+  const bottomPosition = isTabScreen && shouldBeVisible ? 0 : -136;
+
   return (
     <Portal>
       <FAB.Group
         open={open}
         visible
-        icon={'plus'}
+        icon={open ? 'notebook' : 'plus'}
         theme={{
           colors: {
             onPrimaryContainer: theme.colors.primary,
           },
           roundness: 9,
         }}
-        style={styles.fab}
+        style={[styles.fab, { bottom: bottomPosition }]}
         actions={[
           {
             icon: 'package-variant',
@@ -67,13 +76,8 @@ const FabGroup = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   fab: {
-    marginBottom: 60,
+    paddingBottom: 60,
   },
 });
 
