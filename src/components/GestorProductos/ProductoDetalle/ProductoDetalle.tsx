@@ -75,7 +75,7 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
         <Appbar.Action icon="chevron-left" onPress={goBack} />
         <Appbar.Content title="Detalles" subtitle={'Subtitle'} />
         {/* <Appbar.Action icon={'dots-vertical'} onPress={() => {}} /> */}
-        <MenuComponent id={producto.id} />
+        <MenuComponent producto={producto} />
       </Appbar.Header>
       <View style={styles.tituloContainer}>
         <Icon
