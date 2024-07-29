@@ -9,8 +9,14 @@ export const insertCategory = async (
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO categories (name, icon, isEnabled) VALUES (?, ?, ?);',
-        [category.name, category.icon, category.isEnabled ? 1 : 0],
+        'INSERT INTO categories (name, icon, isEnabled, color, ordenCategoria) VALUES (?, ?, ?, ?, ?);',
+        [
+          category.name,
+          category.icon,
+          category.isEnabled ? 1 : 0,
+          category.color ? category.color : '',
+          category.ordenCategoria,
+        ],
         (_, result) => {
           console.log('Category inserted successfully', result);
           resolve(result.insertId);
@@ -42,6 +48,8 @@ export const getAllCategories = async (
               name: result.rows.item(i).name,
               icon: result.rows.item(i).icon,
               isEnabled: result.rows.item(i).isEnabled === 1,
+              color: result.rows.item(i).color,
+              ordenCategoria: result.rows.item(i).ordenCategoria,
             });
           }
           resolve(categories);
@@ -74,6 +82,8 @@ export const getCategoryById = async (
               name: item.name,
               icon: item.icon,
               isEnabled: item.isEnabled === 1,
+              color: item.color,
+              ordenCategoria: item.ordenCategoria,
             });
           } else {
             resolve(null);
@@ -97,8 +107,15 @@ export const updateCategory = async (
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'UPDATE categories SET name = ?, icon = ?, isEnabled = ? WHERE id = ?;',
-        [category.name, category.icon, category.isEnabled ? 1 : 0, category.id],
+        'UPDATE categories SET name = ?, icon = ?, isEnabled = ? , color = ?, ordenCategoria = ? WHERE id = ?;',
+        [
+          category.name,
+          category.icon,
+          category.isEnabled ? 1 : 0,
+          category.id,
+          category.color ? category.color : '',
+          category.ordenCategoria,
+        ],
         (_, result) => {
           console.log('Category updated successfully', result);
           resolve();

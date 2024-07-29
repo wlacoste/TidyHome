@@ -45,7 +45,9 @@ export const createTables = async () => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         icon TEXT,
-        isEnabled INTEGER DEFAULT 1
+        isEnabled INTEGER DEFAULT 1,
+        color TEXT DEFAULT '',
+        ordenCategoria INTEGER DEFAULT 0
       );`,
       [],
       () => {
@@ -195,6 +197,8 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
                   icon: row.icon,
                   name: row.name,
                   isEnabled: Boolean(row.isEnabled),
+                  color: row.color,
+                  ordenCategoria: row.ordenCategoria,
                 },
                 agregarListaCompra: row.agregarListaCompra,
                 cantidadAdvertencia: row.cantidadDeAdvertencia,
