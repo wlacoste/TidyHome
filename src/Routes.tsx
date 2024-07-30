@@ -41,7 +41,7 @@ export const Routes = () => {
         <Stack.Screen
           component={SignupScreen}
           name="Signup"
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
         />
 
         <Stack.Screen component={TestView} name="Test" />
