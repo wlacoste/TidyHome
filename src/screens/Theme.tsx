@@ -1,7 +1,6 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { RadioButton } from 'react-native-paper';
 import { useCustomTheme } from '../context/themeContext';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const ThemeSwitcher: React.FC = () => {
   const { toggleTheme, themeType } = useCustomTheme();

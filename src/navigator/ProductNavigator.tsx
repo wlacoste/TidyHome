@@ -3,8 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ProductoList } from '../models/routeTypes';
 import ProductoDetalle from '../components/GestorProductos/ProductoDetalle/ProductoDetalle';
 import VisorProducto from '../screens/VisorProducto';
-import ProductForm from '../components/GestorProductos/ProductForm';
-import TestView from '../components/TestView/TestView';
 import ProductFormPage from '../components/GestorProductos/ProductForm/ProductFormPage';
 
 const ProductoStack = createNativeStackNavigator<ProductoList>();

@@ -12,10 +12,10 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { FieldError } from 'react-hook-form';
-import { CategoryContext } from '../../context/categoryContext';
+import { useCategories } from '../../context/categoryContext';
 
 interface CategorySelectorProps {
-  // categories: Categoria[];
+  categories?: Categoria[];
 
   error?: FieldError;
   value: Categoria | undefined;
@@ -26,8 +26,11 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   value,
   onChange,
   error,
+  categories: catParam,
 }) => {
-  const { categories } = useContext(CategoryContext);
+  const { categories: catContext } = useCategories();
+
+  const categories = catParam && catParam.length > 0 ? catParam : catContext;
 
   const [visible, setVisible] = useState(false);
   const showModal = () => {

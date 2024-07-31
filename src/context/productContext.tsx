@@ -12,9 +12,13 @@ import {
   MovimientoProducto,
   Producto,
 } from '../models/productos';
-import { getAllProductsWithMovements } from '../service/product-service';
+import {
+  getAllProductsWithMovements,
+  updateProduct,
+} from '../service/product-service';
 import useProducto from '../app/producto/useProducto';
 import { LayoutAnimation } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 export interface ProductContextTyp {
   productos: Producto[];
@@ -23,6 +27,7 @@ export interface ProductContextTyp {
   primerMovimiento: (formu: IProductoForm) => Promise<void>;
   agregarMovimiento: (formu: IMovimientoSimple) => Promise<void>;
   eliminarMovimiento: (formu: number) => Promise<void>;
+  actualizarProducto: (formu: Producto) => Promise<void>;
   loading: boolean;
 }
 
@@ -33,6 +38,7 @@ const defaultProductContext: ProductContextTyp = {
   agregarMovimiento: async () => {},
   eliminarMovimiento: async () => {},
   primerMovimiento: async () => {},
+  actualizarProducto: async () => {},
   loading: false,
 };
 
@@ -48,6 +54,14 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
     borrarMovimiento,
     primerMovimiento: primerMov,
   } = useProducto();
+
+  const updateProductInArray = (updatedProduct: Producto) => {
+    setProductos(prevProducts =>
+      prevProducts.map(product =>
+        product.id === updatedProduct.id ? updatedProduct : product,
+      ),
+    );
+  };
 
   const updateProductoWithMovimiento = (movimiento: MovimientoProducto) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -86,10 +100,23 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const result = await nuevoMovimiento(mov);
     if (result) {
       updateProductoWithMovimiento(result);
+    }
+  };
 
-      // const p = await getAllProductsWithMovements();
-
-      // setProductos(p);
+  const actualizarProducto = async (producto: Producto) => {
+    try {
+      await updateProduct(producto);
+      updateProductInArray(producto);
+      Toast.show({
+        type: 'success',
+        text1: 'Producto modificado correctamente',
+      });
+    } catch (e) {
+      console.log(e);
+      Toast.show({
+        type: 'error',
+        text1: 'Ocurrio un error al modificar el producto',
+      });
     }
   };
 
@@ -132,6 +159,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
         eliminarMovimiento,
         primerMovimiento,
         loading,
+        actualizarProducto,
       }}>
       {children}
     </ProductContext.Provider>

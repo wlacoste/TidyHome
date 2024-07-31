@@ -30,12 +30,12 @@ interface CategoryContextType {
 
 const defaultCategoryContext: CategoryContextType = {
   categories: [],
-  addCategory: async category => 0, // placeholder function, replace with real implementation
-  updateCategory: async category => {}, // placeholder function, replace with real implementation
-  deleteCategory: async id => {}, // placeholder function, replace with real implementation
-  toggleCategoryEnabled: async id => {}, // placeholder function, replace with real implementation
-  resetToDefaults: async () => {}, // placeholder function, replace with real implementation
-  refreshCategories: async () => {}, // placeholder function, replace with real implementation
+  addCategory: async category => 0,
+  updateCategory: async category => {},
+  deleteCategory: async id => {},
+  toggleCategoryEnabled: async id => {},
+  resetToDefaults: async () => {},
+  refreshCategories: async () => {},
   loading: false,
 };
 export const CategoryContext = createContext<CategoryContextType>(

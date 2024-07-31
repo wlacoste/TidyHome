@@ -6,16 +6,12 @@ import Text from '../../Text';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import { useForm, Controller, FieldError } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useProductContext } from '../../../context/productContext';
 import { IProductForm, IProductoForm } from '../../../models/productos';
-import { Categoria } from '../../../models/categorias';
 import { mapProductoToForm } from '../../../utils/transformToProducto';
-import { useCategories } from '../../../context/categoryContext';
-import CategorySelector from '../../CategorySelector/CategorySelector';
 
 const PrimerMovimiento = ({ onClose, producto }: IProductForm) => {
-  //   const { loading } = useCategories();
   const { primerMovimiento } = useProductContext();
   const [openDate, setOpenDate] = useState(false);
 

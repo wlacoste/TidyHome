@@ -4,7 +4,7 @@ import {
   openDatabase,
 } from 'react-native-sqlite-storage';
 import { IProducto, MovimientoProducto, Producto } from '../models/productos';
-import { DefaultCategories } from '../models/categorias';
+import { Categoria, DefaultCategories } from '../models/categorias';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'cleanApp.db', location: 'default' });
@@ -200,9 +200,9 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
                   color: row.color,
                   ordenCategoria: row.ordenCategoria,
                 },
-                agregarListaCompra: row.agregarListaCompra,
+                agregarListaCompra: Boolean(row.agregarListaCompra),
                 cantidadAdvertencia: row.cantidadDeAdvertencia,
-                seguirEstadistica: row.seguirEstadistica,
+                seguirEstadistica: Boolean(row.seguirEstadistica),
                 fechaCreacion: row.fechaCreacion,
                 detalle: [],
               };
@@ -288,6 +288,38 @@ export const updateMovimientoProducto = async (
           movimiento.isCompra ? 1 : 0,
           movimiento.recordatorio,
           movimiento.id,
+        ],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const updateProduct = async (product: Producto) => {
+  const db = await getDBConnection();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `UPDATE productos SET 
+          nombre = ?, 
+          categoria_id = ?, 
+          agregarListaCompra = ?, 
+          cantidadDeAdvertencia = ?, 
+          seguirEstadistica = ? 
+        WHERE id = ?`,
+        [
+          product.nombre,
+          product.categoria.id,
+          product.agregarListaCompra ? 1 : 0,
+          product.cantidadAdvertencia,
+          product.seguirEstadistica ? 1 : 0,
+          product.id,
         ],
         (_, result) => {
           resolve(result);

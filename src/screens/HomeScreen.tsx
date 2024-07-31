@@ -16,7 +16,7 @@ import ProductStackNavigator from '../navigator/ProductNavigator';
 import { FabProvider } from '../context/fabContext';
 
 const HomeScreen = () => {
-  const theme = useTheme<Theme>();
+  // const theme = useTheme<Theme>();
   const tema = useTheme();
   const Tab = createBottomTabNavigator<TabParamList>();
 

@@ -4,7 +4,6 @@ import {
   CompositeNavigationProp,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import { Producto } from './productos';
 
 export type RootStackParamList = {
   Login: undefined;

@@ -5,9 +5,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TextInput,
-  useColorScheme,
   View,
 } from 'react-native';
 // import { ToDoItemComponent } from './components/ToDoItem';
