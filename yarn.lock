@@ -7002,6 +7002,13 @@ react-native-currency-input@^1.1.1:
   resolved "https://registry.npmjs.org/react-native-currency-input/-/react-native-currency-input-1.1.1.tgz"
   integrity sha512-DLsYqXkhpbvwa1M3znaG0bfKh8jlzkf+iO8TRlAJ/t8c+3gXyKwO2YdWqsBUuX0ZHLY4IVBzDjURMEofjq3ypg==
 
+react-native-element-dropdown@^2.12.1:
+  version "2.12.1"
+  resolved "https://registry.npmjs.org/react-native-element-dropdown/-/react-native-element-dropdown-2.12.1.tgz"
+  integrity sha512-Z3uWNFBoezDEsy9AZJxoDc9DxoAdfeprUjaInmbuzYOk6R0Y0UZ659JIalX20XNvrNRWJUfSZwbM94jWYNsIyw==
+  dependencies:
+    lodash "^4.17.21"
+
 react-native-floating-action@^1.22.0:
   version "1.22.0"
   resolved "https://registry.npmjs.org/react-native-floating-action/-/react-native-floating-action-1.22.0.tgz"

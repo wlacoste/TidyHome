@@ -8,9 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { useProductContext } from '../../../context/productContext';
-import { IProductForm, IProductoForm } from '../../../models/productos';
+import { IProductoForm } from '../../../models/productos';
 import { Categoria } from '../../../models/categorias';
-import { mapProductoToForm } from '../../../utils/transformToProducto';
 import { useCategories } from '../../../context/categoryContext';
 import CategorySelector from '../../CategorySelector/CategorySelector';
 
@@ -19,7 +18,7 @@ export interface INuevoProducto {
 }
 const ProductForm = ({ onClose }: INuevoProducto) => {
   const { loading } = useCategories();
-  const { agregarProducto, primerMovimiento } = useProductContext();
+  const { agregarProducto } = useProductContext();
   const [openDate, setOpenDate] = useState(false);
 
   const {
@@ -156,7 +155,6 @@ const ProductForm = ({ onClose }: INuevoProducto) => {
           }}
           render={({ field: { onChange, value } }) => (
             <CategorySelector
-              // categories={categorias}
               value={value as Categoria | undefined}
               onChange={onChange}
               error={errors.categoria as FieldError | undefined}

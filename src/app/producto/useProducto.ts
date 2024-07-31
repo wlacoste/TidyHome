@@ -21,7 +21,6 @@ const useProducto = () => {
     try {
       const { movimiento, producto } = transformToProducto(formulario);
       const resultado = await insertProductWithMovimiento(producto, movimiento);
-      console.log('resultado', resultado);
       Toast.show({
         type: 'success',
         text1: `Producto ${producto.nombre} añadido correctamente`,
@@ -92,13 +91,12 @@ const useProducto = () => {
       const idUpdate = !isUpdate
         ? (result as { insertId: number }).insertId
         : movimiento.id;
-      console.log('resultados', result, idUpdate);
+
       const movimientoGuadado = await getMovimientoById(idUpdate);
-      console.log('nuevoAs,', movimientoGuadado);
       return movimientoGuadado;
     } catch (err) {
       console.error('Error al actualizar movimiento', err);
-      throw err;
+      // throw err;
     }
   };
 
@@ -108,7 +106,7 @@ const useProducto = () => {
       return true;
     } catch (err) {
       console.error('No se pudo eliminar el movimiento', err);
-      throw err;
+      // throw err;
     }
   };
 

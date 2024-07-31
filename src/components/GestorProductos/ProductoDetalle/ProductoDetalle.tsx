@@ -19,6 +19,7 @@ import MenuComponent from './AccionesProducto';
 import DataTableComponent from '../../DataTable';
 import { useFab } from '../../../context/fabContext';
 import { useFocusEffect } from '@react-navigation/native';
+import EditarProducto from '../ProductForm/EditarProducto';
 
 type Props = NativeStackScreenProps<ProductoList, 'ProductoDetalle'>;
 
@@ -30,6 +31,7 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
   const [producto, setProducto] = useState<Producto | null>(null);
   const { showFab, hideFab } = useFab();
   const [backButtonPressed, setBackButtonPressed] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
 
   const goBack = () => {
     setBackButtonPressed(() => true);
@@ -70,95 +72,49 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
     return null;
   }
   return (
-    <ScrollView>
-      <Appbar.Header style={styles.header}>
-        <Appbar.Action icon="chevron-left" onPress={goBack} />
-        <Appbar.Content title="Detalles" subtitle={'Subtitle'} />
-        {/* <Appbar.Action icon={'dots-vertical'} onPress={() => {}} /> */}
-        <MenuComponent producto={producto} />
-      </Appbar.Header>
-      <View style={styles.tituloContainer}>
-        <Icon
-          source={producto.categoria.icon}
-          color={theme.colors.primary}
-          size={30}
+    <>
+      <ScrollView>
+        <Appbar.Header style={styles.header}>
+          <Appbar.Action icon="chevron-left" onPress={goBack} />
+          <Appbar.Content title="Detalles" subtitle={'Subtitle'} />
+          {/* <Appbar.Action icon={'dots-vertical'} onPress={() => {}} /> */}
+          <MenuComponent producto={producto} setOpenModal={setVisibleModal} />
+        </Appbar.Header>
+        <View style={styles.tituloContainer}>
+          <Icon
+            source={producto.categoria.icon}
+            color={theme.colors.primary}
+            size={30}
+          />
+          <Text style={styles.titulo}>{producto.nombre}</Text>
+        </View>
+        <View>
+          <Text>Detalles:</Text>
+          <View style={styles.detalles} />
+        </View>
+        <View>
+          <Text>Evolucion:</Text>
+          <View style={styles.metrica} />
+        </View>
+        <View>
+          <Text>Movimientos:</Text>
+          <DataTableComponent<MovimientoProducto, IMovimientoDetalle>
+            items={producto.detalle}
+            renderItem={MovimientoDetalle}
+            getItemProps={(item, index, array) => ({
+              mov: item,
+              showDivider: index !== array.length - 1,
+              theme: theme,
+            })}
+          />
+        </View>
+        <EditarProducto
+          visible={visibleModal}
+          setVisible={setVisibleModal}
+          producto={producto}
         />
-        <Text style={styles.titulo}>{producto.nombre}</Text>
-      </View>
-      <View>
-        <Text>Detalles:</Text>
-        <View style={styles.detalles} />
-      </View>
-      <View>
-        <Text>Evolucion:</Text>
-        <View style={styles.metrica} />
-      </View>
-      <View>
-        <Text>Movimientos:</Text>
-
-        <DataTableComponent<MovimientoProducto, IMovimientoDetalle>
-          items={producto.detalle}
-          renderItem={MovimientoDetalle}
-          getItemProps={(item, index, array) => ({
-            mov: item,
-            showDivider: index !== array.length - 1,
-            theme: theme,
-          })}
-        />
-      </View>
-      {/* <View>
-        <Text>Movimientos:</Text>
-        <SwipeListView
-          keyExtractor={(item, index) => item.id.toString()}
-          data={producto.detalle}
-          renderItem={data => (
-            <MovimientoDetalle mov={data.item} showDivider={data.index !== 0} />
-          )}
-          style={styles.contenedorDetalle}
-          renderHiddenItem={(data, rowMap) => (
-            <View style={[styles.hiddenContainer]}>
-              <View
-                style={[
-                  styles.xscroll,
-                  styles.leftScroll,
-                  {
-                    backgroundColor: theme.colors.inverseSurface,
-                  },
-                ]}>
-                <IconButton
-                  icon="trash-can-outline"
-                  iconColor={theme.colors.onPrimary}
-                  size={35}
-                  onPress={() => {
-                    eliminarMovimiento(data.item.id);
-                  }}
-                />
-              </View>
-              <View
-                style={[
-                  styles.xscroll,
-                  styles.rightScroll,
-                  {
-                    backgroundColor: theme.colors.primary,
-                  },
-                ]}>
-                <IconButton
-                  icon="playlist-edit"
-                  iconColor={theme.colors.onPrimary}
-                  size={35}
-                  onPress={() => {}}
-                />
-              </View>
-            </View>
-          )}
-          leftOpenValue={75}
-          rightOpenValue={-75}
-          scrollEnabled={true}
-          disableScrollViewPanResponder={true}
-          nestedScrollEnabled={true}
-        />
-      </View> */}
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 
@@ -168,8 +124,6 @@ const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   header: {
-    // borderWidth: 1,
-    // borderColor: 'red',
     height: 60,
     elevation: 10,
   },

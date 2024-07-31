@@ -1,9 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
-import Toast, { BaseToast } from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
 
 export type LoginScreenProps = NativeStackScreenProps<any, 'Login'>;
 
@@ -11,8 +11,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-  const [visible, setVisible] = useState(false);
-  // const onToggleSnackBar = () => setVisible(!visible);
 
   const onToggleSnackBar = () =>
     Toast.show({

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, ScrollView, View } from 'react-native';
-import { NavigatorScreenParams, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RootNavigationProp, SettingsList } from '../models/routeTypes';
 import { Divider, Text, useTheme } from 'react-native-paper';

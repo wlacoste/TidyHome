@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
-import { LoginScreenProps } from './LoginScreen';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const SignupScreen = ({ navigation }: LoginScreenProps) => {
+export type SignUpScreenProps = NativeStackScreenProps<any, 'Signup'>;
+
+const SignupScreen = ({ navigation }: SignUpScreenProps) => {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [mail, setMail] = useState('');

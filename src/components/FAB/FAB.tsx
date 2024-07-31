@@ -7,7 +7,7 @@ import { useModal } from '../../context/modalContext';
 import TestView from '../TestView/TestView';
 import { useFab } from '../../context/fabContext';
 import { useNavigation } from '@react-navigation/native';
-import { ProductoList, RootNavigationProp } from '../../models/routeTypes';
+import { RootNavigationProp } from '../../models/routeTypes';
 
 const FabGroup = () => {
   const theme = useTheme();
