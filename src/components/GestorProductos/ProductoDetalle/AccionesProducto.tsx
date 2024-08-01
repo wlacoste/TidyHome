@@ -31,7 +31,7 @@ const MenuComponent = ({ producto, setOpenModal }) => {
             closeMenu();
             handleEdit();
           }}
-          title="Edit"
+          title="Editar"
         />
         <Menu.Item
           leadingIcon={'trash-can'}
@@ -39,7 +39,7 @@ const MenuComponent = ({ producto, setOpenModal }) => {
             closeMenu();
             handleDelete();
           }}
-          title="Delete"
+          title="Eliminar"
         />
       </Menu>
     </View>
