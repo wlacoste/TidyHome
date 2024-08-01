@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Menu, Appbar } from 'react-native-paper';
-import { useModal } from '../../../context/modalContext';
-import EditarProducto from '../ProductForm/EditarProducto';
 
-const MenuComponent = ({ producto, setOpenModal }) => {
+const MenuComponent = ({ producto, setOpenModal, setOpenDelete }) => {
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -16,6 +14,7 @@ const MenuComponent = ({ producto, setOpenModal }) => {
 
   const handleDelete = () => {
     // Handle delete action
+    setOpenDelete();
     console.log('Delete pressed', producto.id);
   };
 

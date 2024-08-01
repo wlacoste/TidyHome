@@ -351,6 +351,25 @@ export const deleteMovimientoProducto = async (id: number) => {
   });
 };
 
+export const deleteProducto = async (id: number) => {
+  const db = await getDBConnection();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM productos WHERE id = ?',
+        [id],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
 export const getMovimientoById = async (
   id: number,
 ): Promise<MovimientoProducto | null> => {
