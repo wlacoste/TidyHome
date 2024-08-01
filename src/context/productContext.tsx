@@ -28,6 +28,7 @@ export interface ProductContextTyp {
   agregarMovimiento: (formu: IMovimientoSimple) => Promise<void>;
   eliminarMovimiento: (formu: number) => Promise<void>;
   actualizarProducto: (formu: Producto) => Promise<void>;
+  agregarACompraToggle: (formu: Producto) => Promise<void>;
   loading: boolean;
 }
 
@@ -39,6 +40,8 @@ const defaultProductContext: ProductContextTyp = {
   eliminarMovimiento: async () => {},
   primerMovimiento: async () => {},
   actualizarProducto: async () => {},
+  agregarACompraToggle: async () => {},
+
   loading: false,
 };
 
@@ -120,6 +123,32 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  const agregarACompraToggle = async (product: Producto) => {
+    let producto = {
+      ...product,
+      agregarListaCompra: !product.agregarListaCompra,
+    };
+    try {
+      await updateProduct(producto);
+      updateProductInArray(producto);
+      Toast.show({
+        type: 'success',
+        text1: producto.agregarListaCompra
+          ? `${producto.nombre} marcado para comprar`
+          : `${producto.nombre} removido de comprar`,
+        text2: producto.agregarListaCompra
+          ? 'Se agregará cuando generes una lista nueva de compra'
+          : undefined,
+      });
+    } catch (e) {
+      console.log(e);
+      Toast.show({
+        type: 'error',
+        text1: 'Ocurrio un error al modificar el producto',
+      });
+    }
+  };
+
   const eliminarMovimiento = async (id: number) => {
     const result = await borrarMovimiento(id);
     if (result) {
@@ -160,6 +189,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
         primerMovimiento,
         loading,
         actualizarProducto,
+        agregarACompraToggle,
       }}>
       {children}
     </ProductContext.Provider>
