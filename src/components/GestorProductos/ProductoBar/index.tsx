@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     // alignSelf: 'flex-end',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    maxWidth: '30%',
+    maxWidth: '32%',
   },
   categoriaContainer: {
     display: 'flex',
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     textAlignVertical: 'center',
-    width: 30,
+    width: '100%',
 
     textAlign: 'center',
 
