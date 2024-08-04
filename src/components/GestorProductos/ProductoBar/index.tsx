@@ -67,7 +67,9 @@ const ProductoBar = ({ producto }: IProductoBar) => {
         <TouchableRipple
           style={[
             styles.leftSection,
-            { borderColor: theme.colors.outlineVariant },
+            {
+              borderColor: theme.colors.outlineVariant,
+            },
           ]}
           onPress={() =>
             navigation.navigate('ProductoDetalle', {

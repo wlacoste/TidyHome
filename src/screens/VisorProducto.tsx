@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   },
   search: {
     marginHorizontal: 10,
+    //
   },
   contenedor: {
     paddingTop: 10,

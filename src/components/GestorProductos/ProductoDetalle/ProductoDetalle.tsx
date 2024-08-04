@@ -27,6 +27,8 @@ import DataTableComponent from '../../DataTable';
 import { useFab } from '../../../context/fabContext';
 import { useFocusEffect } from '@react-navigation/native';
 import EditarProducto from '../ProductForm/EditarProducto';
+import GraficoEvolutivo from './GraficoEvolutivo';
+// import GraficoEvolutivo from './GraficoEvolutivo';
 
 type Props = NativeStackScreenProps<ProductoList, 'ProductoDetalle'>;
 
@@ -105,12 +107,14 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
           <Text style={styles.titulo}>{producto.nombre}</Text>
         </View>
         <View>
-          <Text>Detalles:</Text>
+          <Text style={{ paddingLeft: 10 }}>Detalles:</Text>
           <View style={styles.detalles} />
         </View>
         <View>
-          <Text>Evolucion:</Text>
-          <View style={styles.metrica} />
+          <Text style={{ paddingLeft: 10 }}>Evolucion:</Text>
+          <View style={styles.metrica}>
+            <GraficoEvolutivo movimientos={producto.detalle} />
+          </View>
         </View>
         <View>
           <Text>Movimientos:</Text>
