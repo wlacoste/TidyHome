@@ -5,6 +5,8 @@ import ProductoBar from '../components/GestorProductos/ProductoBar';
 import { useProductContext } from '../context/productContext';
 import { ActivityIndicator, Card, Searchbar, Text } from 'react-native-paper';
 import { useFab } from '../context/fabContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import NasaApodComponent from '../components/Nasa/NasaApod';
 
 const VisorProducto = () => {
   const { productos, loading } = useProductContext();
@@ -12,6 +14,7 @@ const VisorProducto = () => {
   const { showFab, hideFab } = useFab();
   const [searchQuery, setSearchQuery] = React.useState('');
   const [filteredProducts, setFilteredProducts] = useState(productos);
+  // const queryClient = new QueryClient();
 
   useEffect(() => {
     const lowercasedQuery = searchQuery.toLowerCase();
@@ -52,6 +55,9 @@ const VisorProducto = () => {
     <>
       <View style={styles.buscador}>
         <Text children={undefined} />
+        {/* <QueryClientProvider client={queryClient}>
+          <NasaApodComponent />
+        </QueryClientProvider> */}
         {/* <Card>
           <Card.Cover source={{ uri: 'https://picsum.photos/710' }} />
         </Card> */}
@@ -78,7 +84,7 @@ export default VisorProducto;
 
 const styles = StyleSheet.create({
   buscador: {
-    height: 300,
+    height: 320,
   },
   search: {
     marginHorizontal: 10,
