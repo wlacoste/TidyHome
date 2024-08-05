@@ -5,6 +5,7 @@ import ProductoBar from '../components/GestorProductos/ProductoBar';
 import { useProductContext } from '../context/productContext';
 import { ActivityIndicator, Card, Searchbar, Text } from 'react-native-paper';
 import { useFab } from '../context/fabContext';
+import CategoryChipSelector from '../components/CategorySelector/CategoryChipSelector';
 
 const VisorProducto = () => {
   const { productos, loading } = useProductContext();
@@ -12,14 +13,20 @@ const VisorProducto = () => {
   const { showFab, hideFab } = useFab();
   const [searchQuery, setSearchQuery] = React.useState('');
   const [filteredProducts, setFilteredProducts] = useState(productos);
+  const [seleccionados, setSeleccionados] = useState<number[]>([]);
 
   useEffect(() => {
     const lowercasedQuery = searchQuery.toLowerCase();
-    const filtered = productos.filter(product =>
+    let filtered = productos.filter(product =>
       product.nombre.toLowerCase().includes(lowercasedQuery),
     );
+    if (seleccionados.length > 0) {
+      filtered = filtered.filter(product =>
+        seleccionados.includes(product.categoria.id),
+      );
+    }
     setFilteredProducts(filtered);
-  }, [searchQuery, productos]);
+  }, [searchQuery, productos, seleccionados]);
 
   useEffect(() => {
     showFab();
@@ -56,6 +63,11 @@ const VisorProducto = () => {
           <Card.Cover source={{ uri: 'https://picsum.photos/710' }} />
         </Card> */}
       </View>
+      <CategoryChipSelector
+        seleccionados={seleccionados}
+        setSeleccionados={setSeleccionados}
+      />
+
       <ScrollView nestedScrollEnabled style={styles.contenedor}>
         <Searchbar
           placeholder="Buscar"
@@ -78,7 +90,7 @@ export default VisorProducto;
 
 const styles = StyleSheet.create({
   buscador: {
-    height: 300,
+    height: 100,
   },
   search: {
     marginHorizontal: 10,

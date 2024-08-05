@@ -28,6 +28,7 @@ const GraficoEvolutivo = ({ movimientos }) => {
         height={250}
         scrollToEnd
         endSpacing={-20}
+        adjustToWidth
         // textColor1="red"
         // color1="red"
         // dataPointsColor1="red"
