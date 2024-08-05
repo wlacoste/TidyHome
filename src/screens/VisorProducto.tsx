@@ -1,15 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import ProductoBar from '../components/GestorProductos/ProductoBar';
 import { useProductContext } from '../context/productContext';
-import { ActivityIndicator, Text } from 'react-native-paper';
+import { ActivityIndicator, Card, Searchbar, Text } from 'react-native-paper';
 import { useFab } from '../context/fabContext';
+import CategoryChipSelector from '../components/CategorySelector/CategoryChipSelector';
 
 const VisorProducto = () => {
   const { productos, loading } = useProductContext();
 
   const { showFab, hideFab } = useFab();
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [filteredProducts, setFilteredProducts] = useState(productos);
+  const [seleccionados, setSeleccionados] = useState<number[]>([]);
+
+  useEffect(() => {
+    const lowercasedQuery = searchQuery.toLowerCase();
+    let filtered = productos.filter(product =>
+      product.nombre.toLowerCase().includes(lowercasedQuery),
+    );
+    if (seleccionados.length > 0) {
+      filtered = filtered.filter(product =>
+        seleccionados.includes(product.categoria.id),
+      );
+    }
+    setFilteredProducts(filtered);
+  }, [searchQuery, productos, seleccionados]);
 
   useEffect(() => {
     showFab();
@@ -40,8 +57,25 @@ const VisorProducto = () => {
 
   return (
     <>
+      <View style={styles.buscador}>
+        <Text children={undefined} />
+        {/* <Card>
+          <Card.Cover source={{ uri: 'https://picsum.photos/710' }} />
+        </Card> */}
+      </View>
+      <CategoryChipSelector
+        seleccionados={seleccionados}
+        setSeleccionados={setSeleccionados}
+      />
+
       <ScrollView nestedScrollEnabled style={styles.contenedor}>
-        {productos.map((producto, index) => (
+        <Searchbar
+          placeholder="Buscar"
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+          style={styles.search}
+        />
+        {filteredProducts.map((producto, index) => (
           <ProductoBar
             key={`${index}-${producto.id}-${producto.nombre}`}
             producto={producto}
@@ -55,6 +89,13 @@ const VisorProducto = () => {
 export default VisorProducto;
 
 const styles = StyleSheet.create({
+  buscador: {
+    height: 100,
+  },
+  search: {
+    marginHorizontal: 10,
+    //
+  },
   contenedor: {
     paddingTop: 10,
   },

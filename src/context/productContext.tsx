@@ -13,6 +13,7 @@ import {
   Producto,
 } from '../models/productos';
 import {
+  deleteProducto,
   getAllProductsWithMovements,
   updateProduct,
 } from '../service/product-service';
@@ -29,6 +30,7 @@ export interface ProductContextTyp {
   eliminarMovimiento: (formu: number) => Promise<void>;
   actualizarProducto: (formu: Producto) => Promise<void>;
   agregarACompraToggle: (formu: Producto) => Promise<void>;
+  eliminarProducto: (formu: number) => Promise<void>;
   loading: boolean;
 }
 
@@ -41,6 +43,7 @@ const defaultProductContext: ProductContextTyp = {
   primerMovimiento: async () => {},
   actualizarProducto: async () => {},
   agregarACompraToggle: async () => {},
+  eliminarProducto: async () => {},
 
   loading: false,
 };
@@ -82,6 +85,26 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
           : producto,
       ),
     );
+  };
+
+  const eliminarProducto = async (id: number) => {
+    try {
+      await deleteProducto(id);
+      // updateProductInArray(producto);
+      setProductos(prevProducts =>
+        prevProducts.filter(product => product.id !== id),
+      );
+      Toast.show({
+        type: 'success',
+        text1: 'Producto modificado correctamente',
+      });
+    } catch (e) {
+      console.log(e);
+      Toast.show({
+        type: 'error',
+        text1: 'Ocurrio un error al modificar el producto',
+      });
+    }
   };
 
   const agregarProducto = async (formu: IProductoForm) => {
@@ -190,6 +213,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
         loading,
         actualizarProducto,
         agregarACompraToggle,
+        eliminarProducto,
       }}>
       {children}
     </ProductContext.Provider>
