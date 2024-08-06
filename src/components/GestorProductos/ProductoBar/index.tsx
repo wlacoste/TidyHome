@@ -19,6 +19,7 @@ import { useModal } from '../../../context/modalContext';
 import { useNavigation } from '@react-navigation/native';
 import { RootNavigationProp } from '../../../models/routeTypes';
 import PrimerMovimiento from '../ProductForm/NuevoMovimiento';
+import SelectorCantidad from '../../SelectorCantidad';
 
 interface IProductoBar {
   producto: Producto;
@@ -121,8 +122,13 @@ const ProductoBar = ({ producto }: IProductoBar) => {
             icon="cart-heart"
           />
         </View>
+        <SelectorCantidad
+          cantidad={cantidad}
+          onDecrement={() => hacerMovimiento(false)}
+          onIncrement={() => hacerMovimiento(true)}
+        />
 
-        <View style={styles.rightSection}>
+        {/* <View style={styles.rightSection}>
           <IconButton
             mode="contained"
             style={styles.buttonLeft}
@@ -138,7 +144,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
             onPress={() => hacerMovimiento(true)}
             icon="plus"
           />
-        </View>
+        </View> */}
       </Card.Content>
     </Card>
   );

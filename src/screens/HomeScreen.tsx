@@ -1,11 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import Categories from '../components/Categorias/Categorias';
 import FabGroup from '../components/FAB/FAB';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Theme } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Todo from './TodoScreen';
 import useDB from '../hooks/useDB';
@@ -14,6 +12,8 @@ import { TabParamList } from '../models/routeTypes';
 import SettingsStackNavigator from '../navigator/SettingNavigator';
 import ProductStackNavigator from '../navigator/ProductNavigator';
 import { FabProvider } from '../context/fabContext';
+import ListaCompras from '../components/ListaCompras/ListaCompras';
+import ListaScreen from '../components/ListaCompras/ListaScreen';
 
 const HomeScreen = () => {
   // const theme = useTheme<Theme>();
@@ -66,7 +66,7 @@ const HomeScreen = () => {
                   // case 'Home':
                   //   iconName = 'home-outline';
                   //   break;
-                  case 'Items':
+                  case 'Lista':
                     iconName = 'receipt-outline';
                     break;
                   case 'Productos':
@@ -103,8 +103,8 @@ const HomeScreen = () => {
           /> */}
             <Tab.Screen
               key={'1'}
-              name={'Items'}
-              component={Categories}
+              name={'Lista'}
+              component={ListaScreen}
               options={{ headerShown: false }}
             />
             <Tab.Screen

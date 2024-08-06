@@ -90,10 +90,11 @@ export default VisorProducto;
 
 const styles = StyleSheet.create({
   buscador: {
-    height: 100,
+    height: 20,
   },
   search: {
     marginHorizontal: 10,
+    marginBottom: 5,
     //
   },
   contenedor: {
