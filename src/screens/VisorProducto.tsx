@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 
 import ProductoBar from '../components/GestorProductos/ProductoBar';
 import { useProductContext } from '../context/productContext';
 import { ActivityIndicator, Card, Searchbar, Text } from 'react-native-paper';
 import { useFab } from '../context/fabContext';
 import CategoryChipSelector from '../components/CategorySelector/CategoryChipSelector';
+import imagen from '../../assets/img/cat-mascot.png';
 
 const VisorProducto = () => {
   const { productos, loading } = useProductContext();
@@ -45,8 +46,10 @@ const VisorProducto = () => {
   if (productos.length === 0) {
     return (
       <View style={styles.mensaje}>
+        <Image source={imagen} style={styles.avatar} />
+
         <Text variant="titleLarge" style={styles.textomensaje}>
-          Aun no tenés productos.
+          Aún no tenés productos.
         </Text>
         <Text variant="titleLarge" style={styles.textomensaje}>
           Podes añadirlos y empezar a trackearlos!
@@ -105,10 +108,16 @@ const styles = StyleSheet.create({
   },
   mensaje: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     padding: '10%',
+    paddingTop: '30%',
     gap: 10,
     textAlign: 'left',
+  },
+  avatar: {
+    height: 200,
+    width: 200,
   },
   textomensaje: {
     textAlign: 'center',
