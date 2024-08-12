@@ -80,7 +80,6 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
 
       setProducto({
         ...foundProducto,
-        detalle: foundProducto.detalle.reverse(),
       });
     }
   }, [productoId, productos, navigation]);

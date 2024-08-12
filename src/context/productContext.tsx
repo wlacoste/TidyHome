@@ -190,9 +190,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
       setLoading(true);
       try {
         const p = await getAllProductsWithMovements();
-        console.log('context efect', p[0]?.detalle);
         setProductos(p);
-        console.log('context efect after', productos[0]?.detalle);
       } catch (e) {
         console.log(e);
       } finally {
