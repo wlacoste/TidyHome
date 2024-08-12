@@ -226,6 +226,7 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
           if (currentProducto) {
             productos.push(currentProducto);
           }
+          console.log('in service', productos[0]?.detalle);
           resolve(productos);
         },
         error => {

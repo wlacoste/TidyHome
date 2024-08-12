@@ -5,7 +5,8 @@ import { LineChart } from 'react-native-gifted-charts';
 import { useTheme } from 'react-native-paper';
 
 const mapMovimientos = (movimientos: MovimientoProducto[]) => {
-  const mov = movimientos.sort((a, b) => a.id - b.id);
+  // const mov = movimientos.sort((a, b) => a.id - b.id);
+  const mov = [...movimientos].sort((a, b) => a.id - b.id);
   let total = 0;
   return mov.map(item => {
     total = item.isCompra ? total + item.cantidad : total - item.cantidad;

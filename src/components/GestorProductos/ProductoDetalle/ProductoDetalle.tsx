@@ -78,7 +78,10 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
     } else {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
-      setProducto(foundProducto);
+      setProducto({
+        ...foundProducto,
+        detalle: foundProducto.detalle.reverse(),
+      });
     }
   }, [productoId, productos, navigation]);
 

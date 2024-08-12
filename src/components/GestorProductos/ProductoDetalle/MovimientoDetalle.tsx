@@ -45,7 +45,7 @@ const MovimientoDetalle = ({ mov, showDivider, theme }: IMovimientoDetalle) => {
             <View />
           </View>
         </View>
-        <View style={styles.accion}>
+        {/* <View style={styles.accion}>
           <IconButton
             centered
             mode="outlined"
@@ -53,7 +53,7 @@ const MovimientoDetalle = ({ mov, showDivider, theme }: IMovimientoDetalle) => {
             size={24}
             onPress={() => eliminarMovimiento(mov.id)}
           />
-        </View>
+        </View> */}
 
         {/* <View style={styles.opciones} /> */}
       </View>

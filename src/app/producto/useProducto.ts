@@ -58,7 +58,12 @@ const useProducto = () => {
     if (isUpdate) {
       cantidad = ultimoMovimiento.cantidad + 1;
     }
-    if (!isCompra && cantidad > cantidadActual + 1) {
+
+    let nuevaCantidadActual = cantidadActual;
+    if (!ultimoMovimiento.isCompra) {
+      nuevaCantidadActual += ultimoMovimiento.cantidad;
+    }
+    if (!isCompra && nuevaCantidadActual < cantidad) {
       return;
     }
 

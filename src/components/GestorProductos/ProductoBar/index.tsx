@@ -57,6 +57,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
       ),
       cantidadActual: calculateTotal(producto.detalle),
     };
+    console.log('req', req);
     agregarMovimiento(req);
   };
   const [collapsed, setCollapsed] = useState(true);

@@ -15,6 +15,7 @@ const DataTableComponent = <T, R>({
 }: IDataTable<T, R>) => {
   const [page, setPage] = useState(0);
   const itemsPerPage = 5;
+  console.log('items data table', items);
 
   const paginatedItems = React.useMemo(() => {
     const from = page * itemsPerPage;
@@ -38,7 +39,9 @@ const DataTableComponent = <T, R>({
         page={page}
         numberOfPages={Math.ceil(items.length / itemsPerPage)}
         onPageChange={page => setPage(page)}
-        label={`${from + 1}-${to} of ${items.length}`}
+        label={` Pagina ${page + 1} de ${Math.ceil(
+          items.length / itemsPerPage,
+        )}`}
         numberOfItemsPerPage={itemsPerPage}
         // showFastPaginationControls
         selectPageDropdownLabel={'Rows per page'}
