@@ -78,7 +78,10 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       <View style={styles.buttonContainer}>
         <Button
           mode="contained-tonal"
-          style={[styles.button]}
+          style={[
+            styles.button,
+            { backgroundColor: theme.colors.toastPrimary },
+          ]}
           onPress={handleLogin}>
           Iniciar sesión
         </Button>

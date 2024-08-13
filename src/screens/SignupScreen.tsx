@@ -34,7 +34,7 @@ const SignupScreen = ({ navigation }: SignUpScreenProps) => {
       behavior="padding"
       style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.titleContainer}>
-        <Text variant="displayMedium">Sign up</Text>
+        <Text variant="displayMedium">Registrarse</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -44,7 +44,7 @@ const SignupScreen = ({ navigation }: SignUpScreenProps) => {
           onChangeText={text => setNombre(text)}
         />
         <TextInput
-          placeholder="apellido"
+          placeholder="Apellido"
           style={styles.input}
           value={apellido}
           onChangeText={text => setApellido(text)}
@@ -77,9 +77,12 @@ const SignupScreen = ({ navigation }: SignUpScreenProps) => {
       <View style={styles.buttonContainer}>
         <Button
           mode="contained-tonal"
-          style={[styles.button]}
+          style={[
+            styles.button,
+            { backgroundColor: theme.colors.toastPrimary },
+          ]}
           onPress={handleSignUp}>
-          Register
+          Registrarme
         </Button>
       </View>
     </KeyboardAvoidingView>

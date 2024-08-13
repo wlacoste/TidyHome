@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 16,
     fontWeight: 'bold',
+    // color: 'red',
   },
   button: {
     backgroundColor: '#007AFF',
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   buttonText: {
-    color: '#FFFFFF',
+    // color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoutButtonText: {
-    color: '#FFFFFF',
+    // color: '#FFFFFF',
     fontSize: 14,
     // fontWeight: 'bold',
   },
