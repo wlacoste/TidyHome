@@ -25,6 +25,7 @@ interface CategoryContextType {
   toggleCategoryEnabled: (id: number) => Promise<void>;
   resetToDefaults: () => Promise<void>;
   refreshCategories: () => Promise<void>;
+  updateCategories: (categorias: Categoria[]) => void;
   loading: boolean; // Add this line
 }
 
@@ -36,6 +37,7 @@ const defaultCategoryContext: CategoryContextType = {
   toggleCategoryEnabled: async id => {},
   resetToDefaults: async () => {},
   refreshCategories: async () => {},
+  updateCategories: (categorias: Categoria[]) => {},
   loading: false,
 };
 export const CategoryContext = createContext<CategoryContextType>(
@@ -131,6 +133,10 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
     await refreshCategories();
   };
 
+  const updateCategories = (categorias: Categoria[]) => {
+    setCategories(categorias);
+  };
+
   const value = {
     categories,
     addCategory,
@@ -140,6 +146,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
     resetToDefaults,
     refreshCategories: () => refreshCategories(),
     loading,
+    updateCategories,
   };
 
   return (

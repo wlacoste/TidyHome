@@ -6,6 +6,7 @@ import SettingsMenu from '../screens/Settings';
 import ResetTables from '../components/ResetTables/Reset';
 import About from '../screens/About';
 import ThemeSwitcher from '../screens/Theme';
+import CategoryView from '../screens/CategoryView';
 
 const SettingsStack = createNativeStackNavigator<SettingsList>();
 
@@ -28,7 +29,11 @@ function SettingsStackNavigator() {
       <SettingsStack.Screen name="Currency" component={ResetTables} />
       <SettingsStack.Screen name="About" component={About} />
       <SettingsStack.Screen name="Themes" component={ThemeSwitcher} />
-      <SettingsStack.Screen name="CategorySettings" component={ThemeSwitcher} />
+      <SettingsStack.Screen
+        name="CategorySettings"
+        component={CategoryView}
+        options={{ title: 'Ajustes de categoría' }}
+      />
       {/* <SettingsStack.Screen name="ExportData" component={ProductForm} /> */}
       {/* Add other settings screens here */}
     </SettingsStack.Navigator>

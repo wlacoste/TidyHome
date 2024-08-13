@@ -3,7 +3,7 @@ import { Image, ScrollView, StyleSheet, View } from 'react-native';
 
 import ProductoBar from '../components/GestorProductos/ProductoBar';
 import { useProductContext } from '../context/productContext';
-import { ActivityIndicator, Card, Searchbar, Text } from 'react-native-paper';
+import { ActivityIndicator, Searchbar, Text } from 'react-native-paper';
 import { useFab } from '../context/fabContext';
 import CategoryChipSelector from '../components/CategorySelector/CategoryChipSelector';
 import imagen from '../../assets/img/cat-mascot.png';
@@ -11,7 +11,7 @@ import imagen from '../../assets/img/cat-mascot.png';
 const VisorProducto = () => {
   const { productos, loading } = useProductContext();
 
-  const { showFab, hideFab } = useFab();
+  const { showFab } = useFab();
   const [searchQuery, setSearchQuery] = React.useState('');
   const [filteredProducts, setFilteredProducts] = useState(productos);
   const [seleccionados, setSeleccionados] = useState<number[]>([]);
@@ -62,9 +62,6 @@ const VisorProducto = () => {
     <>
       <View style={styles.buscador}>
         <Text children={undefined} />
-        {/* <Card>
-          <Card.Cover source={{ uri: 'https://picsum.photos/710' }} />
-        </Card> */}
       </View>
       <CategoryChipSelector
         seleccionados={seleccionados}

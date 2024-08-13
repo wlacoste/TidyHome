@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, StyleSheet, FlatList, Keyboard } from 'react-native';
 import { Categoria } from '../../models/categorias';
 import {
@@ -30,7 +30,12 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
 }) => {
   const { categories: catContext } = useCategories();
 
-  const categories = catParam && catParam.length > 0 ? catParam : catContext;
+  const categoriesAuxiliar =
+    catParam && catParam.length > 0 ? catParam : catContext;
+
+  const categories = categoriesAuxiliar
+    .filter(item => item.isEnabled)
+    .sort((a, b) => a.ordenCategoria - b.ordenCategoria);
 
   const [visible, setVisible] = useState(false);
   const showModal = () => {
