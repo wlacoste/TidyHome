@@ -15,7 +15,6 @@ const DataTableComponent = <T, R>({
 }: IDataTable<T, R>) => {
   const [page, setPage] = useState(0);
   const itemsPerPage = 5;
-  console.log('data tabnle', items);
   const paginatedItems = React.useMemo(() => {
     const from = page * itemsPerPage;
     const to = Math.min((page + 1) * itemsPerPage, items.length);

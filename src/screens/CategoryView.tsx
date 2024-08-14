@@ -1,11 +1,18 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
 import {
   Button,
+  Card,
+  Divider,
   Icon,
   IconButton,
   List,
+  Modal,
+  Portal,
   Switch,
+  Text,
+  TextInput,
+  TouchableRipple,
   useTheme,
 } from 'react-native-paper';
 import { useCategories } from '../context/categoryContext';
@@ -13,10 +20,15 @@ import { Categoria } from '../models/categorias';
 import DraggableFlatList, {
   RenderItemParams,
 } from 'react-native-draggable-flatlist';
+import { ScrollView } from 'react-native-gesture-handler';
+import ColorPicker from './ColorPicker';
 
 const CategoryView = () => {
   const theme = useTheme();
   const { categories, updateCategories } = useCategories();
+  const [showModal, setShowModal] = useState(false);
+  const [color, setColor] = useState(undefined);
+  const [icono, setIcono] = useState('');
 
   const onReorderCategories = (newOrder: Categoria[]) => {
     const updatedCategories = newOrder.map((category, index) => ({
@@ -84,6 +96,19 @@ const CategoryView = () => {
     );
   };
 
+  const renderIconos = useCallback(
+    ({ item, onPress }) => (
+      <IconButton
+        icon={item}
+        size={25}
+        onPress={() => onPress(item)}
+        mode="contained-tonal"
+        style={{ flex: 1, aspectRatio: 1, borderRadius: 50 }}
+      />
+    ),
+    [],
+  );
+
   return (
     <>
       <View style={styles.container}>
@@ -91,7 +116,10 @@ const CategoryView = () => {
           style={styles.addButton}
           icon="pen-plus"
           mode="contained"
-          onPress={() => console.log('Pressed')}>
+          onPress={() => {
+            console.log('abrirmodal');
+            setShowModal(true);
+          }}>
           Agregar categoría
         </Button>
         <View>
@@ -104,13 +132,122 @@ const CategoryView = () => {
           />
         </View>
       </View>
+      <Portal>
+        <Modal visible={showModal} onDismiss={() => setShowModal(false)}>
+          <Card style={styles.cardContainer}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                padding: 10,
+                gap: 10,
+              }}>
+              <IconButton
+                icon={'pen'}
+                mode="outlined"
+                containerColor={color ? color : undefined}
+              />
+              <TextInput
+                style={{ flex: 1 }}
+                autoCapitalize={'sentences'}
+                placeholder="Nombre Categoría"
+              />
+            </View>
+            <Divider horizontalInset />
+
+            <ColorPicker setColor={setColor} />
+            <Divider horizontalInset />
+            <ScrollView style={{ minHeight: 100, maxHeight: 400, padding: 10 }}>
+              <FlatList
+                data={icons}
+                renderItem={({ item }) =>
+                  renderIconos({
+                    item,
+                    onPress: setIcono,
+                  })
+                }
+                style={{ marginBottom: 20 }}
+                keyExtractor={item => item}
+                numColumns={5}
+                contentContainerStyle={styles.container}
+              />
+            </ScrollView>
+          </Card>
+        </Modal>
+      </Portal>
     </>
   );
 };
-
+const icons = [
+  'abacus',
+  'access-point',
+  'account',
+  'account-heart',
+  'airballoon-outline',
+  'airplane',
+  'alarm-bell',
+  'alarm',
+  'allergy',
+  'ambulance',
+  'anvil',
+  'arm-flex-outline',
+  'at',
+  'atom',
+  'audio-video',
+  'axe-battle',
+  'baby-carriage',
+  'baby-face-outline',
+  'bacteria',
+  'badge-account',
+  'badminton',
+  'bag-personal',
+  'baguette',
+  'balloon',
+  'bandage',
+  'bank',
+  'barcode',
+  'barley',
+  'basketball',
+  'beach',
+  'beaker-outline',
+  'beer',
+  'biathlon',
+  'bicycle',
+  'bird',
+  'blinds',
+  'book-account',
+  'book-open',
+  'boombox',
+  'brain',
+  'bread-slice-outline',
+  'brush',
+  'bugle',
+  'bus',
+  'butterfly',
+  'cactus',
+  'cake',
+  'calculator',
+  'candy',
+  'car',
+  'cart-outline',
+  'cat',
+  'charity',
+  'chart-line',
+  'cheese',
+  'chef-hat',
+  'circular-saw',
+  'coffee',
+  'controller-classic',
+  'cupcake',
+];
 export default CategoryView;
 
 const styles = StyleSheet.create({
+  cardContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    minHeight: 200,
+  },
   container: {
     flex: 1,
   },
