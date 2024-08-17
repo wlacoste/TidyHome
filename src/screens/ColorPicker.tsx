@@ -16,7 +16,8 @@ const ColorPicker = ({ setColor }) => {
       {colores.map(color => (
         <IconButton
           key={color}
-          icon={''}
+          icon={'ab-testing'}
+          iconColor={color}
           style={styles.boton}
           mode="contained-tonal"
           containerColor={color}

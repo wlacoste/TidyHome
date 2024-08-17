@@ -28,15 +28,13 @@ const CategoryView = () => {
   const { categories, updateCategories } = useCategories();
   const [showModal, setShowModal] = useState(false);
   const [color, setColor] = useState(undefined);
-  const [icono, setIcono] = useState('');
+  const [icono, setIcono] = useState('pen');
 
   const onReorderCategories = (newOrder: Categoria[]) => {
     const updatedCategories = newOrder.map((category, index) => ({
       ...category,
       ordenCategoria: index,
     }));
-    console.log('nuevo Orden', updatedCategories);
-
     updateCategories(updatedCategories);
   };
 
@@ -135,17 +133,14 @@ const CategoryView = () => {
       <Portal>
         <Modal visible={showModal} onDismiss={() => setShowModal(false)}>
           <Card style={styles.cardContainer}>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                padding: 10,
-                gap: 10,
-              }}>
+            <View style={styles.topCard}>
               <IconButton
-                icon={'pen'}
+                icon={icono}
                 mode="outlined"
-                containerColor={color ? color : undefined}
+                // containerColor=
+                iconColor={color ? color : undefined}
+                rippleColor={color}
+                style={{ borderColor: color }}
               />
               <TextInput
                 style={{ flex: 1 }}
@@ -247,6 +242,12 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     minHeight: 200,
+  },
+  topCard: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 10,
+    gap: 10,
   },
   container: {
     flex: 1,
