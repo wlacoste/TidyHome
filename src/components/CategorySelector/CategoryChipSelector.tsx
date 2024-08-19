@@ -117,7 +117,7 @@ const CategoryChipSelector = ({
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: 215,
+    maxHeight: 215, // Adjust this value to control the maximum height of the ScrollView
   },
   chipContainer: {
     flexDirection: 'row',
