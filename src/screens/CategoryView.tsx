@@ -1,4 +1,11 @@
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useCallback, useState } from 'react';
 import {
   Button,
@@ -22,16 +29,21 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 import ColorPicker from './ColorPicker';
-import CardTitle from 'react-native-paper/lib/typescript/components/Card/CardTitle';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CategoryView = () => {
   const theme = useTheme();
-  const { categories, updateCategories } = useCategories();
+  const { categories, updateCategories, addCategory } = useCategories();
   const [showModal, setShowModal] = useState(false);
   const [showModalColor, setShowModalColor] = useState(false);
-  const [color, setColor] = useState(undefined);
-  const [icono, setIcono] = useState('pen');
-  const [colorCate, setColorCate] = useState('');
+  const [nuevaCategoria, setNuevaCategoria] = useState<Categoria>({
+    id: 0,
+    isEnabled: true,
+    icon: 'pen',
+    color: '',
+    name: '',
+    ordenCategoria: categories.length,
+  });
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<
     Categoria | undefined
   >(undefined);
@@ -49,7 +61,24 @@ const CategoryView = () => {
       categories.map(item => (item.id !== categoria.id ? item : categoria)),
     );
   };
+  const updateIcono = (icono: string) => {
+    setNuevaCategoria(prev => ({ ...prev, icon: icono }));
+  };
+  const updateColorCat = (color: string) => {
+    setNuevaCategoria(prev => ({ ...prev, color: color }));
+  };
 
+  const handleNewCategory = async () => {
+    await addCategory(nuevaCategoria);
+    setNuevaCategoria({
+      id: 0,
+      isEnabled: true,
+      icon: 'pen',
+      color: '',
+      name: '',
+      ordenCategoria: categories.length,
+    });
+  };
   const updateColor = (color: string) => {
     if (!categoriaSeleccionada) {
       return;
@@ -172,40 +201,74 @@ const CategoryView = () => {
       <Portal>
         <Modal visible={showModal} onDismiss={() => setShowModal(false)}>
           <Card style={styles.cardContainer}>
-            <View style={styles.topCard}>
-              <IconButton
-                icon={icono}
-                mode="outlined"
-                // containerColor=
-                iconColor={color ? color : undefined}
-                rippleColor={color}
-                style={{ borderColor: color ? color : theme.colors.outline }}
-              />
-              <TextInput
-                style={{ flex: 1 }}
-                autoCapitalize={'sentences'}
-                placeholder="Nombre Categoría"
-              />
-            </View>
+            <KeyboardAvoidingView
+              keyboardVerticalOffset={30}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+              <SafeAreaView style={styles.topCard}>
+                <IconButton
+                  icon={nuevaCategoria.icon}
+                  mode="outlined"
+                  iconColor={
+                    nuevaCategoria.color ? nuevaCategoria.color : undefined
+                  }
+                  rippleColor={
+                    nuevaCategoria.color ? nuevaCategoria.color : undefined
+                  }
+                  style={{
+                    borderColor: nuevaCategoria.color
+                      ? nuevaCategoria.color
+                      : theme.colors.outline,
+                  }}
+                />
+                <TextInput
+                  style={{ flex: 1 }}
+                  autoCapitalize={'sentences'}
+                  placeholder="Nombre Categoría"
+                  value={nuevaCategoria.name}
+                  // error={error.texto} TODO texto no puede ir nulo
+                  onChangeText={text =>
+                    setNuevaCategoria(prevState => ({
+                      ...prevState,
+                      name: text,
+                    }))
+                  }
+                />
+              </SafeAreaView>
+            </KeyboardAvoidingView>
             <Divider horizontalInset />
-
-            <ColorPicker setColor={setColor} />
+            <ColorPicker setColor={updateColorCat} />
             <Divider horizontalInset />
-            <ScrollView style={{ minHeight: 100, maxHeight: 400, padding: 10 }}>
+            <ScrollView
+              style={{
+                minHeight: 100,
+                maxHeight: 300,
+                padding: 10,
+                paddingBottom: 0,
+              }}>
               <FlatList
                 data={icons}
                 renderItem={({ item }) =>
                   renderIconos({
                     item,
-                    onPress: setIcono,
+                    onPress: updateIcono,
                   })
                 }
                 style={{ marginBottom: 20 }}
                 keyExtractor={item => item}
                 numColumns={5}
-                contentContainerStyle={styles.container}
+                contentContainerStyle={styles.Categorycontainer}
               />
             </ScrollView>
+            <Button
+              style={styles.addButtonModal}
+              icon="pen-plus"
+              mode="contained"
+              onPress={() => {
+                handleNewCategory();
+                setShowModal(false);
+              }}>
+              Agregar categoría
+            </Button>
           </Card>
         </Modal>
 
@@ -305,6 +368,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  Categorycontainer: {
+    flex: 1,
+    // maxHeight: 300,
+    marginBottom: 0,
+  },
   header: {
     padding: 16,
   },
@@ -357,11 +425,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   addButton: {
-    // padding: 16,
     alignItems: 'center',
     margin: 16,
     borderRadius: 8,
-    // height: 20,
+  },
+  addButtonModal: {
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    marginTop: 0,
+    // paddingTop: 0,
+    borderRadius: 8,
   },
   addButtonText: {
     fontWeight: 'bold',

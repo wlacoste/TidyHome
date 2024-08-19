@@ -56,13 +56,11 @@ const ProductoBar = ({ producto }: IProductoBar) => {
       ),
       cantidadActual: calculateTotal(producto.detalle),
     };
-    console.log('req', req);
     agregarMovimiento(req);
   };
   const [collapsed, setCollapsed] = useState(true);
   const theme = useTheme();
 
-  console.log('preoductoBar', producto);
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.cardContent}>
