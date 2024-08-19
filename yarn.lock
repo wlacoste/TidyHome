@@ -7143,6 +7143,11 @@ react-native-linear-gradient@*, react-native-linear-gradient@^2.8.3:
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
   integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
+react-native-material-chip@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/react-native-material-chip/-/react-native-material-chip-1.0.3.tgz"
+  integrity sha512-Sy0VgVxtMEVmIkn0pTELkrOHVaxJwUOsaqi6RXY8A/gyKNCs4EV7sAT2joKVnxecaXxq+vK6udiPbAzsmJlf7w==
+
 react-native-mmkv-storage@^0.9.1:
   version "0.9.1"
   resolved "https://registry.npmjs.org/react-native-mmkv-storage/-/react-native-mmkv-storage-0.9.1.tgz"

@@ -14,7 +14,6 @@ import {
 } from '../../../models/productos';
 import { StyleSheet, View } from 'react-native';
 import { useProductContext } from '../../../context/productContext';
-import Collapsible from 'react-native-collapsible';
 import { useModal } from '../../../context/modalContext';
 import { useNavigation } from '@react-navigation/native';
 import { RootNavigationProp } from '../../../models/routeTypes';
@@ -63,6 +62,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
   const [collapsed, setCollapsed] = useState(true);
   const theme = useTheme();
 
+  console.log('preoductoBar', producto);
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.cardContent}>
@@ -70,7 +70,9 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           style={[
             styles.leftSection,
             {
-              borderColor: theme.colors.outlineVariant,
+              borderColor: producto.categoria.color
+                ? producto.categoria.color
+                : theme.colors.outlineVariant,
             },
           ]}
           onPress={() =>
@@ -80,7 +82,15 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           }>
           <>
             <View style={styles.buttonChev}>
-              <Icon source={producto.categoria.icon} size={25} />
+              <Icon
+                source={producto.categoria.icon}
+                size={25}
+                color={
+                  producto.categoria.color
+                    ? producto.categoria.color
+                    : undefined
+                }
+              />
             </View>
             <View style={styles.leftSectionContent}>
               <Text
@@ -128,24 +138,6 @@ const ProductoBar = ({ producto }: IProductoBar) => {
           onDecrement={() => hacerMovimiento(false)}
           onIncrement={() => hacerMovimiento(true)}
         />
-
-        {/* <View style={styles.rightSection}>
-          <IconButton
-            mode="contained"
-            style={styles.buttonLeft}
-            onPress={() => hacerMovimiento(false)}
-            icon="minus"
-          />
-          <Text style={[styles.cantidad]}>{cantidad}</Text>
-          <IconButton
-            containerColor={theme.colors.primaryContainer}
-            iconColor={theme.colors.primary}
-            mode="contained"
-            style={styles.buttonRight}
-            onPress={() => hacerMovimiento(true)}
-            icon="plus"
-          />
-        </View> */}
       </Card.Content>
     </Card>
   );

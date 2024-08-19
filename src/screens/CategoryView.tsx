@@ -22,13 +22,19 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 import ColorPicker from './ColorPicker';
+import CardTitle from 'react-native-paper/lib/typescript/components/Card/CardTitle';
 
 const CategoryView = () => {
   const theme = useTheme();
   const { categories, updateCategories } = useCategories();
   const [showModal, setShowModal] = useState(false);
+  const [showModalColor, setShowModalColor] = useState(false);
   const [color, setColor] = useState(undefined);
   const [icono, setIcono] = useState('pen');
+  const [colorCate, setColorCate] = useState('');
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<
+    Categoria | undefined
+  >(undefined);
 
   const onReorderCategories = (newOrder: Categoria[]) => {
     const updatedCategories = newOrder.map((category, index) => ({
@@ -42,6 +48,20 @@ const CategoryView = () => {
     updateCategories(
       categories.map(item => (item.id !== categoria.id ? item : categoria)),
     );
+  };
+
+  const updateColor = (color: string) => {
+    if (!categoriaSeleccionada) {
+      return;
+    }
+    const categoriaActualizada = { ...categoriaSeleccionada, color: color };
+    setCategoriaSeleccionada(undefined);
+    updateCategories(
+      categories.map(item =>
+        item.id !== categoriaActualizada.id ? item : categoriaActualizada,
+      ),
+    );
+    setShowModalColor(false);
   };
 
   const renderItem = ({
@@ -73,19 +93,38 @@ const CategoryView = () => {
                 }}
                 color={theme.colors.primary}
               />
-              <View style={[styles.icon, { backgroundColor: item.color }]}>
+              <View style={[styles.icon]}>
                 <IconButton
                   icon={item.icon}
                   size={24}
                   onPress={() => {}}
                   mode="outlined"
-                  containerColor={item.color ? item.color : undefined}
+                  iconColor={item.color ? item.color : undefined}
+                  style={{
+                    borderColor: item.color ? item.color : theme.colors.outline,
+                  }}
                 />
               </View>
             </View>
           )}
           right={() => (
             <View style={styles.rightContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setCategoriaSeleccionada(item);
+                  setShowModalColor(true);
+                }}
+                style={{
+                  borderWidth: 1,
+                  width: 34,
+                  height: 34,
+                  borderRadius: 17,
+                  backgroundColor: item.color
+                    ? item.color
+                    : theme.colors.surface,
+                  borderColor: theme.colors.outline,
+                }}
+              />
               <Icon source="drag" size={24} color="gray" />
             </View>
           )}
@@ -140,7 +179,7 @@ const CategoryView = () => {
                 // containerColor=
                 iconColor={color ? color : undefined}
                 rippleColor={color}
-                style={{ borderColor: color }}
+                style={{ borderColor: color ? color : theme.colors.outline }}
               />
               <TextInput
                 style={{ flex: 1 }}
@@ -167,6 +206,15 @@ const CategoryView = () => {
                 contentContainerStyle={styles.container}
               />
             </ScrollView>
+          </Card>
+        </Modal>
+
+        <Modal
+          visible={showModalColor}
+          onDismiss={() => setShowModalColor(false)}>
+          <Card style={styles.cardColores}>
+            <Card.Title title="Seleccionar Color" />
+            <ColorPicker setColor={updateColor} />
           </Card>
         </Modal>
       </Portal>
@@ -243,6 +291,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     minHeight: 200,
   },
+  cardColores: {
+    width: '90%',
+    alignSelf: 'center',
+    minHeight: 100,
+  },
   topCard: {
     display: 'flex',
     flexDirection: 'row',
@@ -299,6 +352,9 @@ const styles = StyleSheet.create({
   rightContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: 70,
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   addButton: {
     // padding: 16,
