@@ -200,41 +200,38 @@ const CategoryView = () => {
       </View>
       <Portal>
         <Modal visible={showModal} onDismiss={() => setShowModal(false)}>
-          <Card style={styles.cardContainer}>
-            <KeyboardAvoidingView
-              keyboardVerticalOffset={30}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <SafeAreaView style={styles.topCard}>
-                <IconButton
-                  icon={nuevaCategoria.icon}
-                  mode="outlined"
-                  iconColor={
-                    nuevaCategoria.color ? nuevaCategoria.color : undefined
-                  }
-                  rippleColor={
-                    nuevaCategoria.color ? nuevaCategoria.color : undefined
-                  }
-                  style={{
-                    borderColor: nuevaCategoria.color
-                      ? nuevaCategoria.color
-                      : theme.colors.outline,
-                  }}
-                />
-                <TextInput
-                  style={{ flex: 1 }}
-                  autoCapitalize={'sentences'}
-                  placeholder="Nombre Categoría"
-                  value={nuevaCategoria.name}
-                  // error={error.texto} TODO texto no puede ir nulo
-                  onChangeText={text =>
-                    setNuevaCategoria(prevState => ({
-                      ...prevState,
-                      name: text,
-                    }))
-                  }
-                />
-              </SafeAreaView>
-            </KeyboardAvoidingView>
+          <Card style={[styles.cardContainer, { marginTop: 50 }]}>
+            <View style={styles.topCard}>
+              <IconButton
+                icon={nuevaCategoria.icon}
+                mode="outlined"
+                iconColor={
+                  nuevaCategoria.color ? nuevaCategoria.color : undefined
+                }
+                rippleColor={
+                  nuevaCategoria.color ? nuevaCategoria.color : undefined
+                }
+                style={{
+                  borderColor: nuevaCategoria.color
+                    ? nuevaCategoria.color
+                    : theme.colors.outline,
+                }}
+              />
+              <TextInput
+                style={{ flex: 1 }}
+                autoCapitalize={'sentences'}
+                placeholder="Nombre Categoría"
+                value={nuevaCategoria.name}
+                // error={error.texto} TODO texto no puede ir nulo
+                onChangeText={text =>
+                  setNuevaCategoria(prevState => ({
+                    ...prevState,
+                    name: text,
+                  }))
+                }
+              />
+            </View>
+            {/* </SafeAreaView> */}
             <Divider horizontalInset />
             <ColorPicker setColor={updateColorCat} />
             <Divider horizontalInset />
@@ -370,7 +367,6 @@ const styles = StyleSheet.create({
   },
   Categorycontainer: {
     flex: 1,
-    // maxHeight: 300,
     marginBottom: 0,
   },
   header: {
