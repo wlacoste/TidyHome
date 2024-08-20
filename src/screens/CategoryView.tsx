@@ -222,7 +222,6 @@ const CategoryView = () => {
                 autoCapitalize={'sentences'}
                 placeholder="Nombre Categoría"
                 value={nuevaCategoria.name}
-                // error={error.texto} TODO texto no puede ir nulo
                 onChangeText={text =>
                   setNuevaCategoria(prevState => ({
                     ...prevState,
@@ -260,6 +259,7 @@ const CategoryView = () => {
               style={styles.addButtonModal}
               icon="pen-plus"
               mode="contained"
+              disabled={nuevaCategoria.name == ''}
               onPress={() => {
                 handleNewCategory();
                 setShowModal(false);

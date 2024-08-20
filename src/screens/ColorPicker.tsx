@@ -24,6 +24,13 @@ const ColorPicker = ({ setColor }) => {
           onPress={() => setColor(color)}
         />
       ))}
+      <IconButton
+        key={'colorVacio'}
+        icon={'close'}
+        style={styles.boton}
+        mode="contained-tonal"
+        onPress={() => setColor('')}
+      />
     </ScrollView>
   );
 };
