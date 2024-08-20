@@ -130,6 +130,53 @@ export const updateCategory = async (
   });
 };
 
+export const updateMultipleCategories = async (
+  db: SQLiteDatabase,
+  categories: Categoria[],
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      const updatePromises = categories.map(category => {
+        return new Promise<void>((innerResolve, innerReject) => {
+          tx.executeSql(
+            'UPDATE categories SET name = ?, icon = ?, isEnabled = ?, color = ?, ordenCategoria = ? WHERE id = ?;',
+            [
+              category.name,
+              category.icon,
+              category.isEnabled ? 1 : 0,
+              category.color || '',
+              category.ordenCategoria,
+              category.id,
+            ],
+            (_, result) => {
+              // console.log(
+              //   `Category ${category.id} updated successfully`,
+              //   result,
+              // );
+              innerResolve();
+            },
+            (_, error) => {
+              console.error(`Error updating category ${category.id}: `, error);
+              innerReject(error);
+              return false;
+            },
+          );
+        });
+      });
+
+      Promise.all(updatePromises)
+        .then(() => {
+          console.log('All categories updated successfully');
+          resolve();
+        })
+        .catch(error => {
+          console.error('Error updating categories: ', error);
+          reject(error);
+        });
+    });
+  });
+};
+
 // Delete a category
 export const deleteCategory = async (
   db: SQLiteDatabase,

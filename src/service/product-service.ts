@@ -172,7 +172,7 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
       tx.executeSql(
         `SELECT p.*, mp.id as mp_id, mp.fechaCreacion as mp_fechaCreacion, 
                 mp.precio, mp.cantidad, mp.isUnitario, mp.precioUnitario, 
-                mp.isVence, mp.fechaVencimiento, mp.isCompra,mp.recordatorio, ct.name, ct.icon, ct.isEnabled
+                mp.isVence, mp.fechaVencimiento, mp.isCompra,mp.recordatorio, ct.name, ct.icon, ct.isEnabled, ct.color
          FROM productos p
          INNER JOIN movimiento_producto mp ON p.id = mp.product_id
          INNER JOIN categories ct ON p.categoria_id = ct.id

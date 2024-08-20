@@ -20,6 +20,7 @@ import {
 import useProducto from '../app/producto/useProducto';
 import { LayoutAnimation } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { useCategories } from './categoryContext';
 
 export interface ProductContextTyp {
   productos: Producto[];
@@ -52,6 +53,7 @@ const ProductContext = createContext<ProductContextTyp>(defaultProductContext);
 
 const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [productos, setProductos] = useState<Producto[]>([]);
+  const { categories } = useCategories();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -68,6 +70,25 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
       ),
     );
   };
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setProductos(prevProductos =>
+        prevProductos.map(producto => {
+          const updatedCategoria = categories.find(
+            cat => cat.id === producto.categoria.id,
+          );
+          if (updatedCategoria) {
+            return {
+              ...producto,
+              categoria: updatedCategoria,
+            };
+          }
+          return producto;
+        }),
+      );
+    }
+  }, [categories]);
 
   const updateProductoWithMovimiento = (movimiento: MovimientoProducto) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useCallback,
 } from 'react';
 import { SQLiteDatabase } from 'react-native-sqlite-storage';
 import {
@@ -13,6 +14,7 @@ import {
   deleteCategory,
   toggleCategoryEnabled,
   resetCategoriesToDefault,
+  updateMultipleCategories,
 } from '../service/category-service';
 import { Categoria } from '../models/categorias';
 import { getDBConnection } from '../service/product-service';
@@ -94,7 +96,8 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
     category: Omit<Categoria, 'id'>,
   ): Promise<number> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      console.log('Database not initialized');
+      return 0;
     }
     const newCategoryId = await insertCategory(db, category);
     await refreshCategories();
@@ -103,7 +106,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const updateCategoryContext = async (category: Categoria): Promise<void> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      return console.log('Database not initialized');
     }
     await updateCategory(db, category);
     await refreshCategories();
@@ -111,7 +114,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const deleteCategoryContext = async (id: number): Promise<void> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      return console.log('Database not initialized');
     }
     await deleteCategory(db, id);
     await refreshCategories();
@@ -119,7 +122,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const toggleCategoryEnabledContext = async (id: number): Promise<void> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      return console.log('Database not initialized');
     }
     await toggleCategoryEnabled(db, id);
     await refreshCategories();
@@ -127,15 +130,32 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const resetToDefaults = async (): Promise<void> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      return console.log('Database not initialized');
     }
     await resetCategoriesToDefault(db);
     await refreshCategories();
   };
 
-  const updateCategories = (categorias: Categoria[]) => {
-    setCategories(categorias);
-  };
+  const updateCategories = useCallback(
+    async (categorias: Categoria[]) => {
+      if (!db) {
+        console.error('Database not initialized');
+        return;
+      }
+
+      try {
+        setCategories(categorias);
+        await updateMultipleCategories(db, categorias);
+        console.log(
+          'Categories updated successfully in both state and database',
+        );
+      } catch (error) {
+        console.error('Error updating categories:', error);
+        // Optionally, you might want to revert the state update or show an error message to the user
+      }
+    },
+    [db],
+  );
 
   const value = {
     categories,
