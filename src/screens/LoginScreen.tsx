@@ -1,9 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { Image, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
-import Toast, { BaseToast } from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
+import imagen from '../../assets/img/cat-mascot.png';
 
 export type LoginScreenProps = NativeStackScreenProps<any, 'Login'>;
 
@@ -11,8 +12,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-  const [visible, setVisible] = useState(false);
-  // const onToggleSnackBar = () => setVisible(!visible);
 
   const onToggleSnackBar = () =>
     Toast.show({
@@ -48,6 +47,8 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       behavior="padding"
       style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.titleContainer}>
+        <Image source={imagen} style={styles.avatar} />
+
         <Text variant="displayMedium">Clean Apps</Text>
       </View>
       <View style={styles.inputContainer}>
@@ -77,21 +78,18 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       <View style={styles.buttonContainer}>
         <Button
           mode="contained-tonal"
-          style={[styles.button]}
+          style={[
+            styles.button,
+            { backgroundColor: theme.colors.toastPrimary },
+          ]}
           onPress={handleLogin}>
-          Login
+          Iniciar sesión
         </Button>
         <Button
           mode="contained-tonal"
           style={[styles.button]}
           onPress={() => navigation.navigate('Signup')}>
-          Register
-        </Button>
-        <Button
-          mode="contained-tonal"
-          style={[styles.button]}
-          onPress={onToggleSnackBar}>
-          Snack
+          Registrarse
         </Button>
       </View>
     </KeyboardAvoidingView>
@@ -101,11 +99,17 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   titleContainer: {
     marginBottom: 30,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  avatar: {
+    height: 200,
+    width: 200,
   },
   inputContainer: {
     width: '80%',

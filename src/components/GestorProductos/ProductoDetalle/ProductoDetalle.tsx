@@ -8,7 +8,14 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProductoList } from '../../../models/routeTypes';
-import { Icon, Text, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  Icon,
+  Portal,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import MovimientoDetalle, { IMovimientoDetalle } from './MovimientoDetalle';
 import { useProductContext } from '../../../context/productContext';
 import { rgbToHex } from '../../../utils/rgbToHex';
@@ -19,17 +26,26 @@ import MenuComponent from './AccionesProducto';
 import DataTableComponent from '../../DataTable';
 import { useFab } from '../../../context/fabContext';
 import { useFocusEffect } from '@react-navigation/native';
+import EditarProducto from '../ProductForm/EditarProducto';
+import GraficoEvolutivo from './GraficoEvolutivo';
+// import GraficoEvolutivo from './GraficoEvolutivo';
 
 type Props = NativeStackScreenProps<ProductoList, 'ProductoDetalle'>;
 
 const ProductoDetalle: React.FC<Props> = ({ route }) => {
   const { productoId } = route.params;
   const theme = useTheme();
-  const { productos } = useProductContext();
+  const { productos, eliminarProducto } = useProductContext();
   const navigation = useNavigation();
   const [producto, setProducto] = useState<Producto | null>(null);
   const { showFab, hideFab } = useFab();
   const [backButtonPressed, setBackButtonPressed] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [visibleDelete, setVisibleDelete] = React.useState(false);
+
+  const showDialog = () => setVisibleDelete(true);
+
+  const hideDialog = () => setVisibleDelete(false);
 
   const goBack = () => {
     setBackButtonPressed(() => true);
@@ -62,7 +78,9 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
     } else {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
-      setProducto(foundProducto);
+      setProducto({
+        ...foundProducto,
+      });
     }
   }, [productoId, productos, navigation]);
 
@@ -70,95 +88,70 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
     return null;
   }
   return (
-    <ScrollView>
-      <Appbar.Header style={styles.header}>
-        <Appbar.Action icon="chevron-left" onPress={goBack} />
-        <Appbar.Content title="Detalles" subtitle={'Subtitle'} />
-        {/* <Appbar.Action icon={'dots-vertical'} onPress={() => {}} /> */}
-        <MenuComponent id={producto.id} />
-      </Appbar.Header>
-      <View style={styles.tituloContainer}>
-        <Icon
-          source={producto.categoria.icon}
-          color={theme.colors.primary}
-          size={30}
+    <>
+      <ScrollView>
+        <Appbar.Header style={styles.header}>
+          <Appbar.Action icon="chevron-left" onPress={goBack} />
+          <Appbar.Content title="Detalles" subtitle={'Subtitle'} />
+          {/* <Appbar.Action icon={'dots-vertical'} onPress={() => {}} /> */}
+          <MenuComponent
+            producto={producto}
+            setOpenModal={setVisibleModal}
+            setOpenDelete={showDialog}
+          />
+        </Appbar.Header>
+        <View style={styles.tituloContainer}>
+          <Icon
+            source={producto.categoria.icon}
+            color={theme.colors.primary}
+            size={30}
+          />
+          <Text style={styles.titulo}>{producto.nombre}</Text>
+        </View>
+        <View>
+          <Text style={{ paddingLeft: 10 }}>Detalles:</Text>
+          <View style={styles.detalles} />
+        </View>
+        <View>
+          <Text style={{ paddingLeft: 10 }}>Evolucion:</Text>
+          <View style={styles.metrica}>
+            <GraficoEvolutivo movimientos={producto.detalle} />
+          </View>
+        </View>
+        <View>
+          <Text>Movimientos:</Text>
+          <DataTableComponent<MovimientoProducto, IMovimientoDetalle>
+            items={producto.detalle}
+            renderItem={MovimientoDetalle}
+            getItemProps={(item, index, array) => ({
+              mov: item,
+              showDivider: index !== array.length - 1,
+              theme: theme,
+            })}
+          />
+        </View>
+        <EditarProducto
+          visible={visibleModal}
+          setVisible={setVisibleModal}
+          producto={producto}
         />
-        <Text style={styles.titulo}>{producto.nombre}</Text>
-      </View>
-      <View>
-        <Text>Detalles:</Text>
-        <View style={styles.detalles} />
-      </View>
-      <View>
-        <Text>Evolucion:</Text>
-        <View style={styles.metrica} />
-      </View>
-      <View>
-        <Text>Movimientos:</Text>
-
-        <DataTableComponent<MovimientoProducto, IMovimientoDetalle>
-          items={producto.detalle}
-          renderItem={MovimientoDetalle}
-          getItemProps={(item, index, array) => ({
-            mov: item,
-            showDivider: index !== array.length - 1,
-            theme: theme,
-          })}
-        />
-      </View>
-      {/* <View>
-        <Text>Movimientos:</Text>
-        <SwipeListView
-          keyExtractor={(item, index) => item.id.toString()}
-          data={producto.detalle}
-          renderItem={data => (
-            <MovimientoDetalle mov={data.item} showDivider={data.index !== 0} />
-          )}
-          style={styles.contenedorDetalle}
-          renderHiddenItem={(data, rowMap) => (
-            <View style={[styles.hiddenContainer]}>
-              <View
-                style={[
-                  styles.xscroll,
-                  styles.leftScroll,
-                  {
-                    backgroundColor: theme.colors.inverseSurface,
-                  },
-                ]}>
-                <IconButton
-                  icon="trash-can-outline"
-                  iconColor={theme.colors.onPrimary}
-                  size={35}
-                  onPress={() => {
-                    eliminarMovimiento(data.item.id);
-                  }}
-                />
-              </View>
-              <View
-                style={[
-                  styles.xscroll,
-                  styles.rightScroll,
-                  {
-                    backgroundColor: theme.colors.primary,
-                  },
-                ]}>
-                <IconButton
-                  icon="playlist-edit"
-                  iconColor={theme.colors.onPrimary}
-                  size={35}
-                  onPress={() => {}}
-                />
-              </View>
-            </View>
-          )}
-          leftOpenValue={75}
-          rightOpenValue={-75}
-          scrollEnabled={true}
-          disableScrollViewPanResponder={true}
-          nestedScrollEnabled={true}
-        />
-      </View> */}
-    </ScrollView>
+        <Portal>
+          <Dialog visible={visibleDelete} onDismiss={hideDialog}>
+            <Dialog.Title>Eliminar {producto.nombre}?</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">
+                Se eliminara el producto y sus movimientos.
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => eliminarProducto(productoId)}>
+                Eliminar
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </ScrollView>
+    </>
   );
 };
 
@@ -168,8 +161,6 @@ const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   header: {
-    // borderWidth: 1,
-    // borderColor: 'red',
     height: 60,
     elevation: 10,
   },

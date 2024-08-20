@@ -1,1 +1,1 @@
-export { default } from './ProductForm';
+export { default } from './ProductFormModal';

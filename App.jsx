@@ -6,6 +6,7 @@ import ProductProvider from './src/context/productContext';
 import CategoryProvider from './src/context/categoryContext';
 import SimpleProvider from './src/context/simpleContext';
 import { ThemeProvider } from './src/context/themeContext';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { MMKVLoader } from 'react-native-mmkv-storage';
 
@@ -14,19 +15,21 @@ const storage = new MMKVLoader().initialize();
 export default function App() {
   return (
     <>
-      <ThemeProvider>
-        <AuthProvider>
-          <CategoryProvider>
-            <SimpleProvider>
-              <ProductProvider>
-                <InputProvider>
-                  <Routes />
-                </InputProvider>
-              </ProductProvider>
-            </SimpleProvider>
-          </CategoryProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider>
+          <AuthProvider>
+            <CategoryProvider>
+              <SimpleProvider>
+                <ProductProvider>
+                  <InputProvider>
+                    <Routes />
+                  </InputProvider>
+                </ProductProvider>
+              </SimpleProvider>
+            </CategoryProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </GestureHandlerRootView>
     </>
   );
 }

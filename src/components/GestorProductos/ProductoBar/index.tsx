@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Button,
   Card,
-  Divider,
   Icon,
   IconButton,
   Text,
+  TouchableRipple,
   useTheme,
 } from 'react-native-paper';
 import {
@@ -13,16 +12,13 @@ import {
   MovimientoProducto,
   Producto,
 } from '../../../models/productos';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useProductContext } from '../../../context/productContext';
-import Collapsible from 'react-native-collapsible';
-import Texto from '../../Text';
-import MovimientoDetalle from '../ProductoDetalle/MovimientoDetalle';
-import { SwipeListView } from 'react-native-swipe-list-view';
 import { useModal } from '../../../context/modalContext';
-import ProductForm from '../ProductForm';
 import { useNavigation } from '@react-navigation/native';
 import { RootNavigationProp } from '../../../models/routeTypes';
+import PrimerMovimiento from '../ProductForm/NuevoMovimiento';
+import SelectorCantidad from '../../SelectorCantidad';
 
 interface IProductoBar {
   producto: Producto;
@@ -38,7 +34,7 @@ export function calculateTotal(items: MovimientoProducto[]): number {
   }, 0);
 }
 const ProductoBar = ({ producto }: IProductoBar) => {
-  const { agregarMovimiento, eliminarMovimiento } = useProductContext();
+  const { agregarMovimiento, agregarACompraToggle } = useProductContext();
   const cantidad = producto.detalle.reduce((acc, transaction) => {
     return transaction.isCompra
       ? acc + transaction.cantidad
@@ -49,13 +45,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
 
   const hacerMovimiento = (isCompra: boolean) => {
     if (!producto.detalle.length) {
-      openModal(
-        <ProductForm
-          tipo={'update'}
-          onClose={closeModal}
-          producto={producto}
-        />,
-      );
+      openModal(<PrimerMovimiento onClose={closeModal} producto={producto} />);
       return;
     }
     const req: IMovimientoSimple = {
@@ -74,105 +64,79 @@ const ProductoBar = ({ producto }: IProductoBar) => {
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.cardContent}>
-        <View style={styles.leftSection}>
-          {/* <IconButton
-            icon={
-              collapsed ? 'unfold-more-horizontal' : 'unfold-less-horizontal'
-            }
-            size={24}
-            style={styles.icon}
-            onPress={() => setCollapsed(prev => !prev)}
-          /> */}
-          <View style={styles.leftSectionContent}>
-            <Text style={styles.text}>
-              {producto.nombre.charAt(0).toUpperCase() +
-                producto.nombre.slice(1)}
-            </Text>
-            <View style={styles.categoriaContainer}>
-              <Icon source={producto.categoria.icon} size={12} />
-              <Text style={styles.textCategoria}>
-                {producto.categoria.name}
+        <TouchableRipple
+          style={[
+            styles.leftSection,
+            {
+              borderColor: producto.categoria.color
+                ? producto.categoria.color
+                : theme.colors.outlineVariant,
+            },
+          ]}
+          onPress={() =>
+            navigation.navigate('ProductoDetalle', {
+              productoId: producto.id,
+            })
+          }>
+          <>
+            <View style={styles.buttonChev}>
+              <Icon
+                source={producto.categoria.icon}
+                size={25}
+                color={
+                  producto.categoria.color
+                    ? producto.categoria.color
+                    : undefined
+                }
+              />
+            </View>
+            <View style={styles.leftSectionContent}>
+              <Text
+                style={[styles.text, { flexShrink: 1 }]}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {producto.nombre.charAt(0).toUpperCase() +
+                  producto.nombre.slice(1)}
               </Text>
+              <View style={styles.categoriaContainer}>
+                {/* <Icon source={producto.categoria.icon} size={12} /> */}
+                <Text style={styles.textCategoria}>
+                  {producto.categoria.name}
+                </Text>
+              </View>
             </View>
-          </View>
+          </>
+        </TouchableRipple>
+        <View
+          style={{
+            paddingHorizontal: 15,
+            width: '30%',
+            display: 'flex',
+            flexDirection: 'row',
+          }}>
           <IconButton
-            style={styles.buttonChev}
-            icon={'chevron-right'}
-            onPress={() =>
-              navigation.navigate('ProductoDetalle', {
-                productoId: producto.id,
-              })
+            mode="contained"
+            iconColor={
+              producto.agregarListaCompra
+                ? theme.colors.error
+                : theme.colors.outline
             }
+            style={[
+              styles.iconoCompra,
+              { backgroundColor: theme.colors.elevation.level1 },
+            ]}
+            onPress={() => {
+              agregarACompraToggle(producto);
+            }}
+            icon="cart-heart"
           />
         </View>
-
-        <View style={styles.rightSection}>
-          <IconButton
-            mode="contained"
-            style={styles.buttonLeft}
-            onPress={() => hacerMovimiento(false)}
-            icon="minus"
-          />
-          <Text style={[styles.cantidad]}>{cantidad}</Text>
-          <IconButton
-            containerColor={theme.colors.primaryContainer}
-            iconColor={theme.colors.primary}
-            mode="contained"
-            style={styles.buttonRight}
-            onPress={() => hacerMovimiento(true)}
-            icon="plus"
-          />
-        </View>
-      </Card.Content>
-      {/* <Collapsible collapsed={collapsed}>
-        <SwipeListView
-          keyExtractor={(item, index) => item.id.toString()}
-          data={producto.detalle}
-          renderItem={data => <MovimientoDetalle mov={data.item} />}
-          style={styles.contenedorDetalle}
-          renderHiddenItem={(data, rowMap) => (
-            <View style={[styles.hiddenContainer]}>
-              <View
-                style={[
-                  styles.xscroll,
-                  styles.leftScroll,
-                  {
-                    backgroundColor: theme.colors.inverseSurface,
-                  },
-                ]}>
-                <IconButton
-                  icon="trash-can-outline"
-                  iconColor={theme.colors.onPrimary}
-                  size={35}
-                  onPress={() => {
-                    eliminarMovimiento(data.item.id);
-                  }}
-                />
-              </View>
-              <View
-                style={[
-                  styles.xscroll,
-                  styles.rightScroll,
-                  {
-                    backgroundColor: theme.colors.primary,
-                  },
-                ]}>
-                <IconButton
-                  icon="playlist-edit"
-                  iconColor={theme.colors.onPrimary}
-                  size={35}
-                  onPress={() => {}}
-                />
-              </View>
-            </View>
-          )}
-          leftOpenValue={75}
-          rightOpenValue={-75}
-          scrollEnabled={true}
-          disableScrollViewPanResponder={true}
-          nestedScrollEnabled={true}
+        <SelectorCantidad
+          cantidad={cantidad}
+          onDecrement={() => hacerMovimiento(false)}
+          onIncrement={() => hacerMovimiento(true)}
         />
-      </Collapsible> */}
+      </Card.Content>
     </Card>
   );
 };
@@ -185,23 +149,45 @@ const styles = StyleSheet.create({
     // borderColor: 'red',
     // borderWidth: 1,
     // paddingBottom: 10,
+    borderRadius: 12,
+  },
+  iconoCompra: {
+    height: 30,
+    marginLeft: 0,
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 10,
+    paddingBottom: 7,
+    paddingTop: 7,
+    paddingLeft: 10,
   },
   leftSection: {
+    // margin: 10,
+    // elevation: 1,
+    width: '40%',
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     alignSelf: 'flex-start',
 
-    // marginLeft: -15,
+    textAlign: 'center',
+    borderWidth: 0.5,
+    padding: 3,
+    paddingLeft: 5,
+    borderRadius: 7,
+    // marginTop: 7,
+    // marginBottom: 7,
+    marginLeft: 0,
   },
   leftSectionContent: {
-    // padding: 0,
-    // marginTop: 0,
+    width: '80%',
+  },
+  rightSection: {
+    // alignSelf: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    maxWidth: '32%',
   },
   categoriaContainer: {
     display: 'flex',
@@ -221,17 +207,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 13,
   },
-  rightSection: {
-    alignSelf: 'flex-end',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    maxWidth: 132,
-  },
   cantidad: {
     fontSize: 20,
     fontWeight: '700',
     textAlignVertical: 'center',
-    width: 30,
+    width: '100%',
 
     textAlign: 'center',
 
@@ -253,10 +233,10 @@ const styles = StyleSheet.create({
   },
   buttonChev: {
     padding: 0,
-    marginLeft: 5,
     margin: 0,
-    width: 40,
-    height: 40,
+    paddingRight: 5,
+    justifyContent: 'center',
+    // width: '100%',
   },
 
   buttonText: {

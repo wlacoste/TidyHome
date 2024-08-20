@@ -35,19 +35,19 @@ export const transformToProducto = (formu: IProductoForm) => {
   return { producto, movimiento };
 };
 
-export const mapProductoToForm = (producto?: Producto): IProductoForm => {
-  if (!producto) {
-    return {
-      nombre: '',
-      cantidad: undefined,
-      precio: undefined,
-      isUnitario: false,
-      categoria: undefined,
-      fechaVencimiento: undefined,
-      isVence: false,
-      fechaCreacion: '',
-    };
-  }
+export const mapProductoToForm = (producto: Producto): IProductoForm => {
+  // if (!producto) {
+  //   return {
+  //     nombre: '',
+  //     cantidad: undefined,
+  //     precio: undefined,
+  //     isUnitario: false,
+  //     categoria: undefined,
+  //     fechaVencimiento: undefined,
+  //     isVence: false,
+  //     fechaCreacion: '',
+  //   };
+  // }
 
   return {
     nombre: producto.nombre,

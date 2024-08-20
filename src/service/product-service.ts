@@ -4,7 +4,7 @@ import {
   openDatabase,
 } from 'react-native-sqlite-storage';
 import { IProducto, MovimientoProducto, Producto } from '../models/productos';
-import { DefaultCategories } from '../models/categorias';
+import { Categoria, DefaultCategories } from '../models/categorias';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'cleanApp.db', location: 'default' });
@@ -45,7 +45,9 @@ export const createTables = async () => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         icon TEXT,
-        isEnabled INTEGER DEFAULT 1
+        isEnabled INTEGER DEFAULT 1,
+        color TEXT DEFAULT '',
+        ordenCategoria INTEGER DEFAULT 0
       );`,
       [],
       () => {
@@ -170,7 +172,7 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
       tx.executeSql(
         `SELECT p.*, mp.id as mp_id, mp.fechaCreacion as mp_fechaCreacion, 
                 mp.precio, mp.cantidad, mp.isUnitario, mp.precioUnitario, 
-                mp.isVence, mp.fechaVencimiento, mp.isCompra,mp.recordatorio, ct.name, ct.icon, ct.isEnabled
+                mp.isVence, mp.fechaVencimiento, mp.isCompra,mp.recordatorio, ct.name, ct.icon, ct.isEnabled, ct.color
          FROM productos p
          INNER JOIN movimiento_producto mp ON p.id = mp.product_id
          INNER JOIN categories ct ON p.categoria_id = ct.id
@@ -195,10 +197,12 @@ export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
                   icon: row.icon,
                   name: row.name,
                   isEnabled: Boolean(row.isEnabled),
+                  color: row.color,
+                  ordenCategoria: row.ordenCategoria,
                 },
-                agregarListaCompra: row.agregarListaCompra,
+                agregarListaCompra: Boolean(row.agregarListaCompra),
                 cantidadAdvertencia: row.cantidadDeAdvertencia,
-                seguirEstadistica: row.seguirEstadistica,
+                seguirEstadistica: Boolean(row.seguirEstadistica),
                 fechaCreacion: row.fechaCreacion,
                 detalle: [],
               };
@@ -296,6 +300,38 @@ export const updateMovimientoProducto = async (
   });
 };
 
+export const updateProduct = async (product: Producto) => {
+  const db = await getDBConnection();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `UPDATE productos SET 
+          nombre = ?, 
+          categoria_id = ?, 
+          agregarListaCompra = ?, 
+          cantidadDeAdvertencia = ?, 
+          seguirEstadistica = ? 
+        WHERE id = ?`,
+        [
+          product.nombre,
+          product.categoria.id,
+          product.agregarListaCompra ? 1 : 0,
+          product.cantidadAdvertencia,
+          product.seguirEstadistica ? 1 : 0,
+          product.id,
+        ],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
 export const deleteMovimientoProducto = async (id: number) => {
   const db = await getDBConnection();
 
@@ -303,6 +339,25 @@ export const deleteMovimientoProducto = async (id: number) => {
     db.transaction(tx => {
       tx.executeSql(
         'DELETE FROM movimiento_producto WHERE id = ?',
+        [id],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const deleteProducto = async (id: number) => {
+  const db = await getDBConnection();
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM productos WHERE id = ?',
         [id],
         (_, result) => {
           resolve(result);

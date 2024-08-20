@@ -8,8 +8,7 @@ import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import { useTheme } from 'react-native-paper';
 import { rgbToHex } from './utils/rgbToHex';
 import TestView from './components/TestView/TestView';
-import { RootStackParamList, SettingsList } from './models/routeTypes';
-import SettingsMenu from './screens/Settings';
+import { RootStackParamList } from './models/routeTypes';
 
 export const Routes = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -41,7 +40,7 @@ export const Routes = () => {
         <Stack.Screen
           component={SignupScreen}
           name="Signup"
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
         />
 
         <Stack.Screen component={TestView} name="Test" />

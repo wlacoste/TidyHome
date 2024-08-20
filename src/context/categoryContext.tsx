@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useCallback,
 } from 'react';
 import { SQLiteDatabase } from 'react-native-sqlite-storage';
 import {
@@ -13,6 +14,7 @@ import {
   deleteCategory,
   toggleCategoryEnabled,
   resetCategoriesToDefault,
+  updateMultipleCategories,
 } from '../service/category-service';
 import { Categoria } from '../models/categorias';
 import { getDBConnection } from '../service/product-service';
@@ -25,17 +27,19 @@ interface CategoryContextType {
   toggleCategoryEnabled: (id: number) => Promise<void>;
   resetToDefaults: () => Promise<void>;
   refreshCategories: () => Promise<void>;
+  updateCategories: (categorias: Categoria[]) => void;
   loading: boolean; // Add this line
 }
 
 const defaultCategoryContext: CategoryContextType = {
   categories: [],
-  addCategory: async category => 0, // placeholder function, replace with real implementation
-  updateCategory: async category => {}, // placeholder function, replace with real implementation
-  deleteCategory: async id => {}, // placeholder function, replace with real implementation
-  toggleCategoryEnabled: async id => {}, // placeholder function, replace with real implementation
-  resetToDefaults: async () => {}, // placeholder function, replace with real implementation
-  refreshCategories: async () => {}, // placeholder function, replace with real implementation
+  addCategory: async category => 0,
+  updateCategory: async category => {},
+  deleteCategory: async id => {},
+  toggleCategoryEnabled: async id => {},
+  resetToDefaults: async () => {},
+  refreshCategories: async () => {},
+  updateCategories: (categorias: Categoria[]) => {},
   loading: false,
 };
 export const CategoryContext = createContext<CategoryContextType>(
@@ -92,7 +96,8 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
     category: Omit<Categoria, 'id'>,
   ): Promise<number> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      console.log('Database not initialized');
+      return 0;
     }
     const newCategoryId = await insertCategory(db, category);
     await refreshCategories();
@@ -101,7 +106,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const updateCategoryContext = async (category: Categoria): Promise<void> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      return console.log('Database not initialized');
     }
     await updateCategory(db, category);
     await refreshCategories();
@@ -109,7 +114,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const deleteCategoryContext = async (id: number): Promise<void> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      return console.log('Database not initialized');
     }
     await deleteCategory(db, id);
     await refreshCategories();
@@ -117,7 +122,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const toggleCategoryEnabledContext = async (id: number): Promise<void> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      return console.log('Database not initialized');
     }
     await toggleCategoryEnabled(db, id);
     await refreshCategories();
@@ -125,11 +130,32 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
 
   const resetToDefaults = async (): Promise<void> => {
     if (!db) {
-      throw new Error('Database not initialized');
+      return console.log('Database not initialized');
     }
     await resetCategoriesToDefault(db);
     await refreshCategories();
   };
+
+  const updateCategories = useCallback(
+    async (categorias: Categoria[]) => {
+      if (!db) {
+        console.error('Database not initialized');
+        return;
+      }
+
+      try {
+        setCategories(categorias);
+        await updateMultipleCategories(db, categorias);
+        console.log(
+          'Categories updated successfully in both state and database',
+        );
+      } catch (error) {
+        console.error('Error updating categories:', error);
+        // Optionally, you might want to revert the state update or show an error message to the user
+      }
+    },
+    [db],
+  );
 
   const value = {
     categories,
@@ -140,6 +166,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
     resetToDefaults,
     refreshCategories: () => refreshCategories(),
     loading,
+    updateCategories,
   };
 
   return (

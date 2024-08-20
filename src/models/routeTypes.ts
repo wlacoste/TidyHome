@@ -4,7 +4,6 @@ import {
   CompositeNavigationProp,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import { Producto } from './productos';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -16,7 +15,7 @@ export type RootStackParamList = {
 
 export type TabParamList = {
   Home: undefined;
-  Items: undefined;
+  Lista: undefined;
   Estado: undefined;
   Productos: undefined;
   Notas: undefined;
@@ -37,9 +36,11 @@ export type SettingsList = {
   Password: undefined;
   Comentarios: undefined;
   About: undefined;
+  CategorySettings: undefined;
 };
 export type ProductoList = {
   Producto: undefined;
+  ProductoForm: undefined;
   ProductoDetalle: { productoId: number };
 };
 

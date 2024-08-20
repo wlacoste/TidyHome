@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
-import { LoginScreenProps } from './LoginScreen';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const SignupScreen = ({ navigation }: LoginScreenProps) => {
+export type SignUpScreenProps = NativeStackScreenProps<any, 'Signup'>;
+
+const SignupScreen = ({ navigation }: SignUpScreenProps) => {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [mail, setMail] = useState('');
@@ -32,7 +34,7 @@ const SignupScreen = ({ navigation }: LoginScreenProps) => {
       behavior="padding"
       style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.titleContainer}>
-        <Text variant="displayMedium">Sign up</Text>
+        <Text variant="displayMedium">Registrarse</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -42,7 +44,7 @@ const SignupScreen = ({ navigation }: LoginScreenProps) => {
           onChangeText={text => setNombre(text)}
         />
         <TextInput
-          placeholder="apellido"
+          placeholder="Apellido"
           style={styles.input}
           value={apellido}
           onChangeText={text => setApellido(text)}
@@ -75,9 +77,12 @@ const SignupScreen = ({ navigation }: LoginScreenProps) => {
       <View style={styles.buttonContainer}>
         <Button
           mode="contained-tonal"
-          style={[styles.button]}
+          style={[
+            styles.button,
+            { backgroundColor: theme.colors.toastPrimary },
+          ]}
           onPress={handleSignUp}>
-          Register
+          Registrarme
         </Button>
       </View>
     </KeyboardAvoidingView>

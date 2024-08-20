@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { Categoria } from './categorias';
 
 export type ToDoItem = {
@@ -63,7 +62,6 @@ export interface IProductoForm {
 }
 
 export interface IProductForm {
-  tipo: 'update' | 'nuevo';
   onClose?: () => void;
-  producto?: Producto;
+  producto: Producto;
 }

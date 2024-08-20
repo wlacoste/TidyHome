@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ProductoList } from '../models/routeTypes';
 import ProductoDetalle from '../components/GestorProductos/ProductoDetalle/ProductoDetalle';
 import VisorProducto from '../screens/VisorProducto';
+import ProductFormPage from '../components/GestorProductos/ProductForm/ProductFormPage';
 
 const ProductoStack = createNativeStackNavigator<ProductoList>();
 
@@ -22,6 +23,14 @@ function ProductStackNavigator() {
           // title: route.params.producto.nombre,
           title: 'Detalles',
           headerShown: false,
+        })}
+      />
+      <ProductoStack.Screen
+        name="ProductoForm"
+        component={ProductFormPage}
+        options={({ route }) => ({
+          title: 'Nuevo Producto',
+          // headerShown: false,
         })}
       />
 

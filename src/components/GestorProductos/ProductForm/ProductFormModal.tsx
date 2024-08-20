@@ -1,53 +1,25 @@
-import {
-  Keyboard,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
-// import { useCategories } from '../../hooks/useCategories';
 import { Button, Card, Switch, TextInput } from 'react-native-paper';
-import { PaperSelect } from 'react-native-paper-select';
-import { ListItem } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
 import Text from '../../Text';
 import Collapsible from 'react-native-collapsible';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { useProductContext } from '../../../context/productContext';
-import { IProductForm, IProductoForm } from '../../../models/productos';
+import { IProductoForm } from '../../../models/productos';
 import { Categoria } from '../../../models/categorias';
-import { getListItem } from '../../../utils/getListItems';
-import { mapProductoToForm } from '../../../utils/transformToProducto';
 import { useCategories } from '../../../context/categoryContext';
 import CategorySelector from '../../CategorySelector/CategorySelector';
 
-const DismissKeyboardView = ({ children }) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    <View style={{ flex: 1 }}>{children}</View>
-  </TouchableWithoutFeedback>
-);
-
-const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
-  // const { categorias, loading: categoriasLoading } = useCategories();
-  const {
-    categories: categorias,
-    loading,
-    refreshCategories,
-  } = useCategories();
-  const { agregarProducto, primerMovimiento } = useProductContext();
-  const [itemsCategorias, setItemsCategorias] = useState<ListItem[]>([]);
+export interface INuevoProducto {
+  onClose?: () => void;
+}
+const ProductForm = ({ onClose }: INuevoProducto) => {
+  const { loading } = useCategories();
+  const { agregarProducto } = useProductContext();
   const [openDate, setOpenDate] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Categoria | null>(
-    null,
-  );
-  // const { categories, loading } = useCategories();
-
-  const handleCategorySelect = (category: Categoria) => {
-    // Handle the selected category (e.g., update form state)
-    console.log('Selected category:', category);
-  };
 
   const {
     control,
@@ -56,36 +28,30 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
     handleSubmit,
   } = useForm<IProductoForm>({
     mode: 'onChange',
-    defaultValues: mapProductoToForm(producto),
+    defaultValues: {
+      nombre: '',
+      cantidad: undefined,
+      precio: undefined,
+      isUnitario: false,
+      categoria: undefined,
+      fechaVencimiento: undefined,
+      isVence: false,
+      fechaCreacion: '',
+    },
   });
 
   const submit = data => {
     console.log('submit data', data);
-    if (tipo === 'nuevo') {
-      agregarProducto(data);
-    } else {
-      primerMovimiento({ ...data, id: producto?.id });
-    }
+
+    agregarProducto(data);
+
     onClose?.();
   };
-
-  useEffect(() => {
-    if (categorias) {
-      setItemsCategorias(
-        categorias.map(categoria => ({
-          _id: categoria.id.toString(),
-          value: categoria.name,
-        })),
-      );
-    }
-  }, [categorias]);
 
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.content}>
-        <Text style={styles.titulo}>
-          {tipo === 'nuevo' ? 'Nuevo producto' : 'Nuevo movimiento'}
-        </Text>
+        <Text style={styles.titulo}>Nuevo producto</Text>
         <Controller
           control={control}
           defaultValue=""
@@ -189,41 +155,12 @@ const ProductForm = ({ onClose, tipo, producto }: IProductForm) => {
           }}
           render={({ field: { onChange, value } }) => (
             <CategorySelector
-              categories={categorias}
               value={value as Categoria | undefined}
               onChange={onChange}
               error={errors.categoria as FieldError | undefined}
             />
           )}
         />
-
-        {/* <Controller
-          control={control}
-          // defaultValue=
-          name="categoria"
-          rules={{
-            required: true,
-            validate: () => {
-              return true;
-            },
-          }}
-          render={({ field: { onChange, value } }) => (
-            <PaperSelect
-              label={'Categorias'}
-              arrayList={itemsCategorias}
-              selectedArrayList={[]}
-              multiEnable={false}
-              value={
-                itemsCategorias.find(item => item._id === value)
-                  ? itemsCategorias.find(item => item._id === value)?.value + ''
-                  : ''
-              }
-              onSelection={(value: any) => {
-                onChange(value.selectedList[0]._id);
-              }}
-            />
-          )}
-        /> */}
         <View style={styles.viewUnitario}>
           <Text style={styles.textoUnitario}>Posee fecha de vencimiento?</Text>
 

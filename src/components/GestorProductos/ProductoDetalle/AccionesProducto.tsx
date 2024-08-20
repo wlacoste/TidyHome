@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Menu, Appbar } from 'react-native-paper';
 
-const MenuComponent = ({ id }) => {
+const MenuComponent = ({ producto, setOpenModal, setOpenDelete }) => {
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
   const handleEdit = () => {
-    // Handle edit action
-    console.log('Edit pressed', id);
+    setOpenModal(true);
   };
 
   const handleDelete = () => {
     // Handle delete action
-    console.log('Delete pressed', id);
+    setOpenDelete();
+    console.log('Delete pressed', producto.id);
   };
 
   return (
@@ -30,7 +30,7 @@ const MenuComponent = ({ id }) => {
             closeMenu();
             handleEdit();
           }}
-          title="Edit"
+          title="Editar"
         />
         <Menu.Item
           leadingIcon={'trash-can'}
@@ -38,7 +38,7 @@ const MenuComponent = ({ id }) => {
             closeMenu();
             handleDelete();
           }}
-          title="Delete"
+          title="Eliminar"
         />
       </Menu>
     </View>

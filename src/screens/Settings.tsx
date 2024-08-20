@@ -1,20 +1,27 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, ScrollView, View } from 'react-native';
-import { NavigatorScreenParams, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RootNavigationProp, SettingsList } from '../models/routeTypes';
 import { Divider, Text, useTheme } from 'react-native-paper';
 import { useUserAuth } from '../context/userAuthContext';
+import UserHeader from '../components/userHeader';
 
 const SettingsMenu = () => {
   const navigation = useNavigation<RootNavigationProp>();
   const { user, logOut } = useUserAuth();
-
   const theme = useTheme();
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View>
+      <UserHeader
+        user={user}
+        onLoginPress={() => {
+          navigation.navigate('Login');
+        }}
+        onLogoutPress={() => logOut()}
+      />
+      {/* <View>
         <Text>Hola, {user?.email}</Text>
         {!user && (
           <>
@@ -39,8 +46,8 @@ const SettingsMenu = () => {
             <Text>Cerrar sesion</Text>
           </TouchableOpacity>
         )}
-        <Divider />
-      </View>
+        </View> */}
+      <Divider />
       {menuItems.map((item, index) => (
         <View key={index}>
           <TouchableOpacity
