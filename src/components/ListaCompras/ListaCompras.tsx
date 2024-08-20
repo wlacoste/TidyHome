@@ -1,5 +1,5 @@
 import { View, FlatList, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useProductContext } from '../../context/productContext';
 import {
   ActivityIndicator,
@@ -14,8 +14,13 @@ import {
 import { Producto } from '../../models/productos';
 import SelectorCantidad from '../SelectorCantidad';
 import { rgbToHex } from '../../utils/rgbToHex';
+import { ItemCompra } from '../ListaComprasGenerada';
 
-const ListaCompras = () => {
+const ListaCompras = ({
+  setLista,
+}: {
+  setLista: React.Dispatch<React.SetStateAction<ItemCompra[]>>;
+}) => {
   const { productos, loading } = useProductContext();
   const [checkedItems, setCheckedItems] = useState({});
 
@@ -28,7 +33,17 @@ const ListaCompras = () => {
 
   const handleSubmit = () => {
     const selectedItems = productos.filter(item => checkedItems[item.id]);
-    console.log(selectedItems);
+
+    const lista = selectedItems.map(
+      item =>
+        ({
+          item: item.nombre,
+          quantity: 3,
+        } as ItemCompra),
+    );
+
+    setLista(lista);
+    // console.log(selectedItems);
   };
 
   // const [cantidad, setCantidad] = useState(5);
