@@ -1,6 +1,5 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useCategories } from '../../context/categoryContext';
 import { Icon, MD3Theme, useTheme } from 'react-native-paper';
 import MaterialChip from 'react-native-material-chip';
 // import { useProductos } from '../../hooks/useProductos';
@@ -31,7 +30,6 @@ const getTheme = (seleccionado: boolean, theme: MD3Theme) => {
     color: theme.colors.onSurfaceVariant,
   };
 };
-
 interface IChipSelector {
   seleccionados: number[];
   setSeleccionados: React.Dispatch<React.SetStateAction<number[]>>;
@@ -40,7 +38,6 @@ const CategoryChipSelector = ({
   seleccionados,
   setSeleccionados,
 }: IChipSelector) => {
-  const { categories } = useCategories();
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const { productos } = useProductContext();
   useEffect(() => {
@@ -69,22 +66,6 @@ const CategoryChipSelector = ({
         {categorias.map((categoria, index) => {
           const seleccionado = seleccionados.includes(categoria.id);
           return (
-            // <Chip
-            //   key={`${index}-${categoria.id}-${categoria.name}`}
-            //   icon={categoria.icon}
-            //   style={[styles.chip, getTheme(seleccionado, theme)]}
-            //   onPress={() =>
-            //     toggleSeleccion(
-            //       categoria.id,
-            //       seleccionados.includes(categoria.id),
-            //     )
-            //   }
-            //   selected={seleccionado}
-            //   //   background={}
-            // >
-            //   {/* <Icon source={categoria.icon} size={18} /> */}
-            //   <Text>{categoria.name}</Text>
-            // </Chip>
             <MaterialChip
               text={categoria.name}
               key={`${index}-${categoria.id}-${categoria.name}`}
@@ -141,12 +122,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   chip: {
-    // paddingHorizontal: 0,
-    // padding: 0,
-    // borderWidth: 10,
     paddingVertical: 0,
-    // display: 'flex',
-    // flexDirection: 'row',
     gap: 20,
     margin: 2,
   },
