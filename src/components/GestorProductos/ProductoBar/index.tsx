@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   Icon,
@@ -58,7 +58,6 @@ const ProductoBar = ({ producto }: IProductoBar) => {
     };
     agregarMovimiento(req);
   };
-  const [collapsed, setCollapsed] = useState(true);
   const theme = useTheme();
 
   return (
