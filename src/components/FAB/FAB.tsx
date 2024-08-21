@@ -34,7 +34,8 @@ const FabGroup = () => {
         icon={open ? 'notebook' : 'plus'}
         theme={{
           colors: {
-            onPrimaryContainer: theme.colors.primary,
+            onPrimaryContainer: theme.colors.onPrimary,
+            primaryContainer: theme.colors.primary,
           },
           roundness: 9,
         }}
@@ -43,6 +44,7 @@ const FabGroup = () => {
           {
             icon: 'package-variant',
             label: 'Producto nuevo',
+            color: theme.colors.primary,
             onPress: () => {
               openModal(<ProductForm onClose={closeModal} />);
             },
@@ -50,6 +52,8 @@ const FabGroup = () => {
           {
             icon: 'package-variant',
             label: 'Producto nuevo 2',
+            color: theme.colors.primary,
+
             onPress: () => {
               navigation.navigate('ProductoForm');
             },
@@ -57,16 +61,22 @@ const FabGroup = () => {
           {
             icon: 'swap-horizontal',
             label: 'Movimiento nuevo',
+            color: theme.colors.primary,
+
             onPress: () => console.log('Pressed email'),
           },
           {
             icon: 'swap-horizontal',
             label: 'Simple Context',
+            color: theme.colors.primary,
+
             onPress: () => openModal(<TestView />),
           },
           {
             icon: 'pencil',
             label: 'Movimiento Input',
+            color: theme.colors.primary,
+
             onPress: () => {
               openModal(<SimpleForm onClose={closeModal} />);
             },

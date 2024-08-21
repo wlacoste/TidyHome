@@ -4,6 +4,7 @@ import { Button } from 'react-native-paper';
 import {
   createTables,
   deleteSpecifiedTables,
+  insertDefaultProducts,
 } from '../../service/product-service';
 
 export default function ResetTables() {
@@ -15,6 +16,9 @@ export default function ResetTables() {
   return (
     <View>
       <Button onPress={() => reset()}>ResetTables</Button>
+      <Button onPress={() => insertDefaultProducts()}>
+        Insert default productos
+      </Button>
     </View>
   );
 }

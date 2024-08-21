@@ -4,7 +4,11 @@ import {
   openDatabase,
 } from 'react-native-sqlite-storage';
 import { IProducto, MovimientoProducto, Producto } from '../models/productos';
-import { Categoria, DefaultCategories } from '../models/categorias';
+import {
+  Categoria,
+  DefaultCategories,
+  DefaultProductos,
+} from '../models/categorias';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'cleanApp.db', location: 'default' });
@@ -500,55 +504,6 @@ export const insertProduct = async (
   });
 };
 
-// export const insertProductWithMovimiento = async (
-//   producto: Producto,
-//   movimiento: MovimientoProducto,
-// ) => {
-//   const db = await getDBConnection();
-
-//   return new Promise<void>((resolve, reject) => {
-//     db.transaction(tx => {
-//       tx.executeSql(
-//         'INSERT INTO productos (nombre, categoria_id, fechaCreacion) VALUES (?, ?, ?);',
-//         [producto.nombre, producto.categoria.id, producto.fechaCreacion],
-//         (tx, result) => {
-//           const productId = result.insertId; // Get the ID of the newly inserted product
-
-//           tx.executeSql(
-//             `INSERT INTO movimiento_producto (product_id, fechaCreacion, precio, cantidad, isUnitario, precioUnitario, isVence, fechaVencimiento, isCompra)
-//              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-//             [
-//               productId,
-//               movimiento.fechaCreacion,
-//               movimiento.precio,
-//               movimiento.cantidad,
-//               movimiento.isUnitario,
-//               movimiento.precioUnitario,
-//               movimiento.isVence,
-//               movimiento.fechaVencimiento,
-//               movimiento.isCompra,
-//             ],
-//             () => {
-//               console.log(
-//                 'Product and movimiento_producto inserted successfully',
-//               );
-//               resolve();
-//             },
-//             error => {
-//               console.error('Error inserting movimiento_producto: ', error);
-//               reject(error);
-//             },
-//           );
-//         },
-//         error => {
-//           console.error('Error inserting product: ', error);
-//           reject(error);
-//         },
-//       );
-//     });
-//   });
-// };
-
 export const insertProductWithMovimiento = async (
   producto: Omit<Producto, 'id' | 'detalle'>,
   movimiento: Omit<MovimientoProducto, 'id' | 'idProducto'>,
@@ -630,5 +585,13 @@ export const deleteSpecifiedTables = async (): Promise<void> => {
       });
       resolve();
     });
+  });
+};
+
+export const insertDefaultProducts = async (): Promise<void> => {
+  const productos = DefaultProductos;
+
+  productos.forEach(async producto => {
+    await insertProductWithMovimiento(producto.producto, producto.movimiento);
   });
 };

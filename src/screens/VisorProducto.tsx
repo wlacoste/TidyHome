@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 
 import ProductoBar from '../components/GestorProductos/ProductoBar';
 import { useProductContext } from '../context/productContext';
@@ -68,13 +68,16 @@ const VisorProducto = () => {
         setSeleccionados={setSeleccionados}
       />
 
+      <Searchbar
+        placeholder="Buscar"
+        onChangeText={setSearchQuery}
+        value={searchQuery}
+        style={styles.search}
+        onBlur={() => Keyboard.dismiss()}
+        // textAlign="center"
+        // textAlignVertical="center"
+      />
       <ScrollView nestedScrollEnabled style={styles.contenedor}>
-        <Searchbar
-          placeholder="Buscar"
-          onChangeText={setSearchQuery}
-          value={searchQuery}
-          style={styles.search}
-        />
         {filteredProducts.map((producto, index) => (
           <ProductoBar
             key={`${index}-${producto.id}-${producto.nombre}`}
@@ -94,11 +97,21 @@ const styles = StyleSheet.create({
   },
   search: {
     marginHorizontal: 10,
-    marginBottom: 5,
+    marginVertical: 5,
+    height: 50,
+    // textAlign: 'center',
+    // textAlignVertical: 'center',
+    // justifyContent: 'center',
+    // alignContent: 'center',
+    // alignItems: 'center',
+    // textDecorationColor: 'red',
+    // paddingBottom: 10,
+    verticalAlign: 'middle',
+
     //
   },
   contenedor: {
-    paddingTop: 10,
+    // paddingTop: 10,
   },
   loading: {
     flexGrow: 1,
