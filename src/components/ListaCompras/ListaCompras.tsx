@@ -10,11 +10,13 @@ import {
   Icon,
   List,
   Text,
+  useTheme,
 } from 'react-native-paper';
 import { Producto } from '../../models/productos';
 import SelectorCantidad from '../SelectorCantidad';
 import { rgbToHex } from '../../utils/rgbToHex';
 import { ItemCompra } from '../ListaComprasGenerada';
+import { calculateTotal } from '../GestorProductos/ProductoBar';
 
 const ListaCompras = ({
   setLista,
@@ -23,6 +25,22 @@ const ListaCompras = ({
 }) => {
   const { productos, loading } = useProductContext();
   const [checkedItems, setCheckedItems] = useState({});
+
+  const [itemsCompra, setItemsCompra] = useState<Producto[]>([]);
+  const theme = useTheme();
+  useEffect(() => {
+    if (productos.length == 0) {
+      return;
+    }
+    let items = productos.filter(
+      producto =>
+        producto.agregarListaCompra ||
+        (producto.cantidadAdvertencia &&
+          producto.cantidadAdvertencia >= calculateTotal(producto.detalle)) ||
+        calculateTotal(producto.detalle) <= 0,
+    );
+    setItemsCompra(items);
+  }, [productos]);
 
   const toggleCheckbox = id => {
     setCheckedItems(prevState => ({
@@ -56,7 +74,20 @@ const ListaCompras = ({
     <List.Item
       style={styles.row}
       title={item.nombre}
-      left={() => <Icon source={item.categoria.icon} size={15} />}
+      titleStyle={{ marginLeft: -4 }}
+      left={() => (
+        <View
+          style={[
+            styles.iconoItem,
+            { backgroundColor: theme.colors.onPrimary },
+          ]}>
+          <Icon
+            source={item.categoria.icon}
+            size={18}
+            color={item.categoria.color}
+          />
+        </View>
+      )}
       right={() => (
         <View style={styles.rightContent}>
           <Checkbox
@@ -77,7 +108,7 @@ const ListaCompras = ({
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={productos}
+        data={itemsCompra}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
       />
@@ -94,7 +125,6 @@ const styles = StyleSheet.create({
   row: {
     width: '100%',
     paddingHorizontal: 10,
-    paddingRight: 10,
     borderBottomWidth: 0.6,
     borderBottomColor: rgbToHex('160, 160, 160'),
   },
@@ -105,6 +135,12 @@ const styles = StyleSheet.create({
   //   borderWidth: 1,
   //   borderColor: 'red',
   // },
+  iconoItem: {
+    alignSelf: 'center',
+    padding: 5,
+    borderRadius: 20,
+    elevation: 5,
+  },
   rightContent: {
     flexDirection: 'row',
     alignItems: 'center',

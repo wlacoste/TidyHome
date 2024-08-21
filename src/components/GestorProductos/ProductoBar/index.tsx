@@ -70,6 +70,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
               borderColor: producto.categoria.color
                 ? producto.categoria.color
                 : theme.colors.outlineVariant,
+              backgroundColor: theme.colors.elevation.level1,
             },
           ]}
           onPress={() =>
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
   },
   leftSection: {
     // margin: 10,
-    // elevation: 1,
+    elevation: 2,
     width: '40%',
     flexDirection: 'row',
     justifyContent: 'space-between',
