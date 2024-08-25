@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ListaCompras from './ListaCompras';
 import ListaCompraGenerada, { ItemCompra } from '../ListaComprasGenerada';
+import CategoryChipSelector from '../CategorySelector/CategoryChipSelector';
 
 const ListaScreen = () => {
   const [lista, setLista] = useState<ItemCompra[]>([]);
+
   return (
     <>
       <View style={styles.generador}>

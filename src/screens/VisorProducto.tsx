@@ -72,10 +72,9 @@ const VisorProducto = () => {
         placeholder="Buscar"
         onChangeText={setSearchQuery}
         value={searchQuery}
-        style={styles.search}
+        style={[styles.search, { paddingTop: 5 }]}
         onBlur={() => Keyboard.dismiss()}
-        // textAlign="center"
-        // textAlignVertical="center"
+        textAlignVertical="top"
       />
       <ScrollView nestedScrollEnabled style={styles.contenedor}>
         {filteredProducts.map((producto, index) => (

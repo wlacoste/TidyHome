@@ -15,8 +15,9 @@ import {
 // Assume you have a ThemeContext set up in your app
 
 export interface ItemCompra {
+  id: number;
   item: string;
-  quantity?: number;
+  cantidad?: number;
 }
 
 interface ListaComprasProps {
@@ -54,7 +55,7 @@ const ListaCompraGenerada: React.FC<ListaComprasProps> = ({
           checkedItems.has(item.item) && styles.checkedItemText,
           { color: theme.colors.onSurface },
         ]}
-        description={item.quantity ? `Quantity: ${item.quantity}` : undefined}
+        description={item.cantidad ? `Quantity: ${item.cantidad}` : undefined}
         descriptionStyle={{ color: theme.colors.onSurfaceVariant }}
         left={props => (
           <List.Icon
@@ -82,7 +83,7 @@ const ListaCompraGenerada: React.FC<ListaComprasProps> = ({
       .map(
         item =>
           `${checkedItems.has(item.item) ? '☑' : '☐'} ${item.item}${
-            item.quantity ? ` (x${item.quantity})` : ''
+            item.cantidad ? ` (x${item.cantidad})` : ''
           }`,
       )
       .join('\n');
