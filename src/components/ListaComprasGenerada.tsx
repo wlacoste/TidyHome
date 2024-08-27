@@ -119,7 +119,7 @@ const ListaCompraGenerada: React.FC<ListaComprasProps> = ({
       style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.colors.onSurface }]}>
-          Grocery List
+          Lista de compras
         </Text>
         <View style={styles.iconContainer}>
           <IconButton
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   iconContainer: {

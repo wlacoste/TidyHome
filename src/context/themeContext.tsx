@@ -109,7 +109,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
       <PaperProvider theme={theme}>
         <NavigationContainer theme={theme}>{children}</NavigationContainer>
       </PaperProvider>
-      <Toast config={toastConfig(theme)} />
+      <Toast
+        config={toastConfig(theme)}
+        visibilityTime={2500}
+        autoHide={true}
+      />
     </ThemeContext.Provider>
   );
 };
