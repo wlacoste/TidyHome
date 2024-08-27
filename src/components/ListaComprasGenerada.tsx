@@ -9,7 +9,11 @@ import {
   Menu,
   FAB,
   IconButton,
+  Card,
+  Divider,
 } from 'react-native-paper';
+import { IListasCompras } from './ListaCompras/ListaScreen';
+import ListaAcciones from './ListaCompras/AccionesLista';
 // import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Assume you have a ThemeContext set up in your app
@@ -21,14 +25,16 @@ export interface ItemCompra {
 }
 
 interface ListaComprasProps {
-  items: ItemCompra[];
+  items: IListasCompras;
   onItemToggle?: (item: ItemCompra, isChecked: boolean) => void;
+  agregarItem: (item: string, idLista: string, cantidad?: number) => void;
 }
 
-const ListaCompraGenerada: React.FC<ListaComprasProps> = ({
-  items,
-  onItemToggle,
-}) => {
+const ListaCompraGenerada = ({
+  items: listaItems,
+  agregarItem,
+}: ListaComprasProps) => {
+  const { id, fecha, items } = listaItems;
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [menuVisible, setMenuVisible] = useState(true);
   const theme = useTheme();
@@ -43,11 +49,10 @@ const ListaCompraGenerada: React.FC<ListaComprasProps> = ({
       }
       return newChecked;
     });
-    onItemToggle?.(item, !checkedItems.has(item.item));
   };
 
   const renderItem = ({ item }: { item: ItemCompra }) => (
-    <TouchableRipple onPress={() => toggleItem(item)}>
+    <TouchableRipple onPress={() => toggleItem(item)} style={{ height: 60 }}>
       <List.Item
         title={item.item}
         titleStyle={[
@@ -55,7 +60,7 @@ const ListaCompraGenerada: React.FC<ListaComprasProps> = ({
           checkedItems.has(item.item) && styles.checkedItemText,
           { color: theme.colors.onSurface },
         ]}
-        description={item.cantidad ? `Quantity: ${item.cantidad}` : undefined}
+        description={item.cantidad ? `Cantidad: ${item.cantidad}` : undefined}
         descriptionStyle={{ color: theme.colors.onSurfaceVariant }}
         left={props => (
           <List.Icon
@@ -115,34 +120,31 @@ const ListaCompraGenerada: React.FC<ListaComprasProps> = ({
   };
 
   return (
-    <View
+    <Card
       style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.colors.onSurface }]}>
           Lista de compras
         </Text>
         <View style={styles.iconContainer}>
-          <IconButton
-            icon="content-copy"
-            size={24}
-            onPress={handleCopyToClipboard}
-            style={styles.icon}
-          />
-          <IconButton
-            icon="share-variant"
-            size={24}
-            onPress={handleShare}
-            style={styles.icon}
-          />
+          <Text
+            style={{
+              color: theme.colors.onSurface,
+              textAlignVertical: 'center',
+            }}>
+            {fecha}
+          </Text>
+          <ListaAcciones />
         </View>
       </View>
+      <Divider />
       <FlatList
         data={items}
         renderItem={renderItem}
         keyExtractor={item => item.item}
         style={styles.list}
       />
-    </View>
+    </Card>
   );
 };
 
@@ -150,12 +152,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    margin: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 5,
   },
   title: {
     fontSize: 18,
@@ -169,6 +172,7 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
+    // height: 20,
   },
   itemText: {
     fontSize: 16,

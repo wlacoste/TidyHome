@@ -5,7 +5,7 @@ import ListaCompraGenerada, { ItemCompra } from '../ListaComprasGenerada';
 import { formatDate } from '../../utils/formatDate';
 import { ScrollView } from 'react-native-gesture-handler';
 
-interface IListasCompras {
+export interface IListasCompras {
   id: string;
   items: ItemCompra[];
   fecha: string;
@@ -19,8 +19,19 @@ const ListaScreen = () => {
       items: items,
       fecha: formatDate(new Date()),
     };
-    console.log(newList.fecha);
     setListas(prev => [newList, ...prev]);
+  };
+  const agregarAlista = (item: string, idLista: string, cantidad?: number) => {
+    let lista = listas.find(l => l.id === idLista);
+    if (!lista) {
+      return;
+    }
+    lista.items = [
+      ...lista.items,
+      { item: item, id: 0, cantidad: cantidad ? cantidad : 1 },
+    ];
+
+    setListas(prev => prev.map(p => (p.id === idLista ? lista : p)));
   };
 
   return (
@@ -30,7 +41,11 @@ const ListaScreen = () => {
       </View>
       <ScrollView style={styles.generador}>
         {listas.map(lista => (
-          <ListaCompraGenerada key={lista.id} items={lista.items} />
+          <ListaCompraGenerada
+            key={lista.id}
+            agregarItem={agregarAlista}
+            items={lista}
+          />
         ))}
       </ScrollView>
     </>
