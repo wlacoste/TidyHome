@@ -1,9 +1,9 @@
 import { View, FlatList, StyleSheet } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useProductContext } from '../../context/productContext';
+import React from 'react';
 import {
   ActivityIndicator,
   Button,
+  Card,
   Checkbox,
   Divider,
   Icon,
@@ -80,7 +80,8 @@ const ListaCompras = ({
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+    <Card
+      style={{ flex: 1, justifyContent: 'flex-start', marginHorizontal: 10 }}>
       <View>
         <CategoryChipSelector
           seleccionados={seleccionados}
@@ -94,10 +95,14 @@ const ListaCompras = ({
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
       />
-      <Button mode="contained" onPress={handleSubmit} style={{ margin: 16 }}>
-        Submit
+      <Button
+        mode="contained"
+        icon={'cart-plus'}
+        onPress={handleSubmit}
+        style={{ margin: 16, marginHorizontal: 40, borderRadius: 8 }}>
+        Generar lista de compras
       </Button>
-    </View>
+    </Card>
   );
 };
 

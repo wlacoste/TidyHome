@@ -1,22 +1,25 @@
-import React, { useState, useContext } from 'react';
-import { View, StyleSheet, FlatList, Share, Clipboard } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import {
+  View,
+  StyleSheet,
+  Share,
+  KeyboardAvoidingView,
+  Keyboard,
+} from 'react-native';
 import {
   List,
   Text,
   useTheme,
   TouchableRipple,
   Icon,
-  Menu,
-  FAB,
   IconButton,
   Card,
   Divider,
+  TextInput,
+  Button,
 } from 'react-native-paper';
 import { IListasCompras } from './ListaCompras/ListaScreen';
 import ListaAcciones from './ListaCompras/AccionesLista';
-// import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-// Assume you have a ThemeContext set up in your app
 
 export interface ItemCompra {
   id: number;
@@ -28,18 +31,22 @@ interface ListaComprasProps {
   items: IListasCompras;
   onItemToggle?: (item: ItemCompra, isChecked: boolean) => void;
   agregarItem: (item: string, idLista: string, cantidad?: number) => void;
+  eliminarLista: (id: string) => void;
 }
 
 const ListaCompraGenerada = ({
   items: listaItems,
   agregarItem,
+  eliminarLista,
 }: ListaComprasProps) => {
   const { id, fecha, items } = listaItems;
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [menuVisible, setMenuVisible] = useState(true);
+  const [newItem, setNewItem] = useState('');
+  const [isAddingItem, setIsAddingItem] = useState(false);
   const theme = useTheme();
 
-  const toggleItem = (item: ItemCompra) => {
+  const toggleItem = useCallback((item: ItemCompra) => {
     setCheckedItems(prevChecked => {
       const newChecked = new Set(prevChecked);
       if (newChecked.has(item.item)) {
@@ -49,39 +56,57 @@ const ListaCompraGenerada = ({
       }
       return newChecked;
     });
-  };
+  }, []);
 
-  const renderItem = ({ item }: { item: ItemCompra }) => (
-    <TouchableRipple onPress={() => toggleItem(item)} style={{ height: 60 }}>
-      <List.Item
-        title={item.item}
-        titleStyle={[
-          styles.itemText,
-          checkedItems.has(item.item) && styles.checkedItemText,
-          { color: theme.colors.onSurface },
-        ]}
-        description={item.cantidad ? `Cantidad: ${item.cantidad}` : undefined}
-        descriptionStyle={{ color: theme.colors.onSurfaceVariant }}
-        left={props => (
-          <List.Icon
-            {...props}
-            icon={({ size, color }) => (
-              <Icon
-                source={
-                  checkedItems.has(item.item)
-                    ? 'checkbox-marked'
-                    : 'checkbox-blank-outline'
-                }
-                size={size}
-                color={
-                  checkedItems.has(item.item) ? theme.colors.primary : color
-                }
-              />
-            )}
-          />
+  const handleAddItem = useCallback(() => {
+    if (newItem.trim()) {
+      agregarItem(newItem.trim(), id);
+      setNewItem('');
+      setIsAddingItem(false);
+    }
+  }, [newItem, agregarItem, id]);
+  const renderFooter = useCallback(
+    () => (
+      <View style={styles.footer}>
+        {isAddingItem ? (
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={[styles.input, { color: theme.colors.onSurface }]}
+              value={newItem}
+              onChangeText={e => setNewItem(e)}
+              placeholder="Agregar nuevo item"
+              placeholderTextColor={theme.colors.onSurfaceVariant}
+              onBlur={() => Keyboard.dismiss()}
+              autoFocus
+            />
+            <IconButton
+              icon="check"
+              onPress={handleAddItem}
+              containerColor={theme.colors.primary}
+              iconColor={theme.colors.onPrimary}
+            />
+            <IconButton
+              icon="close"
+              onPress={() => setIsAddingItem(false)}
+              containerColor={theme.colors.onSurface}
+              iconColor={theme.colors.onPrimary}
+            />
+          </View>
+        ) : (
+          <Button
+            style={[
+              styles.addButton,
+              { backgroundColor: theme.colors.primary, borderRadius: 8 },
+            ]}
+            icon="pen-plus"
+            mode="contained"
+            onPress={() => setIsAddingItem(true)}>
+            Anotar nuevo item
+          </Button>
         )}
-      />
-    </TouchableRipple>
+      </View>
+    ),
+    [isAddingItem, newItem, theme.colors, handleAddItem],
   );
   const createShareableList = () => {
     return items
@@ -114,37 +139,76 @@ const ListaCompraGenerada = ({
     }
   };
 
-  const handleCopyToClipboard = () => {
-    const shareableList = createShareableList();
-    Clipboard.setString(shareableList);
-  };
-
   return (
-    <Card
-      style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.colors.onSurface }]}>
-          Lista de compras
-        </Text>
-        <View style={styles.iconContainer}>
-          <Text
-            style={{
-              color: theme.colors.onSurface,
-              textAlignVertical: 'center',
-            }}>
-            {fecha}
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <Card
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.background },
+        ]}>
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: theme.colors.onSurface }]}>
+            Lista de compras
           </Text>
-          <ListaAcciones />
+          <View style={styles.iconContainer}>
+            <Text
+              style={{
+                color: theme.colors.onSurface,
+                textAlignVertical: 'center',
+              }}>
+              {fecha}
+            </Text>
+            <ListaAcciones
+              eliminar={() => eliminarLista(id)}
+              compartir={handleShare}
+            />
+          </View>
         </View>
-      </View>
-      <Divider />
-      <FlatList
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={item => item.item}
-        style={styles.list}
-      />
-    </Card>
+        <Divider />
+        {items.map(item => {
+          return (
+            <TouchableRipple
+              key={item.id}
+              onPress={() => toggleItem(item)}
+              style={{ height: 60 }}>
+              <List.Item
+                title={item.item}
+                titleStyle={[
+                  styles.itemText,
+                  checkedItems.has(item.item) && styles.checkedItemText,
+                  { color: theme.colors.onSurface },
+                ]}
+                description={
+                  item.cantidad ? `Cantidad: ${item.cantidad}` : undefined
+                }
+                descriptionStyle={{ color: theme.colors.onSurfaceVariant }}
+                left={props => (
+                  <List.Icon
+                    {...props}
+                    icon={({ size, color }) => (
+                      <Icon
+                        source={
+                          checkedItems.has(item.item)
+                            ? 'checkbox-marked'
+                            : 'checkbox-blank-outline'
+                        }
+                        size={size}
+                        color={
+                          checkedItems.has(item.item)
+                            ? theme.colors.primary
+                            : color
+                        }
+                      />
+                    )}
+                  />
+                )}
+              />
+            </TouchableRipple>
+          );
+        })}
+        {renderFooter()}
+      </Card>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -152,13 +216,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingTop: 0,
+    paddingBottom: 0,
     margin: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 2,
   },
   title: {
     fontSize: 18,
@@ -172,13 +238,37 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    // height: 20,
   },
   itemText: {
     fontSize: 16,
   },
   checkedItemText: {
     textDecorationLine: 'line-through',
+  },
+  footer: {
+    padding: 16,
+  },
+  addButton: {
+    padding: 0,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  addButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    marginRight: 8,
   },
 });
 

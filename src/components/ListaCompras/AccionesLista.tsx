@@ -2,21 +2,11 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Menu, Appbar } from 'react-native-paper';
 
-const ListaAcciones = () => {
+const ListaAcciones = ({ eliminar, compartir }) => {
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
-
-  //   const handleEdit = () => {
-  //     setOpenModal(true);
-  //   };
-
-  //   const handleDelete = () => {
-  //     // Handle delete action
-  //     setOpenDelete();
-  //     console.log('Delete pressed', producto.id);
-  //   };
 
   return (
     <View>
@@ -29,6 +19,7 @@ const ListaAcciones = () => {
           onPress={() => {
             closeMenu();
             // handleEdit();
+            compartir();
           }}
           title="Compartir"
         />
@@ -37,6 +28,7 @@ const ListaAcciones = () => {
           onPress={() => {
             closeMenu();
             // handleDelete();
+            eliminar();
           }}
           title="Eliminar"
         />
