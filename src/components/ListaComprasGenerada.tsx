@@ -32,18 +32,22 @@ interface ListaComprasProps {
   onItemToggle?: (item: ItemCompra, isChecked: boolean) => void;
   agregarItem: (item: string, idLista: string, cantidad?: number) => void;
   eliminarLista: (id: string) => void;
+  cambiarNombre: (nombre: string, id: string) => void;
 }
 
 const ListaCompraGenerada = ({
   items: listaItems,
   agregarItem,
   eliminarLista,
+  cambiarNombre,
 }: ListaComprasProps) => {
   const { id, fecha, items } = listaItems;
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [menuVisible, setMenuVisible] = useState(true);
   const [newItem, setNewItem] = useState('');
+  const [nuevoNombre, setNuevoNombre] = useState('');
   const [isAddingItem, setIsAddingItem] = useState(false);
+  const [isCambiarNombre, setCambiarNombre] = useState(false);
   const theme = useTheme();
 
   const toggleItem = useCallback((item: ItemCompra) => {
@@ -65,6 +69,22 @@ const ListaCompraGenerada = ({
       setIsAddingItem(false);
     }
   }, [newItem, agregarItem, id]);
+
+  const handleCambiarNombre = () => {
+    console.log('cambiar nimber');
+    if (nuevoNombre.trim()) {
+      cambiarNombre(nuevoNombre.trim(), id);
+      setNuevoNombre('');
+    }
+    setCambiarNombre(false);
+  };
+  const handleCerrarNombre = () => {
+    if (nuevoNombre.trim().length === 0) {
+      setCambiarNombre(false);
+      setNuevoNombre('');
+    }
+  };
+
   const renderFooter = useCallback(
     () => (
       <View style={styles.footer}>
@@ -81,7 +101,7 @@ const ListaCompraGenerada = ({
             />
             <IconButton
               icon="check"
-              onPress={handleAddItem}
+              onPress={() => handleAddItem()}
               containerColor={theme.colors.primary}
               iconColor={theme.colors.onPrimary}
             />
@@ -108,6 +128,7 @@ const ListaCompraGenerada = ({
     ),
     [isAddingItem, newItem, theme.colors, handleAddItem],
   );
+
   const createShareableList = () => {
     return items
       .map(
@@ -147,9 +168,46 @@ const ListaCompraGenerada = ({
           { backgroundColor: theme.colors.background },
         ]}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.colors.onSurface }]}>
-            Lista de compras
-          </Text>
+          <View style={styles.tituloContainer}>
+            {isCambiarNombre ? (
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.input, { color: theme.colors.onSurface }]}
+                  value={nuevoNombre}
+                  onChangeText={e => setNuevoNombre(e)}
+                  placeholder="Lista de compras"
+                  placeholderTextColor={theme.colors.onSurfaceVariant}
+                  onBlur={() => {
+                    Keyboard.dismiss();
+                    handleCerrarNombre();
+                  }}
+                  autoFocus
+                />
+                <IconButton
+                  icon="check"
+                  onPress={() => {
+                    handleCambiarNombre();
+                  }}
+                  containerColor={theme.colors.surface}
+                  iconColor={theme.colors.onBackground}
+                  size={20}
+                />
+              </View>
+            ) : (
+              <>
+                <Text style={[styles.title, { color: theme.colors.onSurface }]}>
+                  {listaItems.titulo}
+                </Text>
+                <IconButton
+                  icon="pencil-outline"
+                  onPress={() => setCambiarNombre(true)}
+                  containerColor={theme.colors.surface}
+                  iconColor={theme.colors.onBackground}
+                  size={20}
+                />
+              </>
+            )}
+          </View>
           <View style={styles.iconContainer}>
             <Text
               style={{
@@ -229,6 +287,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  tituloContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '60%',
   },
   iconContainer: {
     flexDirection: 'row',

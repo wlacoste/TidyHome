@@ -48,6 +48,29 @@ export async function addProductoToLista(
   });
 }
 
+export async function deleteListaCompras(
+  db: SQLiteDatabase,
+  id: number,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM ListaCompras WHERE id = ?',
+        [id],
+        (_, result) => {
+          console.log('ListaCompras deleted successfully', result);
+          resolve();
+        },
+        (_, error) => {
+          console.error('Error deleting ListaCompras: ', error);
+          reject(error);
+          return false;
+        },
+      );
+    });
+  });
+}
+
 export async function addProductoPorComprarToLista(
   db: SQLiteDatabase,
   idListaCompra: number,
@@ -197,29 +220,6 @@ export async function removeProductoPorComprarFromLista(
         },
         (_, error) => {
           console.error('Error querying ProductoPorComprar: ', error);
-          reject(error);
-          return false;
-        },
-      );
-    });
-  });
-}
-
-export async function deleteListaCompras(
-  db: SQLiteDatabase,
-  id: number,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'DELETE FROM ListaCompras WHERE id = ?',
-        [id],
-        (_, result) => {
-          console.log('ListaCompras deleted successfully', result);
-          resolve();
-        },
-        (_, error) => {
-          console.error('Error deleting ListaCompras: ', error);
           reject(error);
           return false;
         },

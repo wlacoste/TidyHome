@@ -89,19 +89,26 @@ const ListaCompras = ({
         />
       </View>
       <Divider />
-
-      <FlatList
-        data={filteredProducts}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-      />
-      <Button
-        mode="contained"
-        icon={'cart-plus'}
-        onPress={handleSubmit}
-        style={{ margin: 16, marginHorizontal: 40, borderRadius: 8 }}>
-        Generar lista de compras
-      </Button>
+      <View style={{}}>
+        <FlatList
+          style={styles.lista}
+          data={filteredProducts}
+          renderItem={renderItem}
+          keyExtractor={item => item.id.toString()}
+        />
+        <Button
+          mode="contained"
+          icon={'cart-plus'}
+          onPress={handleSubmit}
+          style={{
+            margin: 16,
+            marginVertical: 8,
+            marginHorizontal: 40,
+            borderRadius: 8,
+          }}>
+          Generar lista de compras
+        </Button>
+      </View>
     </Card>
   );
 };
@@ -115,13 +122,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.6,
     borderBottomColor: rgbToHex('160, 160, 160'),
   },
-  // selectores: {
-  //   display: 'flex',
-  //   flexDirection: 'row',
-  //   width: '60%',
-  //   borderWidth: 1,
-  //   borderColor: 'red',
-  // },
+  lista: {
+    height: '64%',
+  },
   iconoItem: {
     alignSelf: 'center',
     padding: 5,

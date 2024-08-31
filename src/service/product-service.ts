@@ -122,7 +122,9 @@ export const createTables = async () => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS ListaCompras (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        fechaCreacion TEXT
+        fechaCreacion TEXT,
+        titulo TEXT,
+        comentario TEXT
       );`,
       [],
       () => {
@@ -137,6 +139,7 @@ export const createTables = async () => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         idListaCompra INTEGER,
         idProducto INTEGER,
+        nombre TEXT,
         cantidad INTEGER,
         FOREIGN KEY (idListaCompra) REFERENCES ListaCompras (id) ON DELETE CASCADE,
         FOREIGN KEY (idProducto) REFERENCES Producto (id) ON DELETE CASCADE
@@ -147,22 +150,6 @@ export const createTables = async () => {
       },
       error => {
         console.error('Error creating table: ProductosPorLista', error);
-      },
-    );
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS ProductoPorComprar (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        idProductosPorLista INTEGER,
-        nombre TEXT,
-        cantidad INTEGER,
-        FOREIGN KEY (idProductosPorLista) REFERENCES ProductosPorLista (id) ON DELETE CASCADE
-    );`,
-      [],
-      () => {
-        console.log('ProductoPorComprar table created successfully');
-      },
-      error => {
-        console.error('Error creating table: ProductoPorComprar', error);
       },
     );
   });
@@ -569,7 +556,13 @@ export const deleteSpecifiedTables = async (): Promise<void> => {
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
-      const tablesToDelete = ['productos', 'movimiento_producto', 'categories'];
+      const tablesToDelete = [
+        'productos',
+        'movimiento_producto',
+        'categories',
+        'ProductosPorLista',
+        'ListaCompras',
+      ];
       tablesToDelete.forEach(table => {
         tx.executeSql(
           `DROP TABLE IF EXISTS ${table};`,

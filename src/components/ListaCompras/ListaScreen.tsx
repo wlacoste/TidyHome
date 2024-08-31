@@ -4,41 +4,24 @@ import ListaCompras from './ListaCompras';
 import ListaCompraGenerada, { ItemCompra } from '../ListaComprasGenerada';
 import { formatDate } from '../../utils/formatDate';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useListasCompras } from '../../hooks/useHandleListaCompras';
+import { useListasComprasDB } from '../../hooks/useListasComprasDB';
 
 export interface IListasCompras {
   id: string;
   items: ItemCompra[];
   fecha: string;
+  titulo: string;
+  comentario: string;
 }
 const ListaScreen = () => {
-  const [listas, setListas] = useState<IListasCompras[]>([]);
-
-  const handleNewLista = (items: ItemCompra[]) => {
-    const newList = {
-      id: Date.now().toString(),
-      items: items,
-      fecha: formatDate(new Date()),
-    };
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setListas(prev => [newList, ...prev]);
-  };
-  const agregarAlista = (item: string, idLista: string, cantidad?: number) => {
-    let lista = listas.find(l => l.id === idLista);
-    if (!lista) {
-      return;
-    }
-    lista.items = [
-      ...lista.items,
-      { item: item, id: 0, cantidad: cantidad ? cantidad : 1 },
-    ];
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setListas(prev => prev.map(p => (p.id === idLista ? lista : p)));
-  };
-  const eliminarLista = (idLista: string) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setListas(prev => prev.filter(lista => lista.id !== idLista));
-  };
-
+  const {
+    listas,
+    handleNewLista,
+    agregarAlista,
+    eliminarLista,
+    cambiarNombre,
+  } = useListasComprasDB();
   return (
     <>
       <View style={styles.generador}>
@@ -50,6 +33,7 @@ const ListaScreen = () => {
             key={lista.id}
             agregarItem={agregarAlista}
             items={lista}
+            cambiarNombre={cambiarNombre}
             eliminarLista={eliminarLista}
           />
         ))}
