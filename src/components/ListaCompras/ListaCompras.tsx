@@ -16,6 +16,7 @@ import { rgbToHex } from '../../utils/rgbToHex';
 import { ItemCompra } from '../ListaComprasGenerada';
 import CategoryChipSelector from '../CategorySelector/CategoryChipSelector';
 import { useListaCompras } from '../../hooks/useListaCompras';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ListaCompras = ({
   setLista,
@@ -90,20 +91,61 @@ const ListaCompras = ({
       </View>
       <Divider />
       <View style={{}}>
-        <FlatList
+        {/* <FlatList
           style={styles.lista}
           data={filteredProducts}
           renderItem={renderItem}
           keyExtractor={item => item.id.toString()}
-        />
+        /> */}
+        <ScrollView style={styles.lista}>
+          {filteredProducts.map(item => {
+            const productoState = getProductoState(item.id);
+
+            return (
+              <List.Item
+                key={`${item.id}-${item.nombre}`}
+                style={styles.row}
+                title={item.nombre}
+                titleStyle={{ marginLeft: -4 }}
+                left={() => (
+                  <View
+                    style={[
+                      styles.iconoItem,
+                      { backgroundColor: theme.colors.onPrimary },
+                    ]}>
+                    <Icon
+                      source={item.categoria.icon}
+                      size={18}
+                      color={item.categoria.color}
+                    />
+                  </View>
+                )}
+                right={() => (
+                  <View style={styles.rightContent}>
+                    <Checkbox
+                      status={productoState?.checked ? 'checked' : 'unchecked'}
+                      onPress={() => toggleCheckbox(item.id)}
+                    />
+                    <SelectorCantidad
+                      cantidad={productoState?.cantidadAComprar || 1}
+                      onDecrement={() => handleDecrement(item.id)}
+                      onIncrement={() => handleIncrement(item.id)}
+                      styles={styles}
+                    />
+                  </View>
+                )}
+              />
+            );
+          })}
+        </ScrollView>
         <Button
           mode="contained"
           icon={'cart-plus'}
           onPress={handleSubmit}
           style={{
-            margin: 16,
-            marginVertical: 8,
-            marginHorizontal: 40,
+            margin: 5,
+
+            marginHorizontal: 35,
             borderRadius: 8,
           }}>
           Generar lista de compras
