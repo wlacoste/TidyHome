@@ -1,8 +1,10 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
-import React from 'react';
-import { useCategories } from '../../context/categoryContext';
+import React, { useEffect, useState } from 'react';
 import { Icon, MD3Theme, useTheme } from 'react-native-paper';
 import MaterialChip from 'react-native-material-chip';
+// import { useProductos } from '../../hooks/useProductos';
+import { Categoria } from '../../models/categorias';
+import { useProductContext } from '../../context/productContext';
 
 const getTheme = (seleccionado: boolean, theme: MD3Theme) => {
   if (theme.dark) {
@@ -28,7 +30,6 @@ const getTheme = (seleccionado: boolean, theme: MD3Theme) => {
     color: theme.colors.onSurfaceVariant,
   };
 };
-
 interface IChipSelector {
   seleccionados: number[];
   setSeleccionados: React.Dispatch<React.SetStateAction<number[]>>;
@@ -37,7 +38,18 @@ const CategoryChipSelector = ({
   seleccionados,
   setSeleccionados,
 }: IChipSelector) => {
-  const { categories } = useCategories();
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const { productos } = useProductContext();
+  useEffect(() => {
+    if (productos.length === 0) {
+      return;
+    }
+    let cate = [...new Set(productos.map(prod => prod.categoria))].sort(
+      (a, b) => a.ordenCategoria - b.ordenCategoria,
+    );
+
+    setCategorias(cate);
+  }, [productos]);
 
   const theme = useTheme();
 
@@ -51,25 +63,9 @@ const CategoryChipSelector = ({
   return (
     <ScrollView style={styles.container}>
       <View style={styles.chipContainer}>
-        {categories.map((categoria, index) => {
+        {categorias.map((categoria, index) => {
           const seleccionado = seleccionados.includes(categoria.id);
           return (
-            // <Chip
-            //   key={`${index}-${categoria.id}-${categoria.name}`}
-            //   icon={categoria.icon}
-            //   style={[styles.chip, getTheme(seleccionado, theme)]}
-            //   onPress={() =>
-            //     toggleSeleccion(
-            //       categoria.id,
-            //       seleccionados.includes(categoria.id),
-            //     )
-            //   }
-            //   selected={seleccionado}
-            //   //   background={}
-            // >
-            //   {/* <Icon source={categoria.icon} size={18} /> */}
-            //   <Text>{categoria.name}</Text>
-            // </Chip>
             <MaterialChip
               text={categoria.name}
               key={`${index}-${categoria.id}-${categoria.name}`}
@@ -117,6 +113,7 @@ const CategoryChipSelector = ({
 
 const styles = StyleSheet.create({
   container: {
+    minHeight: 90,
     maxHeight: 215, // Adjust this value to control the maximum height of the ScrollView
   },
   chipContainer: {
@@ -125,12 +122,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   chip: {
-    // paddingHorizontal: 0,
-    // padding: 0,
-    // borderWidth: 10,
     paddingVertical: 0,
-    // display: 'flex',
-    // flexDirection: 'row',
     gap: 20,
     margin: 2,
   },

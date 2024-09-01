@@ -4,7 +4,11 @@ import {
   openDatabase,
 } from 'react-native-sqlite-storage';
 import { IProducto, MovimientoProducto, Producto } from '../models/productos';
-import { Categoria, DefaultCategories } from '../models/categorias';
+import {
+  Categoria,
+  DefaultCategories,
+  DefaultProductos,
+} from '../models/categorias';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'cleanApp.db', location: 'default' });
@@ -118,7 +122,9 @@ export const createTables = async () => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS ListaCompras (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        fechaCreacion TEXT
+        fechaCreacion TEXT,
+        titulo TEXT,
+        comentario TEXT
       );`,
       [],
       () => {
@@ -133,6 +139,7 @@ export const createTables = async () => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         idListaCompra INTEGER,
         idProducto INTEGER,
+        nombre TEXT,
         cantidad INTEGER,
         FOREIGN KEY (idListaCompra) REFERENCES ListaCompras (id) ON DELETE CASCADE,
         FOREIGN KEY (idProducto) REFERENCES Producto (id) ON DELETE CASCADE
@@ -143,22 +150,6 @@ export const createTables = async () => {
       },
       error => {
         console.error('Error creating table: ProductosPorLista', error);
-      },
-    );
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS ProductoPorComprar (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        idProductosPorLista INTEGER,
-        nombre TEXT,
-        cantidad INTEGER,
-        FOREIGN KEY (idProductosPorLista) REFERENCES ProductosPorLista (id) ON DELETE CASCADE
-    );`,
-      [],
-      () => {
-        console.log('ProductoPorComprar table created successfully');
-      },
-      error => {
-        console.error('Error creating table: ProductoPorComprar', error);
       },
     );
   });
@@ -500,55 +491,6 @@ export const insertProduct = async (
   });
 };
 
-// export const insertProductWithMovimiento = async (
-//   producto: Producto,
-//   movimiento: MovimientoProducto,
-// ) => {
-//   const db = await getDBConnection();
-
-//   return new Promise<void>((resolve, reject) => {
-//     db.transaction(tx => {
-//       tx.executeSql(
-//         'INSERT INTO productos (nombre, categoria_id, fechaCreacion) VALUES (?, ?, ?);',
-//         [producto.nombre, producto.categoria.id, producto.fechaCreacion],
-//         (tx, result) => {
-//           const productId = result.insertId; // Get the ID of the newly inserted product
-
-//           tx.executeSql(
-//             `INSERT INTO movimiento_producto (product_id, fechaCreacion, precio, cantidad, isUnitario, precioUnitario, isVence, fechaVencimiento, isCompra)
-//              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-//             [
-//               productId,
-//               movimiento.fechaCreacion,
-//               movimiento.precio,
-//               movimiento.cantidad,
-//               movimiento.isUnitario,
-//               movimiento.precioUnitario,
-//               movimiento.isVence,
-//               movimiento.fechaVencimiento,
-//               movimiento.isCompra,
-//             ],
-//             () => {
-//               console.log(
-//                 'Product and movimiento_producto inserted successfully',
-//               );
-//               resolve();
-//             },
-//             error => {
-//               console.error('Error inserting movimiento_producto: ', error);
-//               reject(error);
-//             },
-//           );
-//         },
-//         error => {
-//           console.error('Error inserting product: ', error);
-//           reject(error);
-//         },
-//       );
-//     });
-//   });
-// };
-
 export const insertProductWithMovimiento = async (
   producto: Omit<Producto, 'id' | 'detalle'>,
   movimiento: Omit<MovimientoProducto, 'id' | 'idProducto'>,
@@ -614,7 +556,13 @@ export const deleteSpecifiedTables = async (): Promise<void> => {
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
-      const tablesToDelete = ['productos', 'movimiento_producto', 'categories'];
+      const tablesToDelete = [
+        'productos',
+        'movimiento_producto',
+        'categories',
+        'ProductosPorLista',
+        'ListaCompras',
+      ];
       tablesToDelete.forEach(table => {
         tx.executeSql(
           `DROP TABLE IF EXISTS ${table};`,
@@ -630,5 +578,13 @@ export const deleteSpecifiedTables = async (): Promise<void> => {
       });
       resolve();
     });
+  });
+};
+
+export const insertDefaultProducts = async (): Promise<void> => {
+  const productos = DefaultProductos;
+
+  productos.forEach(async producto => {
+    await insertProductWithMovimiento(producto.producto, producto.movimiento);
   });
 };

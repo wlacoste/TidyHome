@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Card,
   Icon,
@@ -19,6 +19,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RootNavigationProp } from '../../../models/routeTypes';
 import PrimerMovimiento from '../ProductForm/NuevoMovimiento';
 import SelectorCantidad from '../../SelectorCantidad';
+import { rgbToHex } from '../../../utils/rgbToHex';
 
 interface IProductoBar {
   producto: Producto;
@@ -58,8 +59,27 @@ const ProductoBar = ({ producto }: IProductoBar) => {
     };
     agregarMovimiento(req);
   };
-  const [collapsed, setCollapsed] = useState(true);
   const theme = useTheme();
+
+  const getColorAdvertencia = (cantActual: number, cantAdvertencia) => {
+    if (cantActual > cantAdvertencia) {
+      return '#00cc00';
+    }
+    if (cantAdvertencia === cantActual) {
+      return '#ff6600';
+    }
+
+    if (cantAdvertencia > cantActual) {
+      return '#cc0000';
+    }
+  };
+  const isMostrarAdvertencia = (cantActual: number, cantAdvertencia) => {
+    if (cantAdvertencia === 0) {
+      return false;
+    }
+
+    return true;
+  };
 
   return (
     <Card style={styles.card}>
@@ -71,6 +91,7 @@ const ProductoBar = ({ producto }: IProductoBar) => {
               borderColor: producto.categoria.color
                 ? producto.categoria.color
                 : theme.colors.outlineVariant,
+              backgroundColor: theme.colors.elevation.level1,
             },
           ]}
           onPress={() =>
@@ -99,7 +120,6 @@ const ProductoBar = ({ producto }: IProductoBar) => {
                   producto.nombre.slice(1)}
               </Text>
               <View style={styles.categoriaContainer}>
-                {/* <Icon source={producto.categoria.icon} size={12} /> */}
                 <Text style={styles.textCategoria}>
                   {producto.categoria.name}
                 </Text>
@@ -109,10 +129,12 @@ const ProductoBar = ({ producto }: IProductoBar) => {
         </TouchableRipple>
         <View
           style={{
-            paddingHorizontal: 15,
+            paddingHorizontal: 12,
             width: '30%',
             display: 'flex',
             flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}>
           <IconButton
             mode="contained"
@@ -130,18 +152,68 @@ const ProductoBar = ({ producto }: IProductoBar) => {
             }}
             icon="cart-heart"
           />
+          {isMostrarAdvertencia(cantidad, producto.cantidadAdvertencia) && (
+            <View
+              style={{
+                width: 15,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: getColorAdvertencia(
+                  cantidad,
+                  producto.cantidadAdvertencia,
+                ),
+              }}
+            />
+          )}
         </View>
-        <SelectorCantidad
-          cantidad={cantidad}
-          onDecrement={() => hacerMovimiento(false)}
-          onIncrement={() => hacerMovimiento(true)}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            // width: '30%',
+            alignItems: 'center',
+            gap: 5,
+            marginRight: 20,
+          }}>
+          <SelectorCantidad
+            cantidad={cantidad}
+            onDecrement={() => hacerMovimiento(false)}
+            onIncrement={() => hacerMovimiento(true)}
+            styles={style}
+          />
+        </View>
       </Card.Content>
     </Card>
   );
 };
 
 export default ProductoBar;
+
+const style = StyleSheet.create({
+  row: {
+    width: '100%',
+    paddingHorizontal: 10,
+    borderBottomWidth: 0.6,
+    borderBottomColor: rgbToHex('160, 160, 160'),
+  },
+  lista: {
+    height: '64%',
+  },
+  iconoItem: {
+    alignSelf: 'center',
+    padding: 5,
+    borderRadius: 20,
+    elevation: 5,
+  },
+  rightContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 150, // Adjust this value as needed
+  },
+  cantidad: {
+    flex: 0,
+    width: 30,
+  },
+});
 
 const styles = StyleSheet.create({
   card: {
@@ -165,7 +237,7 @@ const styles = StyleSheet.create({
   },
   leftSection: {
     // margin: 10,
-    // elevation: 1,
+    elevation: 2,
     width: '40%',
     flexDirection: 'row',
     justifyContent: 'space-between',
