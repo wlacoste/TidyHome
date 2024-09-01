@@ -1,4 +1,4 @@
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -10,7 +10,6 @@ import {
   List,
   useTheme,
 } from 'react-native-paper';
-import { Producto } from '../../models/productos';
 import SelectorCantidad from '../SelectorCantidad';
 import { rgbToHex } from '../../utils/rgbToHex';
 import { ItemCompra } from '../ListaComprasGenerada';
@@ -41,45 +40,6 @@ const ListaCompras = ({
     return <ActivityIndicator />;
   }
 
-  const renderItem = ({ item }: { item: Producto }) => {
-    const productoState = getProductoState(item.id);
-
-    return (
-      <List.Item
-        style={styles.row}
-        title={item.nombre}
-        titleStyle={{ marginLeft: -4 }}
-        left={() => (
-          <View
-            style={[
-              styles.iconoItem,
-              { backgroundColor: theme.colors.onPrimary },
-            ]}>
-            <Icon
-              source={item.categoria.icon}
-              size={18}
-              color={item.categoria.color}
-            />
-          </View>
-        )}
-        right={() => (
-          <View style={styles.rightContent}>
-            <Checkbox
-              status={productoState?.checked ? 'checked' : 'unchecked'}
-              onPress={() => toggleCheckbox(item.id)}
-            />
-            <SelectorCantidad
-              cantidad={productoState?.cantidadAComprar || 1}
-              onDecrement={() => handleDecrement(item.id)}
-              onIncrement={() => handleIncrement(item.id)}
-              styles={styles}
-            />
-          </View>
-        )}
-      />
-    );
-  };
-
   return (
     <Card
       style={{ flex: 1, justifyContent: 'flex-start', marginHorizontal: 10 }}>
@@ -91,12 +51,6 @@ const ListaCompras = ({
       </View>
       <Divider />
       <View style={{}}>
-        {/* <FlatList
-          style={styles.lista}
-          data={filteredProducts}
-          renderItem={renderItem}
-          keyExtractor={item => item.id.toString()}
-        /> */}
         <ScrollView style={styles.lista}>
           {filteredProducts.map(item => {
             const productoState = getProductoState(item.id);
