@@ -1,14 +1,6 @@
-import {
-  SQLiteDatabase,
-  enablePromise,
-  openDatabase,
-} from 'react-native-sqlite-storage';
-import { IProducto, MovimientoProducto, Producto } from '../models/productos';
-import {
-  Categoria,
-  DefaultCategories,
-  DefaultProductos,
-} from '../models/categorias';
+import { enablePromise, openDatabase } from 'react-native-sqlite-storage';
+import { MovimientoProducto, Producto } from '../models/productos';
+import { DefaultCategories, DefaultProductos } from '../models/categorias';
 
 export const getDBConnection = async () => {
   return openDatabase({ name: 'cleanApp.db', location: 'default' });
@@ -150,6 +142,22 @@ export const createTables = async () => {
       },
       error => {
         console.error('Error creating table: ProductosPorLista', error);
+      },
+    );
+
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS TodoItem (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      tituloNota TEXT,
+      fechaNota TEXT,
+      nota TEXT
+      );`,
+      [],
+      () => {
+        console.log('TodoItem table created successfully');
+      },
+      error => {
+        console.error('Error creating table: TodoItem', error);
       },
     );
   });
