@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -41,16 +41,14 @@ const ListaCompras = ({
   }
 
   return (
-    <Card
-      style={{ flex: 1, justifyContent: 'flex-start', marginHorizontal: 10 }}>
-      <View>
+    <View style={styles.container}>
+      <Card style={styles.card}>
         <CategoryChipSelector
           seleccionados={seleccionados}
           setSeleccionados={setSeleccionados}
         />
-      </View>
-      <Divider />
-      <View style={{}}>
+        <Divider />
+
         <ScrollView style={styles.lista}>
           {filteredProducts.map(item => {
             const productoState = getProductoState(item.id);
@@ -96,22 +94,25 @@ const ListaCompras = ({
           mode="contained"
           icon={'cart-plus'}
           onPress={handleSubmit}
-          style={{
-            margin: 5,
-
-            marginHorizontal: 35,
-            borderRadius: 8,
-          }}>
+          style={styles.button}>
           Generar lista de compras
         </Button>
-      </View>
-    </Card>
+      </Card>
+    </View>
   );
 };
 
 export default ListaCompras;
 
 const styles = StyleSheet.create({
+  card: {
+    flex: 1,
+    marginBottom: 10,
+  },
+  container: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
   row: {
     width: '100%',
     paddingHorizontal: 10,
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     borderBottomColor: rgbToHex('160, 160, 160'),
   },
   lista: {
-    height: '64%',
+    height: 420,
   },
   iconoItem: {
     alignSelf: 'center',
@@ -130,10 +131,18 @@ const styles = StyleSheet.create({
   rightContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: 150, // Adjust this value as needed
+    width: 150,
   },
   cantidad: {
     flex: 0,
     width: 30,
+  },
+  button: {
+    margin: 5,
+    marginTop: 10,
+    marginBottom: 15,
+    height: 43,
+    marginHorizontal: 35,
+    borderRadius: 8,
   },
 });

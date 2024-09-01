@@ -175,7 +175,7 @@ const ListaCompraGenerada = ({
                   style={[styles.input, { color: theme.colors.onSurface }]}
                   value={nuevoNombre}
                   onChangeText={e => setNuevoNombre(e)}
-                  placeholder="Lista de compras"
+                  placeholder={listaItems.titulo}
                   placeholderTextColor={theme.colors.onSurfaceVariant}
                   onBlur={() => {
                     Keyboard.dismiss();
@@ -195,16 +195,20 @@ const ListaCompraGenerada = ({
               </View>
             ) : (
               <>
-                <Text style={[styles.title, { color: theme.colors.onSurface }]}>
-                  {listaItems.titulo}
-                </Text>
-                <IconButton
-                  icon="pencil-outline"
-                  onPress={() => setCambiarNombre(true)}
-                  containerColor={theme.colors.surface}
-                  iconColor={theme.colors.onBackground}
-                  size={20}
-                />
+                <TouchableRipple onPress={() => setCambiarNombre(true)}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text
+                      style={[styles.title, { color: theme.colors.onSurface }]}>
+                      {listaItems.titulo}
+                    </Text>
+                    <IconButton
+                      icon="pencil-outline"
+                      containerColor={theme.colors.surface}
+                      iconColor={theme.colors.onBackground}
+                      size={20}
+                    />
+                  </View>
+                </TouchableRipple>
               </>
             )}
           </View>

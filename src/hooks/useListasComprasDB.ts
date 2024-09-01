@@ -7,72 +7,138 @@ import { formatDate } from '../utils/formatDate';
 
 export const useListasComprasDB = () => {
   const [listas, setListas] = useState<IListasCompras[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchListas();
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        await fetchListasCompras();
+        setError(null);
+      } catch (err) {
+        setError('Failed to fetch shopping lists');
+        console.error('Error in fetchListasCompras:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
   }, []);
 
-  const fetchListas = async () => {
+  const fetchListasCompras = async () => {
     const db = await getDBConnection();
 
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM ListaCompras ORDER BY fechaCreacion DESC',
+        `SELECT 
+          LC.id, 
+          LC.fechaCreacion, 
+          LC.titulo, 
+          LC.comentario,
+          PPL.id as itemId,
+          PPL.nombre as item,
+          PPL.cantidad
+        FROM ListaCompras LC
+        LEFT JOIN ProductosPorLista PPL ON LC.id = PPL.idListaCompra
+        ORDER BY LC.id DESC, PPL.id`,
         [],
-        (_, { rows }) => {
-          const fetchedListas: IListasCompras[] = [];
-          for (let i = 0; i < rows.length; i++) {
-            const lista = rows.item(i);
-            fetchedListas.push({
-              id: lista.id.toString(),
-              fecha: lista.fechaCreacion,
-              titulo: lista.titulo,
-              comentario: lista.comentario,
-              items: [],
-            });
-          }
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        (_, result) => {
+          const rows = result.rows.raw();
+          const listasMap = new Map<string, IListasCompras>();
 
-          setListas(fetchedListas);
-          fetchProductosPorLista(fetchedListas);
+          rows.forEach(row => {
+            if (!listasMap.has(row.id.toString())) {
+              listasMap.set(row.id.toString(), {
+                id: row.id.toString(),
+                items: [],
+                fecha: row.fechaCreacion,
+                titulo: row.titulo,
+                comentario: row.comentario,
+              });
+            }
+
+            const lista = listasMap.get(row.id.toString())!;
+            if (row.itemId) {
+              lista.items.push({
+                id: row.itemId,
+                item: row.item,
+                cantidad: row.cantidad,
+              });
+            }
+          });
+
+          setListas(Array.from(listasMap.values()));
         },
         error => {
-          console.error('Error fetching listas:', error);
+          console.error('Error fetching listas compras:', error);
         },
       );
     });
   };
 
-  const fetchProductosPorLista = async (fetchedListas: IListasCompras[]) => {
-    const db = await getDBConnection();
+  // const fetchListas = async () => {
+  //   const db = await getDBConnection();
 
-    db.transaction(tx => {
-      fetchedListas.forEach(lista => {
-        tx.executeSql(
-          'SELECT * FROM ProductosPorLista WHERE idListaCompra = ?',
-          [lista.id],
-          (_, { rows }) => {
-            const items: ItemCompra[] = [];
-            for (let i = 0; i < rows.length; i++) {
-              const producto = rows.item(i);
-              items.push({
-                id: producto.id,
-                item: producto.nombre,
-                cantidad: producto.cantidad,
-              });
-            }
-            lista.items = items;
-          },
-          error => {
-            console.error('Error fetching productos por lista:', error);
-          },
-        );
-      });
-    });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  //   db.transaction(tx => {
+  //     tx.executeSql(
+  //       'SELECT * FROM ListaCompras ORDER BY fechaCreacion DESC',
+  //       [],
+  //       (_, { rows }) => {
+  //         const fetchedListas: IListasCompras[] = [];
+  //         for (let i = 0; i < rows.length; i++) {
+  //           const lista = rows.item(i);
+  //           fetchedListas.push({
+  //             id: lista.id.toString(),
+  //             fecha: lista.fechaCreacion,
+  //             titulo: lista.titulo,
+  //             comentario: lista.comentario,
+  //             items: [],
+  //           });
+  //         }
+  //         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
-    setListas([...fetchedListas]);
-  };
+  //         setListas(fetchedListas);
+  //         fetchProductosPorLista(fetchedListas);
+  //       },
+  //       error => {
+  //         console.error('Error fetching listas:', error);
+  //       },
+  //     );
+  //   });
+  // };
+
+  // const fetchProductosPorLista = async (fetchedListas: IListasCompras[]) => {
+  //   const db = await getDBConnection();
+
+  //   db.transaction(tx => {
+  //     fetchedListas.forEach(lista => {
+  //       tx.executeSql(
+  //         'SELECT * FROM ProductosPorLista WHERE idListaCompra = ?',
+  //         [lista.id],
+  //         (_, { rows }) => {
+  //           const items: ItemCompra[] = [];
+  //           for (let i = 0; i < rows.length; i++) {
+  //             const producto = rows.item(i);
+  //             items.push({
+  //               id: producto.id,
+  //               item: producto.nombre,
+  //               cantidad: producto.cantidad,
+  //             });
+  //           }
+  //           lista.items = items;
+  //         },
+  //         error => {
+  //           console.error('Error fetching productos por lista:', error);
+  //         },
+  //       );
+  //     });
+  //   });
+  //   LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+  //   setListas([...fetchedListas]);
+  // };
 
   const handleNewLista = async (items: ItemCompra[]) => {
     const db = await getDBConnection();
@@ -197,5 +263,6 @@ export const useListasComprasDB = () => {
     agregarAlista,
     eliminarLista,
     cambiarNombre,
+    isLoading,
   };
 };
