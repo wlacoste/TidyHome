@@ -18,7 +18,6 @@ const ListaAcciones = ({ eliminar, compartir }) => {
           leadingIcon={'share-variant'}
           onPress={() => {
             closeMenu();
-            // handleEdit();
             compartir();
           }}
           title="Compartir"
@@ -27,7 +26,6 @@ const ListaAcciones = ({ eliminar, compartir }) => {
           leadingIcon={'trash-can'}
           onPress={() => {
             closeMenu();
-            // handleDelete();
             eliminar();
           }}
           title="Eliminar"

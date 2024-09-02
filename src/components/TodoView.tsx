@@ -1,44 +1,95 @@
-import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { useTodoItemCrud } from '../hooks/useTodoItems';
+import React, { useRef, useState } from 'react';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
+import { ITodoItem, useTodoItemCrud } from '../hooks/useTodoItems';
 import {
   ActivityIndicator,
   Button,
   TextInput,
   Text,
   Card,
+  IconButton,
+  useTheme,
+  Divider,
 } from 'react-native-paper';
 import { formatDate } from '../utils/formatDate';
 import ListaAcciones from './ListaCompras/AccionesLista';
+import { TextInput as TextInputNative } from 'react-native';
+interface EditingItem extends ITodoItem {
+  editedTituloNota: string;
+  editedNota: string;
+}
 
 const TodoView = () => {
   const { todoItems, addTodoItem, updateTodoItem, deleteTodoItem, isLoading } =
     useTodoItemCrud();
-
-  const [titulo, setTitulo] = useState('Nota');
+  const theme = useTheme();
   const [nota, setNota] = useState('');
+  const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
 
   const handleAddTodo = () => {
-    if (titulo.trim() && nota.trim()) {
-      const fechaNota = formatDate(new Date());
-      addTodoItem(titulo, fechaNota, nota);
-      setTitulo('Nota');
+    if (nota.trim()) {
+      const lines = nota.trim().split('\n');
+      let titulo = 'Nota';
+      let contenido = nota.trim();
+
+      const MAX_TITLE_LENGTH = 40;
+
+      if (lines.length > 1 && lines[0].length <= MAX_TITLE_LENGTH) {
+        titulo = lines[0].trim();
+        contenido = lines.slice(1).join('\n').trim();
+      }
+
+      const fechaNota = formatDate(new Date(), true);
+      addTodoItem(titulo, fechaNota, contenido);
       setNota('');
     }
+  };
+
+  const handleEditItem = (item: ITodoItem) => {
+    setEditingItem({
+      ...item,
+      editedTituloNota: item.tituloNota,
+      editedNota: item.nota,
+    });
   };
 
   if (isLoading) {
     return <ActivityIndicator animating={true} />;
   }
+
   const handleShare = () => {
     console.log('hola');
   };
+
+  const handleSaveEdit = () => {
+    if (editingItem) {
+      updateTodoItem(
+        editingItem.id,
+        editingItem.editedTituloNota,
+        editingItem.fechaNota,
+        editingItem.editedNota,
+      );
+      setEditingItem(null);
+    }
+  };
+
+  const handleDismissKeyboard = () => {
+    Keyboard.dismiss();
+    setEditingItem(null);
+  };
   return (
-    <View style={styles.container}>
-      {
+    <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
+      <View style={styles.container}>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Nota"
+            placeholder={'Nota:\n' + 'Escribe tu nota aquí...'}
             value={nota}
             onChangeText={setNota}
             multiline
@@ -55,30 +106,89 @@ const TodoView = () => {
             Guardar Nota
           </Button>
         </View>
-      }
 
-      <ScrollView style={styles.scrollView}>
-        {todoItems.map(item => (
-          <Card key={`${item.id}-${item.nota}`} style={styles.card}>
-            <View style={styles.cardTitleContainer}>
-              <Text
-                style={styles.cardTitle}
-                numberOfLines={1}
-                ellipsizeMode="tail">
-                {item.tituloNota}
-              </Text>
-              <ListaAcciones
-                eliminar={() => deleteTodoItem(item.id)}
-                compartir={handleShare}
-              />
-            </View>
-            <Card.Content style={styles.cardContent}>
-              <Text>{item.nota}</Text>
-            </Card.Content>
-          </Card>
-        ))}
-      </ScrollView>
-    </View>
+        <ScrollView style={styles.scrollView}>
+          {todoItems.map(item => (
+            <Card key={`${item.id}-${item.nota}`} style={styles.card}>
+              <View style={styles.cardTitleContainer}>
+                {editingItem && editingItem.id === item.id ? (
+                  <>
+                    <TextInputNative
+                      style={[
+                        styles.tituloInput,
+                        {
+                          color: theme.colors.onSurface,
+                          borderColor: theme.colors.outline,
+                          backgroundColor: theme.colors.background,
+                        },
+                      ]}
+                      value={editingItem.editedTituloNota}
+                      onChangeText={text =>
+                        setEditingItem({
+                          ...editingItem,
+                          editedTituloNota: text,
+                        })
+                      }
+                    />
+                    <View style={{ flex: 1 }}>
+                      <Text>{''}</Text>
+                    </View>
+                  </>
+                ) : (
+                  <Text
+                    style={styles.cardTitle}
+                    numberOfLines={1}
+                    onPress={() => handleEditItem(item)}
+                    ellipsizeMode="tail">
+                    {item.tituloNota}
+                  </Text>
+                )}
+                <Text numberOfLines={1} ellipsizeMode="tail">
+                  {item.fechaNota}
+                </Text>
+                {editingItem && editingItem.id === item.id ? (
+                  <IconButton
+                    icon="content-save"
+                    size={20}
+                    onPress={handleSaveEdit}
+                  />
+                ) : (
+                  <ListaAcciones
+                    eliminar={() => deleteTodoItem(item.id)}
+                    compartir={handleShare}
+                  />
+                )}
+              </View>
+              <Divider />
+              <TouchableOpacity onPress={() => handleEditItem(item)}>
+                {editingItem && editingItem.id === item.id ? (
+                  <View style={[styles.cardContent, { padding: 0, margin: 0 }]}>
+                    <TextInput
+                      style={{
+                        paddingVertical: 10,
+                      }}
+                      contentStyle={{
+                        width: '100%',
+                      }}
+                      mode="outlined"
+                      value={editingItem.editedNota}
+                      onChangeText={text =>
+                        setEditingItem({ ...editingItem, editedNota: text })
+                      }
+                      multiline
+                    />
+                  </View>
+                ) : (
+                  <Card.Content style={styles.cardContent}>
+                    <Text style={{ fontSize: 16 }}>{item.nota}</Text>
+                  </Card.Content>
+                )}
+              </TouchableOpacity>
+            </Card>
+          ))}
+        </ScrollView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -86,6 +196,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+
+    flexGrow: 1,
+    minHeight: '100%',
+  },
+  tituloInput: {
+    height: 35,
+    padding: 0,
+    paddingHorizontal: 8,
+    fontSize: 17,
+    fontWeight: '700',
+    borderRadius: 3,
+    borderWidth: 0.8,
   },
   addButton: {
     marginBottom: 16,
@@ -105,6 +227,7 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     gap: 10,
+    minHeight: 500,
   },
   noteInputContent: {
     paddingTop: 8,
@@ -132,10 +255,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    paddingTop: 12,
+    paddingVertical: 5,
+    paddingTop: 0,
+    paddingBottom: 0,
     paddingRight: 4,
-    height: 40,
+    height: 45,
+
+    // alignContent: 'center',
   },
   cardTitle: {
     fontSize: 16,
