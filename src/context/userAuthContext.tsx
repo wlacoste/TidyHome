@@ -68,6 +68,17 @@ const UserAuthContextProvider = ({
     apellido: string,
   ) {
     try {
+      const signInMethods = await auth().fetchSignInMethodsForEmail(email);
+
+      if (signInMethods.length > 0) {
+        // Email already exists
+        Toast.show({
+          type: 'error',
+          text1: 'Registration failed',
+          text2: 'This email is already registered',
+        });
+        return;
+      }
       const userCredential = await auth().createUserWithEmailAndPassword(
         email,
         password,

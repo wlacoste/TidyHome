@@ -50,12 +50,14 @@ const SignupScreen = ({ navigation }: SignUpScreenProps) => {
           onChangeText={text => setApellido(text)}
         />
         <TextInput
+          keyboardType="email-address"
           placeholder="Mail"
           style={styles.input}
           value={mail}
           onChangeText={text => setMail(text)}
         />
         <TextInput
+          keyboardType="visible-password"
           placeholder="Contraseña"
           right={
             <TextInput.Icon
