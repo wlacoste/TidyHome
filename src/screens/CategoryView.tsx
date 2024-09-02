@@ -1,11 +1,4 @@
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import {
   Button,
@@ -17,9 +10,7 @@ import {
   Modal,
   Portal,
   Switch,
-  Text,
   TextInput,
-  TouchableRipple,
   useTheme,
 } from 'react-native-paper';
 import { useCategories } from '../context/categoryContext';
@@ -29,7 +20,6 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 import ColorPicker from './ColorPicker';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CategoryView = () => {
   const theme = useTheme();

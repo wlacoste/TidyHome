@@ -43,7 +43,6 @@ const ListaCompraGenerada = ({
 }: ListaComprasProps) => {
   const { id, fecha, items } = listaItems;
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
-  const [menuVisible, setMenuVisible] = useState(true);
   const [newItem, setNewItem] = useState('');
   const [nuevoNombre, setNuevoNombre] = useState('');
   const [isAddingItem, setIsAddingItem] = useState(false);
