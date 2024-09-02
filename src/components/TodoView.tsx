@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Share,
 } from 'react-native';
 import { ITodoItem, useTodoItemCrud } from '../hooks/useTodoItems';
 import {
@@ -64,10 +65,25 @@ const TodoView = () => {
     return <ActivityIndicator animating={true} />;
   }
 
-  const handleShare = () => {
-    console.log('hola');
+  const handleShare = async (item: ITodoItem) => {
+    const message = `${item.tituloNota}: \n ${item.nota}`;
+    try {
+      const result = await Share.share({
+        message: message,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log('Shared with activity type of', result.activityType);
+        } else {
+          console.log('Shared');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log('Share dismissed');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
-
   const handleSaveEdit = () => {
     if (editingItem) {
       updateTodoItem(
@@ -155,7 +171,7 @@ const TodoView = () => {
                 ) : (
                   <ListaAcciones
                     eliminar={() => deleteTodoItem(item.id)}
-                    compartir={handleShare}
+                    compartir={() => handleShare(item)}
                   />
                 )}
               </View>
