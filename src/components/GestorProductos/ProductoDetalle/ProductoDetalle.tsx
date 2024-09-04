@@ -39,7 +39,7 @@ const MetricDisplay = ({ label, value }) => {
       style={{
         display: 'flex',
         flexDirection: 'row',
-        width: '100%',
+
         overflow: 'visible',
       }}>
       <Text style={{ fontSize: 15, marginBottom: 10 }}>{label}: </Text>
@@ -130,15 +130,41 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
         <View style={{ paddingHorizontal: 10 }}>
           <Text style={{ paddingLeft: 10 }}>Detalles:</Text>
           <View style={styles.detalles}>
-            <View style={{ width: '50%' }}>
+            <View
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 10,
+              }}>
               <MetricDisplay
                 label={'Cantidad actual'}
                 value={metricas.cantidadActual}
               />
               <MetricDisplay
+                label={'Variación semana'}
+                value={metricas.avgWeeklyChange.toFixed(2)}
+              />
+            </View>
+
+            <View
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 10,
+              }}>
+              <MetricDisplay
                 label={'Variación diaria'}
                 value={metricas.avgDailyChange.toFixed(2)}
               />
+              <MetricDisplay
+                label={'Última compra'}
+                value={ultimaCompra === 0 ? 'Hoy' : `${ultimaCompra} días`}
+              />
+            </View>
+            <View
+              style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
               <MetricDisplay
                 label={'Estimado duracíon'}
                 value={
@@ -146,16 +172,6 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
                     ? 'N/A (aumentando)'
                     : metricas.daysUntilEmpty
                 }
-              />
-            </View>
-            <View style={{ width: '50%' }}>
-              <MetricDisplay
-                label={'Variación semanal'}
-                value={metricas.avgWeeklyChange.toFixed(2)}
-              />
-              <MetricDisplay
-                label={'Ultima compra'}
-                value={ultimaCompra === 0 ? 'Hoy' : `${ultimaCompra} días`}
               />
             </View>
           </View>
@@ -215,7 +231,7 @@ const styles = StyleSheet.create({
   detalles: {
     width: width - 20,
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     padding: 10,
     // width: '100%',
     height: 110,
