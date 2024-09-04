@@ -168,11 +168,11 @@ export const rellenar = (
   }
 
   const arrayCompleto = fillDateGaps(startDate, endDate, filteredValues);
-
   const valoresAGrafico = arrayCompleto.map(item => {
     return {
       value: item.value,
       label: getFechaCorta(item.fechaDate),
+      fechaDate: item.fechaDate,
     };
   });
 

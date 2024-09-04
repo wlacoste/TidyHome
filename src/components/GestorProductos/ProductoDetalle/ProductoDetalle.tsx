@@ -28,10 +28,27 @@ import { useFab } from '../../../context/fabContext';
 import { useFocusEffect } from '@react-navigation/native';
 import EditarProducto from '../ProductForm/EditarProducto';
 import GraficoEvolutivo from './GraficoEvolutivo';
+import { useMovimiento } from './useMovimiento';
 // import GraficoEvolutivo from './GraficoEvolutivo';
 
 type Props = NativeStackScreenProps<ProductoList, 'ProductoDetalle'>;
 
+const MetricDisplay = ({ label, value }) => {
+  return (
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        overflow: 'visible',
+      }}>
+      <Text style={{ fontSize: 15, marginBottom: 10 }}>{label}: </Text>
+      <Text style={{ fontSize: 16, marginBottom: 10, fontWeight: '800' }}>
+        {value}
+      </Text>
+    </View>
+  );
+};
 const ProductoDetalle: React.FC<Props> = ({ route }) => {
   const { productoId } = route.params;
   const theme = useTheme();
@@ -42,7 +59,9 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
   const [backButtonPressed, setBackButtonPressed] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [visibleDelete, setVisibleDelete] = React.useState(false);
-
+  const { valoresGrafico, metricas, ultimaCompra } = useMovimiento(
+    producto?.detalle,
+  );
   const showDialog = () => setVisibleDelete(true);
 
   const hideDialog = () => setVisibleDelete(false);
@@ -108,14 +127,43 @@ const ProductoDetalle: React.FC<Props> = ({ route }) => {
           />
           <Text style={styles.titulo}>{producto.nombre}</Text>
         </View>
-        <View>
+        <View style={{ paddingHorizontal: 10 }}>
           <Text style={{ paddingLeft: 10 }}>Detalles:</Text>
-          <View style={styles.detalles} />
+          <View style={styles.detalles}>
+            <View style={{ width: '50%' }}>
+              <MetricDisplay
+                label={'Cantidad actual'}
+                value={metricas.cantidadActual}
+              />
+              <MetricDisplay
+                label={'Variación diaria'}
+                value={metricas.avgDailyChange.toFixed(2)}
+              />
+              <MetricDisplay
+                label={'Estimado duracíon'}
+                value={
+                  metricas.daysUntilEmpty === Infinity
+                    ? 'N/A (aumentando)'
+                    : metricas.daysUntilEmpty
+                }
+              />
+            </View>
+            <View style={{ width: '50%' }}>
+              <MetricDisplay
+                label={'Variación semanal'}
+                value={metricas.avgWeeklyChange.toFixed(2)}
+              />
+              <MetricDisplay
+                label={'Ultima compra'}
+                value={ultimaCompra === 0 ? 'Hoy' : `${ultimaCompra} días`}
+              />
+            </View>
+          </View>
         </View>
         <View>
           <Text style={{ paddingLeft: 10 }}>Evolucion:</Text>
           <View style={styles.metrica}>
-            <GraficoEvolutivo movimientos={producto.detalle} />
+            <GraficoEvolutivo movimientos={valoresGrafico} />
           </View>
         </View>
         <View>
@@ -166,11 +214,17 @@ const styles = StyleSheet.create({
   },
   detalles: {
     width: width - 20,
-    height: 100,
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 10,
+    // width: '100%',
+    height: 110,
     borderWidth: 1,
     borderColor: rgbToHex('60,60,60'),
     margin: 10,
+
     borderRadius: 5,
+    alignSelf: 'center',
   },
   metrica: {
     width: width - 20,
