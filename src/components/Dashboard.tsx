@@ -5,6 +5,7 @@ import { useProductContext } from '../context/productContext';
 import { Producto } from '../models/productos';
 import { Categoria } from '../models/categorias';
 import { BarChart, PieChart } from 'react-native-gifted-charts';
+import CatFallback from './CatFallback';
 
 interface CategoryCount {
   category: Categoria | null;
@@ -96,6 +97,15 @@ const Dashboard = () => {
     }
   }, [theme]);
 
+  if (productos.length === 0) {
+    return (
+      <CatFallback
+        titulo={'Aquí no hay estadísticas.'}
+        subtitulo={'Añade productos y con el tiempo verás su evolución.'}
+        numeroImagen={1}
+      />
+    );
+  }
   return (
     <View style={styles.container}>
       <Card style={styles.chartContainer}>

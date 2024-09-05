@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useListasCompras } from '../../hooks/useHandleListaCompras';
 import { useListasComprasDB } from '../../hooks/useListasComprasDB';
 import { ActivityIndicator } from 'react-native-paper';
+import CatFallback from '../CatFallback';
 
 export interface IListasCompras {
   id: string;
@@ -32,6 +33,15 @@ const ListaScreen = () => {
       </View>
       {isLoading ? (
         <ActivityIndicator />
+      ) : listas.length === 0 ? (
+        <View style={{ top: -100 }}>
+          <CatFallback
+            titulo={
+              'Productos agotandose o que hayas marcado apareceran arriba para que puedas generar una nueva lista'
+            }
+            numeroImagen={3}
+          />
+        </View>
       ) : (
         <ScrollView style={styles.listaGenerada}>
           {listas.map(lista => (

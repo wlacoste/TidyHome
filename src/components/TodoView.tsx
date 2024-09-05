@@ -22,14 +22,21 @@ import {
 import { formatDate } from '../utils/formatDate';
 import ListaAcciones from './ListaCompras/AccionesLista';
 import { TextInput as TextInputNative } from 'react-native';
+import CatFallback from './CatFallback';
 interface EditingItem extends ITodoItem {
   editedTituloNota: string;
   editedNota: string;
 }
 
 const TodoView = () => {
-  const { todoItems, addTodoItem, updateTodoItem, deleteTodoItem, isLoading } =
-    useTodoItemCrud();
+  const {
+    todoItems,
+    addTodoItem,
+    updateTodoItem,
+    deleteTodoItem,
+    isLoading,
+    noItems,
+  } = useTodoItemCrud();
   const theme = useTheme();
   const [nota, setNota] = useState('');
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
@@ -100,6 +107,7 @@ const TodoView = () => {
     Keyboard.dismiss();
     setEditingItem(null);
   };
+
   return (
     <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
       <View style={styles.container}>
@@ -122,87 +130,95 @@ const TodoView = () => {
             Guardar Nota
           </Button>
         </View>
-
-        <ScrollView style={styles.scrollView}>
-          {todoItems.map(item => (
-            <Card key={`${item.id}-${item.nota}`} style={styles.card}>
-              <View style={styles.cardTitleContainer}>
-                {editingItem && editingItem.id === item.id ? (
-                  <>
-                    <TextInputNative
-                      style={[
-                        styles.tituloInput,
-                        {
-                          color: theme.colors.onSurface,
-                          borderColor: theme.colors.outline,
-                          backgroundColor: theme.colors.background,
-                        },
-                      ]}
-                      value={editingItem.editedTituloNota}
-                      onChangeText={text =>
-                        setEditingItem({
-                          ...editingItem,
-                          editedTituloNota: text,
-                        })
-                      }
-                    />
-                    <View style={{ flex: 1 }}>
-                      <Text>{''}</Text>
-                    </View>
-                  </>
-                ) : (
-                  <Text
-                    style={styles.cardTitle}
-                    numberOfLines={1}
-                    onPress={() => handleEditItem(item)}
-                    ellipsizeMode="tail">
-                    {item.tituloNota}
+        {noItems ? (
+          <CatFallback
+            titulo={'Aquí no hay notas aún.'}
+            subtitulo={'Intenta escribir una para leerla luego'}
+            numeroImagen={2}
+          />
+        ) : (
+          <ScrollView style={styles.scrollView}>
+            {todoItems.map(item => (
+              <Card key={`${item.id}-${item.nota}`} style={styles.card}>
+                <View style={styles.cardTitleContainer}>
+                  {editingItem && editingItem.id === item.id ? (
+                    <>
+                      <TextInputNative
+                        style={[
+                          styles.tituloInput,
+                          {
+                            color: theme.colors.onSurface,
+                            borderColor: theme.colors.outline,
+                            backgroundColor: theme.colors.background,
+                          },
+                        ]}
+                        value={editingItem.editedTituloNota}
+                        onChangeText={text =>
+                          setEditingItem({
+                            ...editingItem,
+                            editedTituloNota: text,
+                          })
+                        }
+                      />
+                      <View style={{ flex: 1 }}>
+                        <Text>{''}</Text>
+                      </View>
+                    </>
+                  ) : (
+                    <Text
+                      style={styles.cardTitle}
+                      numberOfLines={1}
+                      onPress={() => handleEditItem(item)}
+                      ellipsizeMode="tail">
+                      {item.tituloNota}
+                    </Text>
+                  )}
+                  <Text numberOfLines={1} ellipsizeMode="tail">
+                    {item.fechaNota}
                   </Text>
-                )}
-                <Text numberOfLines={1} ellipsizeMode="tail">
-                  {item.fechaNota}
-                </Text>
-                {editingItem && editingItem.id === item.id ? (
-                  <IconButton
-                    icon="content-save"
-                    size={20}
-                    onPress={handleSaveEdit}
-                  />
-                ) : (
-                  <ListaAcciones
-                    eliminar={() => deleteTodoItem(item.id)}
-                    compartir={() => handleShare(item)}
-                  />
-                )}
-              </View>
-              <Divider />
-              <TouchableOpacity onPress={() => handleEditItem(item)}>
-                {editingItem && editingItem.id === item.id ? (
-                  <View style={[styles.cardContent, { padding: 0, margin: 0 }]}>
-                    <TextInput
-                      style={{
-                        paddingVertical: 10,
-                      }}
-                      contentStyle={{
-                        width: '100%',
-                      }}
-                      mode="outlined"
-                      value={editingItem.editedNota}
-                      onChangeText={text =>
-                        setEditingItem({ ...editingItem, editedNota: text })
-                      }
-                      multiline
+                  {editingItem && editingItem.id === item.id ? (
+                    <IconButton
+                      icon="content-save"
+                      size={20}
+                      onPress={handleSaveEdit}
                     />
-                  </View>
-                ) : (
-                  <Card.Content style={styles.cardContent}>
-                    <Text style={{ fontSize: 16 }}>{item.nota}</Text>
-                  </Card.Content>
-                )}
-              </TouchableOpacity>
-            </Card>
-          ))}
-        </ScrollView>
+                  ) : (
+                    <ListaAcciones
+                      eliminar={() => deleteTodoItem(item.id)}
+                      compartir={() => handleShare(item)}
+                    />
+                  )}
+                </View>
+                <Divider />
+                <TouchableOpacity onPress={() => handleEditItem(item)}>
+                  {editingItem && editingItem.id === item.id ? (
+                    <View
+                      style={[styles.cardContent, { padding: 0, margin: 0 }]}>
+                      <TextInput
+                        style={{
+                          paddingVertical: 10,
+                        }}
+                        contentStyle={{
+                          width: '100%',
+                        }}
+                        mode="outlined"
+                        value={editingItem.editedNota}
+                        onChangeText={text =>
+                          setEditingItem({ ...editingItem, editedNota: text })
+                        }
+                        multiline
+                      />
+                    </View>
+                  ) : (
+                    <Card.Content style={styles.cardContent}>
+                      <Text style={{ fontSize: 16 }}>{item.nota}</Text>
+                    </Card.Content>
+                  )}
+                </TouchableOpacity>
+              </Card>
+            ))}
+          </ScrollView>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

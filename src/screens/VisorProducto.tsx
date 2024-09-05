@@ -7,6 +7,7 @@ import { ActivityIndicator, Searchbar, Text } from 'react-native-paper';
 import { useFab } from '../context/fabContext';
 import CategoryChipSelector from '../components/CategorySelector/CategoryChipSelector';
 import imagen from '../../assets/img/cat-mascot.png';
+import CatFallback from '../components/CatFallback';
 
 const VisorProducto = () => {
   const { productos, loading } = useProductContext();
@@ -45,16 +46,10 @@ const VisorProducto = () => {
   }
   if (productos.length === 0) {
     return (
-      <View style={styles.mensaje}>
-        <Image source={imagen} style={styles.avatar} />
-
-        <Text variant="titleLarge" style={styles.textomensaje}>
-          Aún no tenés productos.
-        </Text>
-        <Text variant="titleLarge" style={styles.textomensaje}>
-          Podes añadirlos y empezar a trackearlos!
-        </Text>
-      </View>
+      <CatFallback
+        titulo={'Aún no tenés productos.'}
+        subtitulo={' Podes añadirlos y empezar a trackearlos!'}
+      />
     );
   }
 

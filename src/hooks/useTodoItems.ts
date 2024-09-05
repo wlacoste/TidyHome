@@ -13,6 +13,33 @@ export const useTodoItemCrud = () => {
   const [todoItems, setTodoItems] = useState<ITodoItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [noItems, setNoItems] = useState(false);
+
+  const fetchAllTodoItems = useCallback(async () => {
+    const db = await getDBConnection();
+
+    return new Promise<void>((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          'SELECT * FROM TodoItem ORDER BY id DESC',
+          [],
+          (_, { rows }) => {
+            const items = rows.raw();
+            LayoutAnimation.configureNext(
+              LayoutAnimation.Presets.easeInEaseOut,
+            );
+            setTodoItems(items);
+            setNoItems(items.length === 0);
+            resolve();
+          },
+          error => {
+            console.error('Error fetching TodoItems:', error);
+            reject(error);
+          },
+        );
+      });
+    });
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -29,23 +56,6 @@ export const useTodoItemCrud = () => {
     };
 
     loadData();
-  }, []);
-
-  const fetchAllTodoItems = useCallback(async () => {
-    const db = await getDBConnection();
-
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM TodoItem ORDER BY id DESC',
-        [],
-        (_, { rows }) => {
-          const items = rows.raw();
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-          setTodoItems(items);
-        },
-        error => console.error('Error fetching TodoItems:', error),
-      );
-    });
   }, []);
 
   const addTodoItem = useCallback(
@@ -112,5 +122,6 @@ export const useTodoItemCrud = () => {
     deleteTodoItem,
     fetchAllTodoItems,
     isLoading,
+    noItems,
   };
 };
