@@ -14,6 +14,7 @@ import ProductStackNavigator from '../navigator/ProductNavigator';
 import { FabProvider } from '../context/fabContext';
 import ListaCompras from '../components/ListaCompras/ListaCompras';
 import ListaScreen from '../components/ListaCompras/ListaScreen';
+import Dashboard from '../components/Dashboard';
 
 const HomeScreen = () => {
   // const theme = useTheme<Theme>();
@@ -110,7 +111,7 @@ const HomeScreen = () => {
             <Tab.Screen
               key={'2'}
               name={'Estado'}
-              component={Todo}
+              component={Dashboard}
               options={{ headerShown: false }}
             />
             <Tab.Screen
