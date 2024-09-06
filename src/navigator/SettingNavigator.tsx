@@ -7,6 +7,7 @@ import ResetTables from '../components/ResetTables/Reset';
 import About from '../screens/About';
 import ThemeSwitcher from '../screens/Theme';
 import CategoryView from '../screens/CategoryView';
+import Exportacion from '../components/Exportacion';
 
 const SettingsStack = createNativeStackNavigator<SettingsList>();
 
@@ -29,6 +30,11 @@ function SettingsStackNavigator() {
       <SettingsStack.Screen name="Currency" component={ResetTables} />
       <SettingsStack.Screen name="About" component={About} />
       <SettingsStack.Screen name="Themes" component={ThemeSwitcher} />
+      <SettingsStack.Screen
+        name="ExportData"
+        component={Exportacion}
+        options={{ title: 'Exportar datos' }}
+      />
       <SettingsStack.Screen
         name="CategorySettings"
         component={CategoryView}

@@ -6,6 +6,7 @@ import { Producto } from '../models/productos';
 import { Categoria } from '../models/categorias';
 import { BarChart, PieChart } from 'react-native-gifted-charts';
 import CatFallback from './CatFallback';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface CategoryCount {
   category: Categoria | null;
@@ -107,7 +108,7 @@ const Dashboard = () => {
     );
   }
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Card style={styles.chartContainer}>
         <Text variant="titleMedium" style={{ paddingLeft: 20, marginTop: 10 }}>
           Items por categoria:
@@ -155,19 +156,16 @@ const Dashboard = () => {
           })}
         </View>
       </Card>
+
       <Card style={styles.chartContainer}>
         <Text variant="titleMedium" style={{ paddingLeft: 20, marginTop: 10 }}>
-          Items por categoria:
+          Productos por categoria:
         </Text>
         <View
           style={{
             alignSelf: 'center',
             flex: 1,
             marginTop: 10,
-            marginHorizontal: 5,
-            // paddingLeft: 0,
-            // paddingRight: 10,
-            // marginLeft: 10,
           }}>
           <BarChart
             // showFractionalValue
@@ -184,7 +182,7 @@ const Dashboard = () => {
             dashWidth={10}
           />
         </View>
-        {/* <View
+        <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-around',
@@ -193,25 +191,10 @@ const Dashboard = () => {
             flexWrap: 'wrap',
             width: '90%',
             marginHorizontal: 25,
-          }}>
-          {categoryCounts.map(categoria => {
-            return (
-              <View
-                key={`${categoria.label}-${categoria.category?.id}`}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  width: 120,
-                  //   marginRight: 20,
-                }}>
-                {renderDot(categoria.color)}
-                <Text>{categoria.label}</Text>
-              </View>
-            );
-          })}
-        </View> */}
+          }}
+        />
       </Card>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -221,13 +204,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
   },
   chartContainer: {
+    width: '100%',
+    paddingHorizontal: 20,
     marginTop: 20,
     alignContent: 'center',
     height: 330,
-
+    paddingTop: 5,
+    alignItems: 'center',
+  },
+  chartContainer1: {
+    flex: 1,
+    flexDirection: 'row',
+    marginTop: 20,
+    alignContent: 'center',
+    height: 330,
+    maxHeight: 330,
     paddingTop: 5,
     alignItems: 'center',
   },

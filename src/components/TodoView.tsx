@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   ScrollView,
@@ -181,6 +181,7 @@ const TodoView = () => {
                       icon="content-save"
                       size={20}
                       onPress={handleSaveEdit}
+                      iconColor={theme.colors.primary}
                     />
                   ) : (
                     <ListaAcciones
