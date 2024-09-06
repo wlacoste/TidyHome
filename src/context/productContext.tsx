@@ -15,6 +15,7 @@ import {
 import {
   deleteProducto,
   getAllProductsWithMovements,
+  updateFechaGuardado,
   updateProduct,
 } from '../service/product-service';
 import useProducto from '../app/producto/useProducto';
@@ -111,6 +112,8 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const eliminarProducto = async (id: number) => {
     try {
       await deleteProducto(id);
+      await updateFechaGuardado();
+
       // updateProductInArray(producto);
       setProductos(prevProducts =>
         prevProducts.filter(product => product.id !== id),
@@ -130,6 +133,8 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const agregarProducto = async (formu: IProductoForm) => {
     const agregado = await nuevoProducto(formu);
+
+    await updateFechaGuardado();
     if (agregado) {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setProductos(prev => [agregado, ...prev]);
@@ -145,6 +150,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const agregarMovimiento = async (mov: IMovimientoSimple) => {
     const result = await nuevoMovimiento(mov);
+    await updateFechaGuardado();
     if (result) {
       updateProductoWithMovimiento(result);
     }
@@ -153,6 +159,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const actualizarProducto = async (producto: Producto) => {
     try {
       await updateProduct(producto);
+      await updateFechaGuardado();
       updateProductInArray(producto);
       Toast.show({
         type: 'success',
@@ -174,6 +181,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
     };
     try {
       await updateProduct(producto);
+      await updateFechaGuardado();
       updateProductInArray(producto);
       Toast.show({
         type: 'success',
@@ -195,6 +203,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const eliminarMovimiento = async (id: number) => {
     const result = await borrarMovimiento(id);
+    await updateFechaGuardado();
     if (result) {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setProductos(prevProductos =>

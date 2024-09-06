@@ -18,7 +18,7 @@ export interface IGetColeccion {
   subColeccion: { coleccion: string; id?: string }[];
 }
 export interface IAddData {
-  data: { nanoId: string; [key: string]: any };
+  data: { nanoId?: string; [key: string]: any };
   setLoading: React.Dispatch<React.SetStateAction<any>>;
   setData: React.Dispatch<React.SetStateAction<any>>;
   setError: React.Dispatch<React.SetStateAction<any>>;
@@ -32,8 +32,12 @@ export interface IDeleteData {
   setError: React.Dispatch<React.SetStateAction<any>>;
 }
 
+interface SubCollection {
+  coleccion: string;
+  id?: string;
+}
+
 const getRef = (subColeccion: { coleccion: string; id?: string }[]) => {
-  // const dataRef = firestore();
   let dynamicRef: any = firestore();
 
   subColeccion.forEach(item => {
@@ -69,6 +73,27 @@ export const useFireDB = () => {
       setError(error.message);
     } finally {
       setLoading(prev => ({ ...prev, getData: false }));
+    }
+  };
+
+  const checkIfCollectionExists = async (
+    subColeccion: SubCollection[],
+  ): Promise<boolean> => {
+    try {
+      const collectionRef = getRef(subColeccion);
+
+      // If the last item in subColeccion has an id, we're checking for a document
+      if (subColeccion[subColeccion.length - 1].id) {
+        const docSnapshot = await collectionRef.get();
+        return docSnapshot.exists;
+      } else {
+        // We're checking for a collection
+        const snapshot = await collectionRef.limit(1).get();
+        return !snapshot.empty;
+      }
+    } catch (error) {
+      console.error('Error checking collection:', error);
+      return false;
     }
   };
 
@@ -238,6 +263,7 @@ export const useFireDB = () => {
     addData,
     // deleteData,
     updateData,
+    checkIfCollectionExists,
     getColeccion,
   };
 };

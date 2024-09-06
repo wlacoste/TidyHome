@@ -17,7 +17,10 @@ import {
   updateMultipleCategories,
 } from '../service/category-service';
 import { Categoria } from '../models/categorias';
-import { getDBConnection } from '../service/product-service';
+import {
+  getDBConnection,
+  updateFechaGuardado,
+} from '../service/product-service';
 
 interface CategoryContextType {
   categories: Categoria[];
@@ -100,6 +103,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
       return 0;
     }
     const newCategoryId = await insertCategory(db, category);
+    await updateFechaGuardado();
     await refreshCategories();
     return newCategoryId;
   };
@@ -117,6 +121,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
       return console.log('Database not initialized');
     }
     await deleteCategory(db, id);
+    await updateFechaGuardado();
     await refreshCategories();
   };
 
@@ -125,6 +130,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
       return console.log('Database not initialized');
     }
     await toggleCategoryEnabled(db, id);
+    await updateFechaGuardado();
     await refreshCategories();
   };
 
@@ -149,6 +155,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
         console.log(
           'Categories updated successfully in both state and database',
         );
+        await updateFechaGuardado();
       } catch (error) {
         console.error('Error updating categories:', error);
         // Optionally, you might want to revert the state update or show an error message to the user

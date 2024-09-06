@@ -160,9 +160,65 @@ export const createTables = async () => {
         console.error('Error creating table: TodoItem', error);
       },
     );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS FechaGuardado (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      fecha TEXT
+      );`,
+      [],
+      () => {
+        console.log('FechaGuardado table created successfully');
+      },
+      error => {
+        console.error('Error creating table: FechaGuardado', error);
+      },
+    );
   });
 };
 
+export const updateFechaGuardado = async () => {
+  const db = await getDBConnection();
+
+  db.transaction(tx => {
+    const now = new Date().toISOString();
+
+    tx.executeSql(
+      'INSERT OR REPLACE INTO FechaGuardado (id, fecha) VALUES (1, ?)',
+      [now],
+      (_, result) => {
+        console.log('FechaGuardado updated successfully');
+      },
+      (_, error) => {
+        console.error('Error updating FechaGuardado:', error);
+      },
+    );
+  });
+};
+
+export const getFechaGuardado = (): Promise<Date | null> => {
+  return new Promise(async (resolve, reject) => {
+    const db = await getDBConnection();
+
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT fecha FROM FechaGuardado ORDER BY id DESC LIMIT 1',
+        [],
+        (_, result) => {
+          if (result.rows.length > 0) {
+            const fecha = result.rows.item(0).fecha;
+            resolve(new Date(fecha));
+          } else {
+            resolve(null);
+          }
+        },
+        (_, error) => {
+          console.error('Error fetching FechaGuardado:', error);
+          reject(error);
+        },
+      );
+    });
+  });
+};
 export const getAllProductsWithMovements = async (): Promise<Producto[]> => {
   const db = await getDBConnection();
 
@@ -570,6 +626,7 @@ export const deleteSpecifiedTables = async (): Promise<void> => {
         'categories',
         'ProductosPorLista',
         'ListaCompras',
+        'FechaGuardado',
       ];
       tablesToDelete.forEach(table => {
         tx.executeSql(
