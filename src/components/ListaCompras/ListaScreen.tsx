@@ -1,12 +1,11 @@
-import { LayoutAnimation, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import React from 'react';
 import ListaCompras from './ListaCompras';
 import ListaCompraGenerada, { ItemCompra } from '../ListaComprasGenerada';
-import { formatDate } from '../../utils/formatDate';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useListasCompras } from '../../hooks/useHandleListaCompras';
 import { useListasComprasDB } from '../../hooks/useListasComprasDB';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, useTheme } from 'react-native-paper';
+import CatFallback from '../CatFallback';
 
 export interface IListasCompras {
   id: string;
@@ -17,21 +16,36 @@ export interface IListasCompras {
 }
 
 const ListaScreen = () => {
-  const {
-    listas,
-    handleNewLista,
-    agregarAlista,
-    eliminarLista,
-    cambiarNombre,
-    isLoading,
-  } = useListasComprasDB();
+  const { listas, handleNewLista, agregarAlista, eliminarLista, cambiarNombre, isLoading } =
+    useListasComprasDB();
+
+  const theme = useTheme();
+  if (isLoading) {
+    return (
+      <>
+        <View style={styles.generador}>
+          <ListaCompras setLista={handleNewLista} />
+        </View>
+        <ActivityIndicator />
+      </>
+    );
+  }
+
   return (
     <>
       <View style={styles.generador}>
         <ListaCompras setLista={handleNewLista} />
       </View>
-      {isLoading ? (
-        <ActivityIndicator />
+      {listas.length === 0 ? (
+        <ScrollView>
+          <CatFallback
+            titulo={
+              'Productos agotandose o que hayas marcado apareceran arriba para que puedas generar una nueva lista'
+            }
+            tituloStyle={{ fontSize: 16 }}
+            numeroImagen={3}
+          />
+        </ScrollView>
       ) : (
         <ScrollView style={styles.listaGenerada}>
           {listas.map(lista => (

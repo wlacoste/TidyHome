@@ -1,27 +1,16 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import React from 'react';
-import { MovimientoProducto } from '../../../models/productos';
 import { LineChart } from 'react-native-gifted-charts';
 import { useTheme } from 'react-native-paper';
 
-const mapMovimientos = (movimientos: MovimientoProducto[]) => {
-  // const mov = movimientos.sort((a, b) => a.id - b.id);
-  const mov = [...movimientos].sort((a, b) => a.id - b.id);
-  let total = 0;
-  return mov.map(item => {
-    total = item.isCompra ? total + item.cantidad : total - item.cantidad;
-    return { value: total, label: 'x' };
-  });
-};
-
 const GraficoEvolutivo = ({ movimientos }) => {
   const theme = useTheme();
-  const data = mapMovimientos(movimientos);
+
   return (
     <View>
       <LineChart
         areaChart
-        data={data}
+        data={movimientos}
         startFillColor="rgb(46, 217, 255)"
         startOpacity={0.8}
         endFillColor="rgb(203, 241, 250)"
@@ -30,6 +19,8 @@ const GraficoEvolutivo = ({ movimientos }) => {
         scrollToEnd
         endSpacing={-20}
         adjustToWidth
+        spacing={60}
+        noOfSections={5}
         // textColor1="red"
         // color1="red"
         // dataPointsColor1="red"

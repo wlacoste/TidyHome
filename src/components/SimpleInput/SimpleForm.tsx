@@ -36,9 +36,9 @@ const SimpleForm = ({ onClose }: INuevoProducto) => {
     console.log(u);
   }, [u]);
 
-  useEffect(() => {
-    console.log('prodoso', products);
-  }, [products]);
+  // useEffect(() => {
+  //   console.log('prodoso', products);
+  // }, [products]);
 
   const handleChange = (e: string) => {
     setProduct(e);

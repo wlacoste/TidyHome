@@ -30,8 +30,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
 }) => {
   const { categories: catContext } = useCategories();
 
-  const categoriesAuxiliar =
-    catParam && catParam.length > 0 ? catParam : catContext;
+  const categoriesAuxiliar = catParam && catParam.length > 0 ? catParam : catContext;
 
   const categories = categoriesAuxiliar
     .filter(item => item.isEnabled)
@@ -70,16 +69,15 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
               source={category.icon}
               color={
                 value?.id !== category.id
-                  ? theme.colors.onSurface
+                  ? category.color
+                    ? category.color
+                    : theme.colors.onSurface
                   : theme.colors.inverseSurface
               }
               size={22}
             />
           </View>
-          <Text
-            style={styles.categoryName}
-            numberOfLines={1}
-            ellipsizeMode="tail">
+          <Text style={styles.categoryName} numberOfLines={1} ellipsizeMode="tail">
             {category.name}
           </Text>
         </View>
@@ -98,10 +96,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
           showModal();
         }}
         icon={value?.icon}
-        style={[
-          styles.boton,
-          error ? { borderColor: theme.colors.error } : null,
-        ]}
+        style={[styles.boton, error ? { borderColor: theme.colors.error } : null]}
         textColor={error ? theme.colors.error : theme.colors.primary}>
         {value ? value.name : 'Seleccionar Categoría'}
       </Button>
@@ -122,12 +117,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
             contentContainerStyle={styles.container}
           />
 
-          <IconButton
-            icon="close"
-            size={24}
-            onPress={hideModal}
-            style={styles.closeButton}
-          />
+          <IconButton icon="close" size={24} onPress={hideModal} style={styles.closeButton} />
         </Modal>
       </Portal>
     </View>

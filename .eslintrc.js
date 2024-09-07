@@ -15,6 +15,7 @@ module.exports = {
       'error',
       {
         endOfLine: 'auto',
+        printWidth: 100,
       },
     ],
     'no-unused-vars': 'off',

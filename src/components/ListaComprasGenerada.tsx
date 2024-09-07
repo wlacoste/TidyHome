@@ -1,11 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import {
-  View,
-  StyleSheet,
-  Share,
-  KeyboardAvoidingView,
-  Keyboard,
-} from 'react-native';
+import { View, StyleSheet, Share, KeyboardAvoidingView, Keyboard } from 'react-native';
 import {
   List,
   Text,
@@ -34,6 +28,76 @@ interface ListaComprasProps {
   eliminarLista: (id: string) => void;
   cambiarNombre: (nombre: string, id: string) => void;
 }
+const toBold = text => {
+  const boldChars = {
+    A: '𝗔',
+    B: '𝗕',
+    C: '𝗖',
+    D: '𝗗',
+    E: '𝗘',
+    F: '𝗙',
+    G: '𝗚',
+    H: '𝗛',
+    I: '𝗜',
+    J: '𝗝',
+    K: '𝗞',
+    L: '𝗟',
+    M: '𝗠',
+    N: '𝗡',
+    O: '𝗢',
+    P: '𝗣',
+    Q: '𝗤',
+    R: '𝗥',
+    S: '𝗦',
+    T: '𝗧',
+    U: '𝗨',
+    V: '𝗩',
+    W: '𝗪',
+    X: '𝗫',
+    Y: '𝗬',
+    Z: '𝗭',
+    a: '𝗮',
+    b: '𝗯',
+    c: '𝗰',
+    d: '𝗱',
+    e: '𝗲',
+    f: '𝗳',
+    g: '𝗴',
+    h: '𝗵',
+    i: '𝗶',
+    j: '𝗷',
+    k: '𝗸',
+    l: '𝗹',
+    m: '𝗺',
+    n: '𝗻',
+    o: '𝗼',
+    p: '𝗽',
+    q: '𝗾',
+    r: '𝗿',
+    s: '𝘀',
+    t: '𝘁',
+    u: '𝘂',
+    v: '𝘃',
+    w: '𝘄',
+    x: '𝘅',
+    y: '𝘆',
+    z: '𝘇',
+    '0': '𝟬',
+    '1': '𝟭',
+    '2': '𝟮',
+    '3': '𝟯',
+    '4': '𝟰',
+    '5': '𝟱',
+    '6': '𝟲',
+    '7': '𝟳',
+    '8': '𝟴',
+    '9': '𝟵',
+  };
+  return text
+    .split('')
+    .map(char => boldChars[char] || char)
+    .join('');
+};
 
 const ListaCompraGenerada = ({
   items: listaItems,
@@ -113,10 +177,7 @@ const ListaCompraGenerada = ({
           </View>
         ) : (
           <Button
-            style={[
-              styles.addButton,
-              { backgroundColor: theme.colors.primary, borderRadius: 8 },
-            ]}
+            style={[styles.addButton, { backgroundColor: theme.colors.primary, borderRadius: 8 }]}
             icon="pen-plus"
             mode="contained"
             onPress={() => setIsAddingItem(true)}>
@@ -129,14 +190,14 @@ const ListaCompraGenerada = ({
   );
 
   const createShareableList = () => {
-    return items
-      .map(
-        item =>
-          `${checkedItems.has(item.item) ? '☑' : '☐'} ${item.item}${
-            item.cantidad ? ` (x${item.cantidad})` : ''
-          }`,
-      )
-      .join('\n');
+    const formattedItems = items.map(
+      item =>
+        `${checkedItems.has(item.item) ? '☑' : '☐'} ${item.item}${
+          item.cantidad ? ` (x${item.cantidad})` : ''
+        }`,
+    );
+
+    return [toBold(listaItems.titulo), ...formattedItems].join('\n');
   };
 
   const handleShare = async () => {
@@ -161,11 +222,7 @@ const ListaCompraGenerada = ({
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
-      <Card
-        style={[
-          styles.container,
-          { backgroundColor: theme.colors.background },
-        ]}>
+      <Card style={[styles.container, { backgroundColor: theme.colors.background }]}>
         <View style={styles.header}>
           <View style={styles.tituloContainer}>
             {isCambiarNombre ? (
@@ -196,8 +253,7 @@ const ListaCompraGenerada = ({
               <>
                 <TouchableRipple onPress={() => setCambiarNombre(true)}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text
-                      style={[styles.title, { color: theme.colors.onSurface }]}>
+                    <Text style={[styles.title, { color: theme.colors.onSurface }]}>
                       {listaItems.titulo}
                     </Text>
                     <IconButton
@@ -219,19 +275,13 @@ const ListaCompraGenerada = ({
               }}>
               {fecha}
             </Text>
-            <ListaAcciones
-              eliminar={() => eliminarLista(id)}
-              compartir={handleShare}
-            />
+            <ListaAcciones eliminar={() => eliminarLista(id)} compartir={handleShare} />
           </View>
         </View>
         <Divider />
         {items.map(item => {
           return (
-            <TouchableRipple
-              key={item.id}
-              onPress={() => toggleItem(item)}
-              style={{ height: 60 }}>
+            <TouchableRipple key={item.id} onPress={() => toggleItem(item)} style={{ height: 60 }}>
               <List.Item
                 title={item.item}
                 titleStyle={[
@@ -239,9 +289,7 @@ const ListaCompraGenerada = ({
                   checkedItems.has(item.item) && styles.checkedItemText,
                   { color: theme.colors.onSurface },
                 ]}
-                description={
-                  item.cantidad ? `Cantidad: ${item.cantidad}` : undefined
-                }
+                description={item.cantidad ? `Cantidad: ${item.cantidad}` : undefined}
                 descriptionStyle={{ color: theme.colors.onSurfaceVariant }}
                 left={props => (
                   <List.Icon
@@ -249,16 +297,10 @@ const ListaCompraGenerada = ({
                     icon={({ size, color }) => (
                       <Icon
                         source={
-                          checkedItems.has(item.item)
-                            ? 'checkbox-marked'
-                            : 'checkbox-blank-outline'
+                          checkedItems.has(item.item) ? 'checkbox-marked' : 'checkbox-blank-outline'
                         }
                         size={size}
-                        color={
-                          checkedItems.has(item.item)
-                            ? theme.colors.primary
-                            : color
-                        }
+                        color={checkedItems.has(item.item) ? theme.colors.primary : color}
                       />
                     )}
                   />
