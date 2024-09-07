@@ -53,16 +53,30 @@ export const createTables = async () => {
         console.error('Error creating categories table: ', error);
       },
     );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS categoriesSave (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        icon TEXT,
+        isEnabled INTEGER DEFAULT 1,
+        color TEXT DEFAULT '',
+        ordenCategoria INTEGER DEFAULT 0
+      );`,
+      [],
+      () => {
+        console.log('Categories table created successfully');
+      },
+      error => {
+        console.error('Error creating categories table: ', error);
+      },
+    );
     DefaultCategories.forEach(category => {
       tx.executeSql(
         'INSERT OR IGNORE INTO categories (id, name, icon, isEnabled) VALUES (?, ?, ?, ?);',
         [category.id, category.name, category.icon, category.isEnabled ? 1 : 0],
         () => console.log(`Default category "${category.name}" inserted`),
         (_, error) => {
-          console.error(
-            `Error inserting default category "${category.name}":`,
-            error,
-          );
+          console.error(`Error inserting default category "${category.name}":`, error);
           return false;
         },
       );
@@ -87,6 +101,25 @@ export const createTables = async () => {
         console.error('Error creating products table: ', error);
       },
     );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS productosSave (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT,
+        categoria_id INTEGER,
+        fechaCreacion TEXT,
+        agregarListaCompra INTEGER DEFAULT 0,
+        cantidadDeAdvertencia INTEGER DEFAULT 0,
+        seguirEstadistica INTEGER DEFAULT 1,
+        FOREIGN KEY (categoria_id) REFERENCES categoriesSave (id) ON DELETE SET NULL
+      );`,
+      [],
+      () => {
+        console.log('Products table created successfully');
+      },
+      error => {
+        console.error('Error creating products table: ', error);
+      },
+    );
 
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS movimiento_producto (
@@ -102,6 +135,29 @@ export const createTables = async () => {
           isCompra INTEGER,
           recordatorio string DEFAULT '',
           FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+        );`,
+      [],
+      () => {
+        console.log('Bought dates table created successfully');
+      },
+      error => {
+        console.error('Error creating bought dates table: ', error);
+      },
+    );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS movimiento_productoSave (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          product_id INTEGER,
+          fechaCreacion TEXT,
+          precio REAL,
+          cantidad INTEGER,
+          isUnitario INTEGER,
+          precioUnitario REAL,
+          isVence INTEGER,
+          fechaVencimiento string,
+          isCompra INTEGER,
+          recordatorio string DEFAULT '',
+          FOREIGN KEY (product_id) REFERENCES productsSave (id) ON DELETE CASCADE
         );`,
       [],
       () => {
@@ -176,11 +232,11 @@ export const createTables = async () => {
   });
 };
 
-export const updateFechaGuardado = async () => {
+export const updateFechaGuardado = async (fecha?: Date) => {
   const db = await getDBConnection();
 
   db.transaction(tx => {
-    const now = new Date().toISOString();
+    const now = fecha ? fecha.toISOString() : new Date().toISOString();
 
     tx.executeSql(
       'INSERT OR REPLACE INTO FechaGuardado (id, fecha) VALUES (1, ?)',
@@ -322,9 +378,7 @@ export const addMovimientoProducto = async (movimiento: MovimientoProducto) => {
   });
 };
 
-export const updateMovimientoProducto = async (
-  movimiento: MovimientoProducto,
-) => {
+export const updateMovimientoProducto = async (movimiento: MovimientoProducto) => {
   const db = await getDBConnection();
 
   return new Promise((resolve, reject) => {
@@ -425,9 +479,7 @@ export const deleteProducto = async (id: number) => {
   });
 };
 
-export const getMovimientoById = async (
-  id: number,
-): Promise<MovimientoProducto | null> => {
+export const getMovimientoById = async (id: number): Promise<MovimientoProducto | null> => {
   const db = await getDBConnection();
 
   return new Promise((resolve, reject) => {

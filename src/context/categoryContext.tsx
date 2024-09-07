@@ -17,10 +17,7 @@ import {
   updateMultipleCategories,
 } from '../service/category-service';
 import { Categoria } from '../models/categorias';
-import {
-  getDBConnection,
-  updateFechaGuardado,
-} from '../service/product-service';
+import { getDBConnection, updateFechaGuardado } from '../service/product-service';
 
 interface CategoryContextType {
   categories: Categoria[];
@@ -45,9 +42,7 @@ const defaultCategoryContext: CategoryContextType = {
   updateCategories: (categorias: Categoria[]) => {},
   loading: false,
 };
-export const CategoryContext = createContext<CategoryContextType>(
-  defaultCategoryContext,
-);
+export const CategoryContext = createContext<CategoryContextType>(defaultCategoryContext);
 
 export const useCategories = () => {
   const context = useContext(CategoryContext);
@@ -61,9 +56,7 @@ interface CategoryProviderProps {
   children: ReactNode;
 }
 
-export const CategoryProvider: React.FC<CategoryProviderProps> = ({
-  children,
-}) => {
+export const CategoryProvider: React.FC<CategoryProviderProps> = ({ children }) => {
   const [categories, setCategories] = useState<Categoria[]>([]);
   const [db, setDb] = useState<SQLiteDatabase | null>(null);
   const [loading, setLoading] = useState(true); // Add this line
@@ -87,17 +80,15 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
   const refreshCategories = async (database: SQLiteDatabase | null = db) => {
     if (database) {
       let fetchedCategories = await getAllCategories(database);
-      if (fetchedCategories.length === 0) {
-        await resetCategoriesToDefault(database);
-        fetchedCategories = await getAllCategories(database);
-      }
+      // if (fetchedCategories.length === 0) {
+      //   await resetCategoriesToDefault(database);
+      //   fetchedCategories = await getAllCategories(database);
+      // }
       setCategories(fetchedCategories);
     }
   };
 
-  const addCategory = async (
-    category: Omit<Categoria, 'id'>,
-  ): Promise<number> => {
+  const addCategory = async (category: Omit<Categoria, 'id'>): Promise<number> => {
     if (!db) {
       console.log('Database not initialized');
       return 0;
@@ -152,9 +143,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
       try {
         setCategories(categorias);
         await updateMultipleCategories(db, categorias);
-        console.log(
-          'Categories updated successfully in both state and database',
-        );
+        console.log('Categories updated successfully in both state and database');
         await updateFechaGuardado();
       } catch (error) {
         console.error('Error updating categories:', error);
@@ -176,11 +165,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
     updateCategories,
   };
 
-  return (
-    <CategoryContext.Provider value={value}>
-      {children}
-    </CategoryContext.Provider>
-  );
+  return <CategoryContext.Provider value={value}>{children}</CategoryContext.Provider>;
 };
 
 export default CategoryProvider;

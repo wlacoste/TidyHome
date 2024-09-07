@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FC, ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import {
   IMovimientoSimple,
   IProductoForm,
@@ -33,6 +26,7 @@ export interface ProductContextTyp {
   actualizarProducto: (formu: Producto) => Promise<void>;
   agregarACompraToggle: (formu: Producto) => Promise<void>;
   eliminarProducto: (formu: number) => Promise<void>;
+  getProductos: () => Promise<void>;
   loading: boolean;
 }
 
@@ -46,6 +40,7 @@ const defaultProductContext: ProductContextTyp = {
   actualizarProducto: async () => {},
   agregarACompraToggle: async () => {},
   eliminarProducto: async () => {},
+  getProductos: async () => {},
 
   loading: false,
 };
@@ -66,9 +61,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const updateProductInArray = (updatedProduct: Producto) => {
     setProductos(prevProducts =>
-      prevProducts.map(product =>
-        product.id === updatedProduct.id ? updatedProduct : product,
-      ),
+      prevProducts.map(product => (product.id === updatedProduct.id ? updatedProduct : product)),
     );
   };
 
@@ -76,9 +69,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (categories.length > 0) {
       setProductos(prevProductos =>
         prevProductos.map(producto => {
-          const updatedCategoria = categories.find(
-            cat => cat.id === producto.categoria.id,
-          );
+          const updatedCategoria = categories.find(cat => cat.id === producto.categoria.id);
           if (updatedCategoria) {
             return {
               ...producto,
@@ -99,10 +90,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
         producto.id === movimiento.idProducto
           ? {
               ...producto,
-              detalle: [
-                movimiento,
-                ...producto.detalle.filter(m => m.id !== movimiento.id),
-              ],
+              detalle: [movimiento, ...producto.detalle.filter(m => m.id !== movimiento.id)],
             }
           : producto,
       ),
@@ -115,9 +103,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
       await updateFechaGuardado();
 
       // updateProductInArray(producto);
-      setProductos(prevProducts =>
-        prevProducts.filter(product => product.id !== id),
-      );
+      setProductos(prevProducts => prevProducts.filter(product => product.id !== id));
       Toast.show({
         type: 'success',
         text1: 'Producto modificado correctamente',
@@ -214,7 +200,17 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
       );
     }
   };
-
+  const getProductos = async () => {
+    setLoading(true);
+    try {
+      const p = await getAllProductsWithMovements();
+      setProductos(p);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     const getProductos = async () => {
       setLoading(true);
@@ -244,6 +240,7 @@ const ProductProvider: FC<{ children: ReactNode }> = ({ children }) => {
         actualizarProducto,
         agregarACompraToggle,
         eliminarProducto,
+        getProductos,
       }}>
       {children}
     </ProductContext.Provider>
