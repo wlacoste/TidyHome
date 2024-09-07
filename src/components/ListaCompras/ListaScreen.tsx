@@ -16,14 +16,8 @@ export interface IListasCompras {
 }
 
 const ListaScreen = () => {
-  const {
-    listas,
-    handleNewLista,
-    agregarAlista,
-    eliminarLista,
-    cambiarNombre,
-    isLoading,
-  } = useListasComprasDB();
+  const { listas, handleNewLista, agregarAlista, eliminarLista, cambiarNombre, isLoading } =
+    useListasComprasDB();
 
   const theme = useTheme();
   if (isLoading) {
@@ -36,24 +30,7 @@ const ListaScreen = () => {
       </>
     );
   }
-  // if (listas.length === 0) {
-  //   return (
-  //     <>
-  //       <View style={styles.generador}>
-  //         <ListaCompras setLista={handleNewLista} />
-  //       </View>
-  //       <ScrollView style={{ borderWidth: 1 }}>
-  //         <CatFallback
-  //           titulo={
-  //             'Productos agotandose o que hayas marcado apareceran arriba para que puedas generar una nueva lista'
-  //           }
-  //           numeroImagen={3}
-  //           tituloStyle={{ color: theme.colors.onBackground, fontSize: 19 }}
-  //         />
-  //       </ScrollView>
-  //     </>
-  //   );
-  // }
+
   return (
     <>
       <View style={styles.generador}>
