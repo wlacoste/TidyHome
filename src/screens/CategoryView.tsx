@@ -412,16 +412,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   addButton: {
-    alignItems: 'center',
     margin: 16,
     borderRadius: 8,
   },
   addButtonModal: {
-    alignItems: 'center',
     marginHorizontal: 16,
     marginBottom: 16,
     marginTop: 0,
-    // paddingTop: 0,
     borderRadius: 8,
   },
   addButtonText: {

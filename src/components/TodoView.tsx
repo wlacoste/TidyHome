@@ -252,7 +252,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   submitButton: {
-    alignItems: 'center',
     borderRadius: 8,
     marginTop: 8,
   },
