@@ -264,7 +264,7 @@ const CategoryView = () => {
           onDismiss={() => setShowModalColor(false)}>
           <Card style={styles.cardColores}>
             <Card.Title title="Seleccionar Color" />
-            <ColorPicker setColor={updateColor} />
+            <ColorPicker setColor={updateColor} numColumns={3} />
           </Card>
         </Modal>
       </Portal>
@@ -345,6 +345,7 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     minHeight: 100,
+    // height: 200,
   },
   topCard: {
     display: 'flex',

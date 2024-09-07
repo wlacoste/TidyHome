@@ -58,7 +58,59 @@ function countCategories(products: Producto[]): CategoryCount[] {
   return topCategories;
 }
 
-const colors = ['#8ECAE6', '#219EBC', '#023047', '#FFB703', '#FB8500'];
+export const colors = [
+  '#8ECAE6',
+  '#219EBC',
+  '#023047',
+  '#FFB703',
+  '#FB8500',
+  '#0d3b66',
+  '#faf0ca',
+  '#f4d35e',
+  '#ee964b',
+  '#f95738',
+  '#370617',
+  '#6a040f',
+  '#9d0208',
+  '#d00000',
+  '#dc2f02',
+  '#e85d04',
+  '#f48c06',
+  '#faa307',
+  '#ffba08',
+  '#90e0ef',
+  '#48cae4',
+  '#00b4d8',
+  '#0096c7',
+  '#0077b6',
+  '#023e8a',
+  '#1e6091',
+  '#168aad',
+  '#34a0a4',
+  '#52b69a',
+  '#76c893',
+  '#99d98c',
+  '#b5e48c',
+  '#d9ed92',
+  '#1b4332',
+  '#40916c',
+  '#2d6a4f',
+  '#52b788',
+  '#74c69d',
+  '#95d5b2',
+  '#b7e4c7',
+  '#735d78',
+  '#b392ac',
+  '#d1b3c4',
+  '#e8c2ca',
+  '#f7d1cd',
+  '#9d4edd',
+  '#7b2cbf',
+  '#5a189a',
+  '#3c096c',
+  '#240046',
+  '#735d78',
+];
 
 const renderDot = color => {
   return (
@@ -74,18 +126,39 @@ const renderDot = color => {
   );
 };
 
+const countMovimientos = (productos: Producto[]) => {
+  const resultado: CategoryCount[] = productos.map(producto => ({
+    category: null,
+    label: producto.nombre,
+    value: producto.detalle.length,
+    color: undefined,
+    frontColor: undefined,
+  }));
+  return resultado;
+};
+
 const Dashboard = () => {
   const { productos, loading } = useProductContext();
   const [categoryCounts, setCategoryCounts] = useState<CategoryCount[]>([]);
+  const [movimientoCount, setMovimientoCount] = useState<CategoryCount[]>([]);
   const theme = useTheme();
   useEffect(() => {
     if (productos.length) {
       const counts = countCategories(productos);
-      const conColor = counts.map(count => ({
+      const conColor = counts.map((count, index) => ({
         ...count,
         labelTextStyle: { color: theme.colors.onSurface },
+        frontColor: colors[index % colors.length],
       }));
       setCategoryCounts(conColor);
+
+      const movimientos = countMovimientos(productos);
+      const movimientosConColor = movimientos.map((count, index) => ({
+        ...count,
+        labelTextStyle: { color: theme.colors.onSurface },
+        frontColor: colors[(index + 5) % colors.length],
+      }));
+      setMovimientoCount(movimientosConColor);
     }
   }, [productos]);
   useEffect(() => {
@@ -157,15 +230,56 @@ const Dashboard = () => {
         </View>
       </Card>
 
-      <Card style={styles.chartContainer}>
+      <Card style={styles.chartContainer1}>
+        <Text variant="titleMedium" style={{ paddingLeft: 20, marginTop: 10 }}>
+          Movimientos por producto:
+        </Text>
+        <ScrollView
+          horizontal
+          style={{
+            alignSelf: 'flex-start',
+            flex: 1,
+            marginTop: 10,
+            // borderWidth: 1,
+          }}>
+          <BarChart
+            // showFractionalValue
+            showYAxisIndices
+            yAxisTextStyle={{ color: theme.colors.onSurface }}
+            noOfSections={4}
+            // maxValue={400}
+            data={movimientoCount}
+            isAnimated
+            animationDuration={500}
+            spacing={20}
+            barWidth={40}
+            xAxisLength={310}
+            dashWidth={10}
+          />
+        </ScrollView>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginBottom: 20,
+            marginTop: 20,
+            flexWrap: 'wrap',
+            width: '90%',
+            marginHorizontal: 25,
+          }}
+        />
+      </Card>
+      <Card style={styles.chartContainer1}>
         <Text variant="titleMedium" style={{ paddingLeft: 20, marginTop: 10 }}>
           Productos por categoria:
         </Text>
-        <View
+        <ScrollView
+          horizontal
           style={{
-            alignSelf: 'center',
+            alignSelf: 'flex-start',
             flex: 1,
             marginTop: 10,
+            // borderWidth: 1,
           }}>
           <BarChart
             // showFractionalValue
@@ -181,7 +295,7 @@ const Dashboard = () => {
             xAxisLength={310}
             dashWidth={10}
           />
-        </View>
+        </ScrollView>
         <View
           style={{
             flexDirection: 'row',
@@ -202,7 +316,7 @@ export default Dashboard;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     paddingHorizontal: 20,
   },
@@ -216,13 +330,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chartContainer1: {
-    flex: 1,
-    flexDirection: 'row',
+    width: '100%',
+    paddingHorizontal: 20,
     marginTop: 20,
     alignContent: 'center',
     height: 330,
-    maxHeight: 330,
     paddingTop: 5,
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
 });

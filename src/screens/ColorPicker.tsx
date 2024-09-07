@@ -2,44 +2,97 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import React from 'react';
 import { Card, IconButton } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { colors } from '../components/Dashboard';
 
-const ColorPicker = ({ setColor }) => {
+const chunkArray = <T,>(array: T[], size: number): T[][] => {
+  const chunked: T[][] = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunked.push(array.slice(i, i + size));
+  }
+  return chunked;
+};
+
+interface ColorPickerProps {
+  setColor: (color: string) => void;
+  numColumns?: number;
+}
+const ColorPicker: React.FC<ColorPickerProps> = ({
+  setColor,
+  numColumns = 5,
+}) => {
+  const chunkedColors = chunkArray(colors, 3);
+
   return (
     <ScrollView
       horizontal
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        padding: 10,
-        gap: 10,
-      }}>
-      {colores.map(color => (
-        <IconButton
-          key={color}
-          icon={'ab-testing'}
-          iconColor={color}
-          style={styles.boton}
-          mode="contained-tonal"
-          containerColor={color}
-          onPress={() => setColor(color)}
-        />
-      ))}
-      <IconButton
-        key={'colorVacio'}
-        icon={'close'}
-        style={styles.boton}
-        mode="contained-tonal"
-        onPress={() => setColor('')}
-      />
+      contentContainerStyle={styles.container}
+      // style={{
+      //   display: 'flex',
+      //   flexDirection: 'row',
+      //   padding: 10,
+      //   gap: 10,
+      // }}
+    >
+      {chunkedColors
+        .map((row, columnIndex) => (
+          <View key={columnIndex} style={styles.column}>
+            {
+              row.map(color => (
+                <IconButton
+                  key={color}
+                  icon="ab-testing"
+                  iconColor={color}
+                  style={styles.boton}
+                  mode="contained-tonal"
+                  containerColor={color}
+                  onPress={() => setColor(color)}
+                />
+              ))
+
+              // .push(
+              //   <IconButton
+              //     key={'colorVacio'}
+              //     icon={'close'}
+              //     style={styles.boton}
+              //     mode="contained-tonal"
+              //     onPress={() => setColor('')}
+              //     // eslint-disable-next-line prettier/prettier
+              //   />)
+            }
+          </View>
+        ))
+        .concat(
+          <IconButton
+            key={'colorVacio'}
+            icon={'close'}
+            style={styles.boton}
+            mode="contained-tonal"
+            onPress={() => setColor('')}
+          />,
+        )}
     </ScrollView>
   );
 };
 
 export default ColorPicker;
 
+// const styles = StyleSheet.create({
+//   boton: { width: 50, height: 50, borderRadius: 25 },
+// });
+
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row' as const,
+    padding: 10,
+  },
+  column: {
+    flexDirection: 'column' as const,
+    marginRight: 10,
+  },
+
   boton: { width: 50, height: 50, borderRadius: 25 },
 });
+
 const colores = [
   'rgb(194, 255, 194)',
   'rgb(153, 255, 153)',
