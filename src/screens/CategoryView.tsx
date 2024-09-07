@@ -15,9 +15,7 @@ import {
 } from 'react-native-paper';
 import { useCategories } from '../context/categoryContext';
 import { Categoria } from '../models/categorias';
-import DraggableFlatList, {
-  RenderItemParams,
-} from 'react-native-draggable-flatlist';
+import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 import ColorPicker from './ColorPicker';
 
@@ -34,9 +32,9 @@ const CategoryView = () => {
     name: '',
     ordenCategoria: categories.length,
   });
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<
-    Categoria | undefined
-  >(undefined);
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<Categoria | undefined>(
+    undefined,
+  );
 
   const onReorderCategories = (newOrder: Categoria[]) => {
     const updatedCategories = newOrder.map((category, index) => ({
@@ -47,9 +45,7 @@ const CategoryView = () => {
   };
 
   const updateCate = (categoria: Categoria) => {
-    updateCategories(
-      categories.map(item => (item.id !== categoria.id ? item : categoria)),
-    );
+    updateCategories(categories.map(item => (item.id !== categoria.id ? item : categoria)));
   };
   const updateIcono = (icono: string) => {
     setNuevaCategoria(prev => ({ ...prev, icon: icono }));
@@ -76,18 +72,12 @@ const CategoryView = () => {
     const categoriaActualizada = { ...categoriaSeleccionada, color: color };
     setCategoriaSeleccionada(undefined);
     updateCategories(
-      categories.map(item =>
-        item.id !== categoriaActualizada.id ? item : categoriaActualizada,
-      ),
+      categories.map(item => (item.id !== categoriaActualizada.id ? item : categoriaActualizada)),
     );
     setShowModalColor(false);
   };
 
-  const renderItem = ({
-    item,
-    drag,
-    isActive,
-  }: RenderItemParams<Categoria>) => {
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<Categoria>) => {
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -96,9 +86,7 @@ const CategoryView = () => {
         style={[
           styles.itemContainer,
           {
-            backgroundColor: isActive
-              ? 'rgba(0,0,0,0.1)'
-              : theme.colors.background,
+            backgroundColor: isActive ? 'rgba(0,0,0,0.1)' : theme.colors.background,
           },
         ]}>
         <List.Item
@@ -138,9 +126,7 @@ const CategoryView = () => {
                   width: 34,
                   height: 34,
                   borderRadius: 17,
-                  backgroundColor: item.color
-                    ? item.color
-                    : theme.colors.surface,
+                  backgroundColor: item.color ? item.color : theme.colors.surface,
                   borderColor: theme.colors.outline,
                 }}
               />
@@ -195,16 +181,10 @@ const CategoryView = () => {
               <IconButton
                 icon={nuevaCategoria.icon}
                 mode="outlined"
-                iconColor={
-                  nuevaCategoria.color ? nuevaCategoria.color : undefined
-                }
-                rippleColor={
-                  nuevaCategoria.color ? nuevaCategoria.color : undefined
-                }
+                iconColor={nuevaCategoria.color ? nuevaCategoria.color : undefined}
+                rippleColor={nuevaCategoria.color ? nuevaCategoria.color : undefined}
                 style={{
-                  borderColor: nuevaCategoria.color
-                    ? nuevaCategoria.color
-                    : theme.colors.outline,
+                  borderColor: nuevaCategoria.color ? nuevaCategoria.color : theme.colors.outline,
                 }}
               />
               <TextInput
@@ -259,9 +239,7 @@ const CategoryView = () => {
           </Card>
         </Modal>
 
-        <Modal
-          visible={showModalColor}
-          onDismiss={() => setShowModalColor(false)}>
+        <Modal visible={showModalColor} onDismiss={() => setShowModalColor(false)}>
           <Card style={styles.cardColores}>
             <Card.Title title="Seleccionar Color" />
             <ColorPicker setColor={updateColor} numColumns={3} />
