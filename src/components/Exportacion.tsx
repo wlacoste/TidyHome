@@ -18,11 +18,19 @@ const Exportacion = () => {
   } = useExportacion();
   return (
     <>
-      <View style={{ gap: 10 }}>
-        <Button onPress={() => cargarDatos()} mode="contained" style={styles.boton}>
-          Cargar datos
+      <View style={{ gap: 15, marginTop: 50 }}>
+        <Button
+          onPress={() => cargarDatos()}
+          mode="contained"
+          style={styles.boton}
+          icon={'satellite-uplink'}>
+          Cargar Datos
         </Button>
-        <Button onPress={() => descargarDatos()} mode="contained" style={styles.boton}>
+        <Button
+          onPress={() => descargarDatos()}
+          mode="contained"
+          style={styles.boton}
+          icon={'cloud-download'}>
           Descargar datos
         </Button>
         {procesoCarga && <ActivityIndicator />}

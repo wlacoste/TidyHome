@@ -32,9 +32,7 @@ export const insertCategory = async (
 };
 
 // Read all categories
-export const getAllCategories = async (
-  db: SQLiteDatabase,
-): Promise<Categoria[]> => {
+export const getAllCategories = async (db: SQLiteDatabase): Promise<Categoria[]> => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
@@ -100,10 +98,7 @@ export const getCategoryById = async (
 };
 
 // Update a category
-export const updateCategory = async (
-  db: SQLiteDatabase,
-  category: Categoria,
-): Promise<void> => {
+export const updateCategory = async (db: SQLiteDatabase, category: Categoria): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
@@ -178,10 +173,7 @@ export const updateMultipleCategories = async (
 };
 
 // Delete a category
-export const deleteCategory = async (
-  db: SQLiteDatabase,
-  id: number,
-): Promise<void> => {
+export const deleteCategory = async (db: SQLiteDatabase, id: number): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
@@ -202,10 +194,7 @@ export const deleteCategory = async (
 };
 
 // Toggle category enabled status
-export const toggleCategoryEnabled = async (
-  db: SQLiteDatabase,
-  id: number,
-): Promise<void> => {
+export const toggleCategoryEnabled = async (db: SQLiteDatabase, id: number): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
@@ -225,9 +214,7 @@ export const toggleCategoryEnabled = async (
   });
 };
 
-export const resetCategoriesToDefault = async (
-  db: SQLiteDatabase,
-): Promise<void> => {
+export const resetCategoriesToDefault = async (db: SQLiteDatabase): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       // First, delete all existing categories
@@ -248,21 +235,10 @@ export const resetCategoriesToDefault = async (
               DefaultCategories.forEach(category => {
                 tx.executeSql(
                   'INSERT INTO categories (id, name, icon, isEnabled) VALUES (?, ?, ?, ?);',
-                  [
-                    category.id,
-                    category.name,
-                    category.icon,
-                    category.isEnabled ? 1 : 0,
-                  ],
-                  () =>
-                    console.log(
-                      `Default category "${category.name}" re-inserted`,
-                    ),
+                  [category.id, category.name, category.icon, category.isEnabled ? 1 : 0],
+                  () => {},
                   (_, error) => {
-                    console.error(
-                      `Error re-inserting default category "${category.name}":`,
-                      error,
-                    );
+                    console.error(`Error re-inserting default category "${category.name}":`, error);
                     return false;
                   },
                 );

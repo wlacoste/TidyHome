@@ -74,7 +74,7 @@ export const createTables = async () => {
       tx.executeSql(
         'INSERT OR IGNORE INTO categories (id, name, icon, isEnabled) VALUES (?, ?, ?, ?);',
         [category.id, category.name, category.icon, category.isEnabled ? 1 : 0],
-        () => console.log(`Default category "${category.name}" inserted`),
+        () => {},
         (_, error) => {
           console.error(`Error inserting default category "${category.name}":`, error);
           return false;

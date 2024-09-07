@@ -1,14 +1,20 @@
-import React, { useMemo, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { FAB, Portal, useTheme } from 'react-native-paper';
-import ProductForm from '../GestorProductos/ProductForm';
-import SimpleForm from '../SimpleInput';
-import { useModal } from '../../context/modalContext';
-import TestView from '../TestView/TestView';
-import { useFab } from '../../context/fabContext';
 import { useNavigation } from '@react-navigation/native';
+import React, { useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { FAB, Portal, useTheme } from 'react-native-paper';
+import { useFab } from '../../context/fabContext';
+import { useModal } from '../../context/modalContext';
 import { RootNavigationProp } from '../../models/routeTypes';
+import CatFallback from '../CatFallback';
+import ProductForm from '../GestorProductos/ProductForm';
 
+const CatModal = () => {
+  return (
+    <View style={{ width: 200, height: 200 }}>
+      <CatFallback titulo={''} />
+    </View>
+  );
+};
 const FabGroup = () => {
   const theme = useTheme();
   const [state, setState] = useState({ open: false });
@@ -43,7 +49,7 @@ const FabGroup = () => {
         actions={[
           {
             icon: 'package-variant',
-            label: 'Producto nuevo',
+            label: 'Agregar producto',
             color: theme.colors.primary,
             onPress: () => {
               openModal(<ProductForm onClose={closeModal} />);
@@ -51,7 +57,7 @@ const FabGroup = () => {
           },
           {
             icon: 'package-variant',
-            label: 'Producto nuevo 2',
+            label: 'Agregar producto vista',
             color: theme.colors.primary,
 
             onPress: () => {
@@ -60,26 +66,10 @@ const FabGroup = () => {
           },
           {
             icon: 'swap-horizontal',
-            label: 'Movimiento nuevo',
-            color: theme.colors.primary,
-
-            onPress: () => console.log('Pressed email'),
-          },
-          {
-            icon: 'swap-horizontal',
             label: 'Simple Context',
             color: theme.colors.primary,
 
-            onPress: () => openModal(<TestView />),
-          },
-          {
-            icon: 'pencil',
-            label: 'Movimiento Input',
-            color: theme.colors.primary,
-
-            onPress: () => {
-              openModal(<SimpleForm onClose={closeModal} />);
-            },
+            onPress: () => openModal(<CatModal />),
           },
         ]}
         onStateChange={onStateChange}

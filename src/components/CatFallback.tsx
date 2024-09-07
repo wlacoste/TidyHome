@@ -41,9 +41,7 @@ const CatFallback: React.FC<IfallbackCat> = ({
         {titulo}
       </Text>
       {subtitulo && (
-        <Text
-          variant="titleLarge"
-          style={[styles.textomensaje, subtituloStyle]}>
+        <Text variant="titleLarge" style={[styles.textomensaje, subtituloStyle]}>
           {subtitulo}
         </Text>
       )}

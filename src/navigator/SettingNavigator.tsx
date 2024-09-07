@@ -20,11 +20,7 @@ function SettingsStackNavigator() {
         options={{ title: 'Ajustes', headerShown: false }}
       />
 
-      <SettingsStack.Screen
-        name="Profile"
-        component={TestView}
-        options={{ title: 'Perfil' }}
-      />
+      <SettingsStack.Screen name="Profile" component={TestView} options={{ title: 'Perfil' }} />
       <SettingsStack.Screen name="Reminder" component={TestView} />
       <SettingsStack.Screen name="RegularPayments" component={TestView} />
       <SettingsStack.Screen name="Currency" component={ResetTables} />
